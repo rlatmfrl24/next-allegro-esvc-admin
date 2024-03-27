@@ -19,7 +19,7 @@ export default function RootLayout({
         <Providers>
           <main
             id="main-container"
-            className="flex flex-col min-h-screen overflow-hidden"
+            className="flex flex-col min-h-screen overflow-hidden font-pretendard"
           >
             {children}
           </main>
