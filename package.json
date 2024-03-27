@@ -9,9 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
     "@lit/react": "^1.0.4",
     "@material/material-color-utilities": "^0.2.7",
     "@material/web": "^1.4.0",
+    "@mui/icons-material": "^5.15.14",
+    "@mui/material": "^5.15.14",
     "classnames": "^2.5.1",
     "next": "14.1.4",
     "react": "^18",
