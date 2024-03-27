@@ -8,6 +8,7 @@ import { DividerComponent } from "@/app/components/divider";
 import { CompanyType } from "@/util/typeDef/super";
 import { useRecoilState } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";
+import { MdRangeDatePicker } from "@/app/components/datepickers/range-picker";
 
 export default function BasicInformationStep(props: {
   onNextStep: () => void;
@@ -99,6 +100,9 @@ export default function BasicInformationStep(props: {
         />
       </div>
       <DividerComponent className="border-dotted my-2" />
+      <div className="flex">
+        <MdRangeDatePicker />
+      </div>
       <div className="flex gap-2">
         <NAOutlinedTextField
           label="Representative"
