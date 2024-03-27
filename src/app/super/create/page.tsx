@@ -6,6 +6,7 @@ import { CSSProperties, useState } from "react";
 import BasicInformationStep from "./basic-information-step";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ThemeStyleStep from "./theme-style-step";
 
 export default function CreateCompany() {
   const tabBackgroundStyle = {
@@ -52,7 +53,7 @@ export default function CreateCompany() {
             Business Configuration
           </MdPrimaryTab>
         </MdTabs>
-        <div className="px-8 py-6 flex-1">
+        <div className="px-8 py-6 flex-1 flex flex-col">
           {
             {
               0: (
@@ -62,7 +63,7 @@ export default function CreateCompany() {
                   }}
                 />
               ),
-              1: "Theme & Style",
+              1: <ThemeStyleStep onStepMove={(step) => setCurrentStep(step)} />,
               2: "Main Page Style",
               3: "Menu Management",
               4: "System Configuration",
