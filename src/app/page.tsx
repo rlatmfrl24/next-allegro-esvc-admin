@@ -1,6 +1,11 @@
-import "@material/web/button/elevated-button.js";
-import { MdElevatedButton } from "@material/web/button/elevated-button.js";
+"use client";
+
+import { MdCircularProgress } from "@/util/md3";
 
 export default function Home() {
-  return <main className="flex min-h-screen"></main>;
+  return (
+    <div className="flex-1 flex items-center justify-center">
+      <MdCircularProgress indeterminate />
+    </div>
+  );
 }
