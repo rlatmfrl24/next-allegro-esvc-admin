@@ -15,11 +15,14 @@ import TransfarShippingLogo from "@/../public/logo_transfar_shipping.svg";
 import CyberlogitecLogo from "@/../public/logo_cyberlogitec.svg";
 import TSLineLogo from "@/../public/logo_tsline.svg";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function SuperHome() {
   return (
     <div className="flex-1 flex flex-col p-8">
-      <MdFilledButton className="w-fit self-end">Create Company</MdFilledButton>
+      <Link href="/super/create" className="self-end">
+        <MdFilledButton>Create Company</MdFilledButton>
+      </Link>
       <div className="grid grid-cols-4 gap-6 mt-6 ">
         <CompanyCard
           companyName="E-Service"
