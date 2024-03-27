@@ -1,9 +1,11 @@
 "use client";
 
 import { MdTypography } from "@/app/components/typography";
-import { MdPrimaryTab, MdTabs } from "@/util/md3";
+import { MdOutlinedButton, MdPrimaryTab, MdTabs } from "@/util/md3";
 import { CSSProperties, useState } from "react";
 import BasicInformationStep from "./basic-information-step";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CreateCompany() {
   const tabBackgroundStyle = {
@@ -14,9 +16,15 @@ export default function CreateCompany() {
 
   return (
     <div className="px-12 py-6 flex flex-col flex-1">
-      <MdTypography variant="title" size="large" className="text-primary">
-        Create Company
-      </MdTypography>
+      <div className="flex items-center justify-between">
+        <MdTypography variant="title" size="large" className="text-primary">
+          Create Company
+        </MdTypography>
+        <Link href={`/super`}>
+          <MdOutlinedButton>Cancel</MdOutlinedButton>
+        </Link>
+      </div>
+
       <div className="bg-surfaceContainerLowest flex-1 rounded-2xl overflow-hidden mt-4 flex flex-col">
         <MdTabs
           className="bg-surfaceContainerLowest"
