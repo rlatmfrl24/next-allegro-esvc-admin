@@ -1,12 +1,18 @@
 "use client";
 
-import { MdTypography } from "@/app/components/typography";
-import { MdOutlinedButton, MdPrimaryTab, MdTabs } from "@/util/md3";
-import { CSSProperties, useState } from "react";
-import BasicInformationStep from "./basic-information-step";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import ThemeStyleStep from "./theme-style-step";
+import { CSSProperties, useState } from "react";
+
+import { MdTypography } from "@/app/components/typography";
+import {
+  MdFilledButton,
+  MdOutlinedButton,
+  MdPrimaryTab,
+  MdTabs,
+} from "@/util/md3";
+
+import BasicInformationStep from "./step-basic-information";
+import ThemeStyleStep from "./step-theme-style";
 
 export default function CreateCompany() {
   const tabBackgroundStyle = {
@@ -21,9 +27,14 @@ export default function CreateCompany() {
         <MdTypography variant="title" size="large" className="text-primary">
           Create Company
         </MdTypography>
-        <Link href={`/super`}>
-          <MdOutlinedButton>Cancel</MdOutlinedButton>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href={`/super`}>
+            <MdOutlinedButton>Cancel</MdOutlinedButton>
+          </Link>
+          <Link href={`/super`}>
+            <MdFilledButton>Create</MdFilledButton>
+          </Link>
+        </div>
       </div>
 
       <div className="bg-surfaceContainerLowest flex-1 rounded-2xl overflow-hidden mt-4 flex flex-col">
@@ -58,9 +69,7 @@ export default function CreateCompany() {
             {
               0: (
                 <BasicInformationStep
-                  onNextStep={() => {
-                    setCurrentStep(1);
-                  }}
+                  onStepMove={(step) => setCurrentStep(step)}
                 />
               ),
               1: <ThemeStyleStep onStepMove={(step) => setCurrentStep(step)} />,

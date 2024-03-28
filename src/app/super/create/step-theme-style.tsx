@@ -5,8 +5,9 @@ import {
   MdIcon,
   MdOutlinedButton,
   MdRippleEffect,
+  MdTextButton,
 } from "@/util/md3";
-import { Upload } from "@mui/icons-material";
+import { ChevronLeft, ChevronRight, Upload } from "@mui/icons-material";
 import Image from "next/image";
 import IconThemeViolet from "@/../public/assets/img_theme_violet.svg";
 import IconThemePurple from "@/../public/assets/img_theme_purple.svg";
@@ -91,21 +92,29 @@ export default function ThemeStyleStep(props: {
         <MdTypography variant="title" size="large">
           Theme & Style
         </MdTypography>
-        <div className="flex gap-2">
-          <MdOutlinedButton
+        <div className="flex gap-2 items-center">
+          <MdTextButton
             onClick={() => {
               props.onStepMove(0);
             }}
           >
+            <MdIcon slot="icon">
+              <ChevronLeft />
+            </MdIcon>
             Previous
-          </MdOutlinedButton>
-          <MdFilledButton
+          </MdTextButton>
+          <DividerComponent orientation="vertical" className="h-6" />
+          <MdTextButton
             onClick={() => {
               props.onStepMove(2);
             }}
+            trailingIcon
           >
             Next
-          </MdFilledButton>
+            <MdIcon slot="icon">
+              <ChevronRight />
+            </MdIcon>
+          </MdTextButton>
         </div>
       </div>
       <div className="flex flex-1 gap-6">

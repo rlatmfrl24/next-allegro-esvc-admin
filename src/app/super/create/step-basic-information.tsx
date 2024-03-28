@@ -1,5 +1,5 @@
 import { MdTypography } from "@/app/components/typography";
-import { MdFilledButton } from "@/util/md3";
+import { MdFilledButton, MdIcon, MdTextButton } from "@/util/md3";
 import { useCallback, useMemo, useState } from "react";
 import { faker } from "@faker-js/faker";
 import NAMultiAutoComplete from "@/app/components/na-multi-autocomplete";
@@ -9,9 +9,10 @@ import { CompanyType } from "@/util/typeDef/super";
 import { useRecoilState } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";
 import { MdRangeDatePicker } from "@/app/components/datepickers/range-picker";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 
 export default function BasicInformationStep(props: {
-  onNextStep: () => void;
+  onStepMove: (step: number) => void;
 }) {
   const [currentCompanyStore, setCurrentCompanyStore] =
     useRecoilState(CurrentCompanyState);
@@ -38,9 +39,12 @@ export default function BasicInformationStep(props: {
     );
   }, []);
 
-  const moveToNextStep = useCallback(() => {
-    props.onNextStep();
-  }, [props]);
+  const moveToStep = useCallback(
+    (step: number) => {
+      props.onStepMove(step);
+    },
+    [props]
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -48,7 +52,26 @@ export default function BasicInformationStep(props: {
         <MdTypography variant="title" size="large">
           Basic Information
         </MdTypography>
-        <MdFilledButton onClick={moveToNextStep}>Next</MdFilledButton>
+        <div className="flex gap-2 items-center">
+          <MdTextButton disabled>
+            <MdIcon slot="icon">
+              <ChevronLeft />
+            </MdIcon>
+            Previous
+          </MdTextButton>
+          <DividerComponent orientation="vertical" className="h-6" />
+          <MdTextButton
+            onClick={() => {
+              props.onStepMove(1);
+            }}
+            trailingIcon
+          >
+            Next
+            <MdIcon slot="icon">
+              <ChevronRight />
+            </MdIcon>
+          </MdTextButton>
+        </div>
       </div>
       <div className="flex gap-2">
         <NAMultiAutoComplete

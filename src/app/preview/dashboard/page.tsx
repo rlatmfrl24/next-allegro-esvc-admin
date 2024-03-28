@@ -41,7 +41,7 @@ export default function DashboardPreview() {
         zoom: 0.6,
       }}
     >
-      {/* <div className="absolute top-0 left-0 w-full h-full z-10"></div> */}
+      <div className="absolute top-0 left-0 w-full h-full z-10"></div>
       <div className="w-20 flex flex-col items-center h-full gap-4 py-1">
         <MdIcon className="w-12 h-12 rounded-full p-2">
           <Menu fontSize="small" />
