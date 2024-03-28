@@ -36,12 +36,12 @@ import QuickChart from "./chart";
 export default function DashboardPreview() {
   return (
     <div
-      className="bg-surfaceDim flex overflow-hidden relative rounded-3xl shadow-md w-[1280px] flex-1"
+      className="bg-surfaceDim flex overflow-hidden relative rounded-3xl shadow-lg w-[1280px] flex-1"
       style={{
         zoom: 0.6,
       }}
     >
-      <div className="absolute top-0 left-0 w-full h-full z-10"></div>
+      {/* <div className="absolute top-0 left-0 w-full h-full z-10"></div> */}
       <div className="w-20 flex flex-col items-center h-full gap-4 py-1">
         <MdIcon className="w-12 h-12 rounded-full p-2">
           <Menu fontSize="small" />
@@ -137,6 +137,7 @@ export default function DashboardPreview() {
                   </MdOutlinedTextField>
                 </div>
               </DashboardCard>
+              <InputItem title="Tracking" width={2} />
             </div>
           </div>
         </div>
@@ -153,9 +154,11 @@ const DashboardCard = (props: {
 }) => {
   return (
     <div
-      className={` rounded-lg border-2 border-secondaryContainer bg-surfaceContainerLowest overflow-hidden ${
-        props.width ? `col-span-${props.width}` : ""
-      } ${props.height ? `row-span-${props.height}` : ""}`}
+      style={{
+        gridColumn: `span ${props.width}`,
+        gridRow: `span ${props.height}`,
+      }}
+      className={`rounded-lg border-2 border-secondaryContainer bg-surfaceContainerLowest overflow-hidden `}
     >
       <div className="h-12 flex items-center bg-surfaceContainerLow px-4 py-2 justify-between text-secondary">
         <MdTypography variant="body" size="medium" prominent>

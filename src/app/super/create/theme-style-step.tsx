@@ -21,6 +21,7 @@ import IconThemeCustom from "@/../public/assets/img_theme_custom.svg";
 import DashboardPreview from "@/app/preview/dashboard/page";
 import { useEffect, useState } from "react";
 import { createMDTheme } from "@/util/theme";
+import ColorPicker from "@/app/components/color-picker";
 
 export default function ThemeStyleStep(props: {
   onStepMove: (step: number) => void;
@@ -81,7 +82,6 @@ export default function ThemeStyleStep(props: {
   const [selectedTheme, setSelectedTheme] = useState(colorThemes[8]);
 
   useEffect(() => {
-    // createMDTheme(selectedTheme.name);
     createMDTheme(selectedTheme.primaryColor);
   }, [selectedTheme]);
 
@@ -145,8 +145,17 @@ export default function ThemeStyleStep(props: {
               );
             })}
           </div>
+          {selectedTheme.name === "custom" && (
+            <ColorPicker
+              className="mt-4"
+              color="#000000"
+              onColorChange={(color) => {
+                createMDTheme(color);
+              }}
+            />
+          )}
         </div>
-        <div className="flex-1  rounded-lg bg-surfaceContainerLow px-6 py-4 flex flex-col">
+        <div className="flex-1 rounded-lg bg-surfaceContainerLow px-6 py-4 flex flex-col">
           <MdTypography
             variant="body"
             size="large"
