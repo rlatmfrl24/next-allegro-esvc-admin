@@ -18,6 +18,7 @@ import IconThemeRed from "@/../public/assets/img_theme_red.svg";
 import IconThemeDarkBlue from "@/../public/assets/img_theme_darkblue.svg";
 import IconThemeJeal from "@/../public/assets/img_theme_jeal.svg";
 import IconThemeCustom from "@/../public/assets/img_theme_custom.svg";
+import DashboardPreview from "@/app/preview/dashboard/page";
 
 export default function ThemeStyleStep(props: {
   onStepMove: (step: number) => void;
@@ -89,7 +90,7 @@ export default function ThemeStyleStep(props: {
         </div>
       </div>
       <div className="flex flex-1 gap-6">
-        <div className="w-1/3 border border-outlineVariant rounded-lg px-6 py-4 flex flex-col gap-4">
+        <div className="w-[480px] border border-outlineVariant rounded-lg px-6 py-4 flex flex-col gap-4">
           <MdTypography variant="body" size="large" prominent>
             Logo Upload
           </MdTypography>
@@ -108,20 +109,20 @@ export default function ThemeStyleStep(props: {
               return (
                 <div
                   key={theme.name}
-                  className="relative border border-outlineVariant bg-surfaceContainerLow rounded-lg flex cursor-pointer "
+                  className="relative border border-outlineVariant bg-surfaceContainerLow rounded-lg flex cursor-pointer"
                 >
                   <MdRippleEffect />
                   <Image
                     src={theme.icon}
                     alt={theme.name}
-                    className="m-6 flex-1"
+                    className="m-6 flex-1 w-12 h-12"
                   />
                 </div>
               );
             })}
           </div>
         </div>
-        <div className="w-2/3 rounded-lg bg-surfaceContainerLow px-6 py-4">
+        <div className="flex-1  rounded-lg bg-surfaceContainerLow px-6 py-4 flex flex-col">
           <MdTypography
             variant="body"
             size="large"
@@ -130,6 +131,7 @@ export default function ThemeStyleStep(props: {
           >
             Preview
           </MdTypography>
+          <DashboardPreview />
         </div>
       </div>
     </div>
