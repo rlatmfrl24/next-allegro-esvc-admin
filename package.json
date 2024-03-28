@@ -19,6 +19,7 @@
     "@material/web": "^1.4.0",
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
+    "@types/lodash": "^4.17.0",
     "@types/luxon": "^3.4.2",
     "classnames": "^2.5.1",
     "cookies-next": "^4.1.1",
