@@ -9,19 +9,41 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@floating-ui/react": "^0.26.10",
+    "@h6s/calendar": "^2.0.1",
+    "@headlessui/react": "^1.7.18",
+    "@lit/react": "^1.0.4",
+    "@material/material-color-utilities": "^0.2.7",
+    "@material/web": "^1.4.0",
+    "@mui/icons-material": "^5.15.14",
+    "@mui/material": "^5.15.14",
+    "@types/lodash": "^4.17.0",
+    "@types/luxon": "^3.4.2",
+    "classnames": "^2.5.1",
+    "cookies-next": "^4.1.1",
+    "framer-motion": "^11.0.22",
+    "lodash": "^4.17.21",
+    "luxon": "^3.4.4",
+    "next": "14.1.4",
+    "overlayscrollbars-react": "^0.5.5",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.1.4"
+    "recharts": "^2.12.3",
+    "recoil": "^0.7.7",
+    "tailwind-scrollbar-hide": "^1.1.7"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@faker-js/faker": "^8.4.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.4",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.4"
+    "typescript": "^5"
   }
 }
