@@ -19,6 +19,8 @@ import IconThemeDarkBlue from "@/../public/assets/img_theme_darkblue.svg";
 import IconThemeJeal from "@/../public/assets/img_theme_jeal.svg";
 import IconThemeCustom from "@/../public/assets/img_theme_custom.svg";
 import DashboardPreview from "@/app/preview/dashboard/page";
+import { useEffect, useState } from "react";
+import { createMDTheme } from "@/util/theme";
 
 export default function ThemeStyleStep(props: {
   onStepMove: (step: number) => void;
@@ -27,44 +29,61 @@ export default function ThemeStyleStep(props: {
     {
       name: "violet",
       icon: IconThemeViolet,
+      primaryColor: "#6B4EB8",
     },
     {
       name: "purple",
       icon: IconThemePurple,
+      primaryColor: "#BE489D",
     },
     {
       name: "blue",
       icon: IconThemeBlue,
+      primaryColor: "#00A3FF",
     },
     {
       name: "green",
       icon: IconThemeGreen,
+      primaryColor: "#20B266",
     },
     {
       name: "yellow",
       icon: IconThemeYellow,
+      primaryColor: "#EBA900",
     },
     {
       name: "orange",
       icon: IconThemeOrange,
+      primaryColor: "#F17B2F",
     },
     {
       name: "red",
       icon: IconThemeRed,
+      primaryColor: "#D13044",
     },
     {
       name: "dark blue",
       icon: IconThemeDarkBlue,
+      primaryColor: "#174FA0",
     },
     {
       name: "jeal",
       icon: IconThemeJeal,
+      primaryColor: "#196584",
     },
     {
       name: "custom",
       icon: IconThemeCustom,
+      primaryColor: "#000000",
     },
   ];
+
+  const [selectedTheme, setSelectedTheme] = useState(colorThemes[8]);
+
+  useEffect(() => {
+    // createMDTheme(selectedTheme.name);
+    createMDTheme(selectedTheme.primaryColor);
+  }, [selectedTheme]);
 
   return (
     <div className="flex flex-col gap-4 flex-1">
@@ -109,7 +128,12 @@ export default function ThemeStyleStep(props: {
               return (
                 <div
                   key={theme.name}
-                  className="relative border border-outlineVariant bg-surfaceContainerLow rounded-lg flex cursor-pointer"
+                  className={`relative rounded-lg flex cursor-pointer ${
+                    selectedTheme.name === theme.name
+                      ? "bg-surfaceContainerLowest border-2 border-primary"
+                      : "bg-surfaceContainerLow border border-outlineVariant"
+                  }`}
+                  onClick={() => setSelectedTheme(theme)}
                 >
                   <MdRippleEffect />
                   <Image
