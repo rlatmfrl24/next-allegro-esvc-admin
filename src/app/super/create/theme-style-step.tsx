@@ -90,7 +90,7 @@ export default function ThemeStyleStep(props: {
         </div>
       </div>
       <div className="flex flex-1 gap-6">
-        <div className="w-[480px] border border-outlineVariant rounded-lg px-6 py-4 flex flex-col gap-4">
+        <div className="min-w-[480px] border border-outlineVariant rounded-lg px-6 py-4 flex flex-col gap-4">
           <MdTypography variant="body" size="large" prominent>
             Logo Upload
           </MdTypography>
@@ -131,7 +131,9 @@ export default function ThemeStyleStep(props: {
           >
             Preview
           </MdTypography>
-          <DashboardPreview />
+          <div className="flex justify-center py-12 px-12 overflow-hidden flex-auto h-0">
+            <DashboardPreview />
+          </div>
         </div>
       </div>
     </div>
