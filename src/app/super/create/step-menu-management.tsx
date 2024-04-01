@@ -26,11 +26,9 @@ import {
 import { menuItems } from "./constants";
 import { MenuItemType } from "@/util/typeDef/super";
 import { CSS } from "@dnd-kit/utilities";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { MenuManagementState } from "@/store/super.store";
-import { Item } from "@material/web/labs/item/internal/item";
-import { de } from "@faker-js/faker";
 
 export default function MenuManagementStep(props: {
   onStepMove: (step: number) => void;
@@ -133,6 +131,9 @@ export default function MenuManagementStep(props: {
 
   function ResetToDefaultMenu() {
     setItems(menuItems);
+    setMenuStore({
+      deactivatedMenuIds: [],
+    });
   }
 }
 
@@ -154,9 +155,11 @@ const FirstMenuItem = (props: { item: MenuItemType }) => {
   const [subItems, setSubItems] = useState(props.item.subMenu || []);
   const [menuStore, setMenuStore] = useRecoilState(MenuManagementState);
   const [isActivated, setIsActivated] = useState(
-    !subItems.every((item) =>
-      menuStore.deactivatedMenuIds.includes(props.item.id + "/" + item.id)
-    )
+    subItems.length > 0
+      ? !subItems.every((item) =>
+          menuStore.deactivatedMenuIds.includes(props.item.id + "/" + item.id)
+        )
+      : menuStore.deactivatedMenuIds.includes(props.item.id)
   );
 
   function handleDragOver(event: any) {
@@ -176,11 +179,15 @@ const FirstMenuItem = (props: { item: MenuItemType }) => {
   }
 
   useEffect(() => {
-    setIsActivated(
-      !subItems.every((item) =>
-        menuStore.deactivatedMenuIds.includes(props.item.id + "/" + item.id)
-      )
-    );
+    if (subItems.length > 0) {
+      setIsActivated(
+        !subItems.every((item) =>
+          menuStore.deactivatedMenuIds.includes(props.item.id + "/" + item.id)
+        )
+      );
+    } else {
+      setIsActivated(!menuStore.deactivatedMenuIds.includes(props.item.id));
+    }
   }, [menuStore.deactivatedMenuIds, props.item.id, subItems]);
 
   return (
@@ -214,27 +221,42 @@ const FirstMenuItem = (props: { item: MenuItemType }) => {
           onClick={(e) => {
             e.stopPropagation();
             if (e.currentTarget.selected) {
-              console.log("deactivate");
-
               setMenuStore((prev) => {
-                return {
-                  ...prev,
-                  deactivatedMenuIds: [
-                    ...prev.deactivatedMenuIds,
-                    ...subItems.map((item) => props.item.id + "/" + item.id),
-                  ],
-                };
+                if (subItems.length === 0) {
+                  return {
+                    ...prev,
+                    deactivatedMenuIds: [
+                      ...prev.deactivatedMenuIds,
+                      props.item.id,
+                    ],
+                  };
+                } else {
+                  return {
+                    ...prev,
+                    deactivatedMenuIds: [
+                      ...prev.deactivatedMenuIds,
+                      ...subItems.map((item) => props.item.id + "/" + item.id),
+                    ],
+                  };
+                }
               });
             } else {
-              console.log("active");
-
               setMenuStore((prev) => {
-                return {
-                  ...prev,
-                  deactivatedMenuIds: prev.deactivatedMenuIds.filter(
-                    (id) => !id.startsWith(props.item.id + "/")
-                  ),
-                };
+                if (subItems.length === 0) {
+                  return {
+                    ...prev,
+                    deactivatedMenuIds: prev.deactivatedMenuIds.filter(
+                      (id) => id !== props.item.id
+                    ),
+                  };
+                } else {
+                  return {
+                    ...prev,
+                    deactivatedMenuIds: prev.deactivatedMenuIds.filter(
+                      (id) => !id.startsWith(props.item.id + "/")
+                    ),
+                  };
+                }
               });
             }
           }}
