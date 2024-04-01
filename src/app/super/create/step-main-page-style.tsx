@@ -18,7 +18,7 @@ import { ChevronLeft, ChevronRight, Upload } from "@mui/icons-material";
 import React, { useRef } from "react";
 import { useRecoilState } from "recoil";
 
-export default function MainPageStyle(props: {
+export default function MainPageStyleStep(props: {
   onStepMove: (step: number) => void;
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
