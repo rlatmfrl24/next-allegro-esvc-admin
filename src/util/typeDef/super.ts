@@ -21,4 +21,7 @@ export type CompanyThemeType = {
     icon: any;
     primaryColor: string;
   };
+  backgroundImages: File[];
+  mainText: string;
+  subText: string;
 };

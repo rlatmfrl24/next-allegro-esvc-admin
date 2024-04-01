@@ -13,6 +13,7 @@ import {
 
 import BasicInformationStep from "./step-basic-information";
 import ThemeStyleStep from "./step-theme-style";
+import MainPageStyle from "./step-main-page-style";
 
 export default function CreateCompany() {
   const tabBackgroundStyle = {
@@ -73,7 +74,7 @@ export default function CreateCompany() {
                 />
               ),
               1: <ThemeStyleStep onStepMove={(step) => setCurrentStep(step)} />,
-              2: "Main Page Style",
+              2: <MainPageStyle onStepMove={(step) => setCurrentStep(step)} />,
               3: "Menu Management",
               4: "System Configuration",
               5: "Business Configuration",
