@@ -1,8 +1,10 @@
 import { DividerComponent } from "@/app/components/divider";
 import { MdTypography } from "@/app/components/typography";
 import {
+  MdChipSet,
   MdFilledButton,
   MdIcon,
+  MdInputChip,
   MdOutlinedButton,
   MdRippleEffect,
   MdTextButton,
@@ -20,9 +22,13 @@ import IconThemeDarkBlue from "@/../public/assets/img_theme_darkblue.svg";
 import IconThemeJeal from "@/../public/assets/img_theme_jeal.svg";
 import IconThemeCustom from "@/../public/assets/img_theme_custom.svg";
 import DashboardPreview from "@/app/preview/dashboard/page";
-import { useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { createMDTheme } from "@/util/theme";
 import ColorPicker from "@/app/components/color-picker";
+import { CurrentCompanyState } from "@/store/super.store";
+import { useRecoilState } from "recoil";
+import { faker } from "@faker-js/faker";
+import RemovableChip from "@/app/components/removable-chip";
 
 export default function ThemeStyleStep(props: {
   onStepMove: (step: number) => void;
@@ -80,11 +86,31 @@ export default function ThemeStyleStep(props: {
     },
   ];
 
-  const [selectedTheme, setSelectedTheme] = useState(colorThemes[8]);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [currentCompanyStore, setCurrentCompanyStore] =
+    useRecoilState(CurrentCompanyState);
+  const [selectedTheme, setSelectedTheme] = useState(
+    currentCompanyStore.themeStyle.theme
+      ? currentCompanyStore.themeStyle.theme
+      : colorThemes[0]
+  );
 
   useEffect(() => {
     createMDTheme(selectedTheme.primaryColor);
-  }, [selectedTheme]);
+    setCurrentCompanyStore({
+      ...currentCompanyStore,
+      themeStyle: {
+        ...currentCompanyStore.themeStyle,
+        theme: selectedTheme,
+      },
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTheme, setCurrentCompanyStore]);
+
+  useEffect(() => {
+    console.log(currentCompanyStore.themeStyle.logo);
+  }, [currentCompanyStore]);
 
   return (
     <div className="flex flex-col gap-4 flex-1">
@@ -122,12 +148,61 @@ export default function ThemeStyleStep(props: {
           <MdTypography variant="body" size="large" prominent>
             Logo Upload
           </MdTypography>
-          <MdOutlinedButton className="w-fit">
-            <MdIcon slot="icon">
-              <Upload fontSize="small" />
-            </MdIcon>
-            Upload
-          </MdOutlinedButton>
+          <div className="flex items-center gap-2">
+            <MdOutlinedButton
+              className="w-fit"
+              disabled={currentCompanyStore.themeStyle.logo ? true : false}
+              onClick={() => {
+                fileRef.current?.click();
+              }}
+            >
+              <MdIcon slot="icon">
+                <Upload fontSize="small" />
+              </MdIcon>
+              Upload
+            </MdOutlinedButton>
+            <MdChipSet>
+              {currentCompanyStore.themeStyle.logo && (
+                <RemovableChip
+                  label={currentCompanyStore.themeStyle.logo.name}
+                  onRemove={() => {
+                    setCurrentCompanyStore((prev) => {
+                      return {
+                        ...prev,
+                        themeStyle: {
+                          ...prev.themeStyle,
+                          logo: null,
+                        },
+                      };
+                    });
+                  }}
+                />
+              )}
+            </MdChipSet>
+          </div>
+
+          <input
+            type="file"
+            ref={fileRef}
+            hidden
+            accept="image/*"
+            onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setCurrentCompanyStore((prev) => {
+                  return {
+                    ...prev,
+                    themeStyle: {
+                      ...prev.themeStyle,
+                      logo: file,
+                    },
+                  };
+                });
+
+                e.target.value = "";
+              }
+            }}
+          />
           <DividerComponent className="border-dotted my-2" />
           <MdTypography variant="body" size="large" prominent>
             Color Theme

@@ -13,3 +13,12 @@ export type CompanyType = {
   zipCode: string;
   email: string;
 };
+
+export type CompanyThemeType = {
+  logo: File | null;
+  theme: {
+    name: string;
+    icon: any;
+    primaryColor: string;
+  };
+};
