@@ -205,8 +205,7 @@ const FirstMenuItem = (props: { item: MenuItemType }) => {
         <DragHandle
           {...attributes}
           {...listeners}
-          focusable={false}
-          className="text-outlineVariant "
+          className="text-outlineVariant outline-none cursor-move"
         />
         <MdTypography
           variant="label"
