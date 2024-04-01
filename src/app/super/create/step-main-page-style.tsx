@@ -164,7 +164,7 @@ export default function MainPageStyle(props: {
           >
             Preview
           </MdTypography>
-          <div className="flex justify-center py-12 px-12 overflow-hidden flex-auto h-0">
+          <div className="flex justify-center p-6 overflow-hidden flex-auto h-0">
             <LandingPreview />
           </div>
         </div>

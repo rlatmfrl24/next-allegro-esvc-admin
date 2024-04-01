@@ -40,7 +40,7 @@ export default function DashboardPreview() {
 
   return (
     <div
-      className="bg-surfaceDim flex overflow-hidden relative rounded-3xl shadow-lg w-[1280px] flex-1"
+      className="bg-surfaceDim flex overflow-hidden relative rounded-3xl shadow-lg w-[1280px] h-[840px] flex-1"
       style={{
         zoom: 0.6,
       }}
