@@ -8,3 +8,10 @@ export const CurrentCompanyState = atom({
     themeStyle: {} as CompanyThemeType,
   },
 });
+
+export const MenuManagementState = atom({
+  key: "menuManagement",
+  default: {
+    deactivatedMenuIds: [] as string[],
+  },
+});
