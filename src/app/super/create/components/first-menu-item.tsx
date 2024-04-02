@@ -250,7 +250,7 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
                   <SecondMenuItem
                     key={item.id}
                     item={item}
-                    parentId={props.item.id}
+                    parent={props.item}
                   />
                 ))}
               </SortableContext>
