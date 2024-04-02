@@ -2,6 +2,14 @@ import { DividerComponent } from "@/app/components/divider";
 import { MdTypography } from "@/app/components/typography";
 import { MdIcon, MdTextButton } from "@/util/md3";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { GridSelectComponent } from "./components/grid-select";
+import {
+  DateFormatOptions,
+  LanguageOptions,
+  MaxPageSizeOptions,
+  SearchPeriodOptions,
+  TimeZoneOptions,
+} from "./constants";
 
 type SystemConfigurationStepProps = {
   dateFormat: string;
@@ -51,19 +59,29 @@ export default function SystemConfigurationStep(props: {
         <BaseItem isHeader>Value</BaseItem>
         <BaseItem>1</BaseItem>
         <BaseItem>Date Format</BaseItem>
-        <BaseItem>Date Format</BaseItem>
+        <div className="border-b border-b-outlineVariant">
+          <GridSelectComponent options={DateFormatOptions} />
+        </div>
         <BaseItem>2</BaseItem>
         <BaseItem>Search Period</BaseItem>
-        <BaseItem>Search Period</BaseItem>
+        <div className="border-b border-b-outlineVariant">
+          <GridSelectComponent options={SearchPeriodOptions} />
+        </div>
         <BaseItem>3</BaseItem>
         <BaseItem>Max Page Size</BaseItem>
-        <BaseItem>Max Page Size</BaseItem>
+        <div className="border-b border-b-outlineVariant">
+          <GridSelectComponent options={MaxPageSizeOptions} />
+        </div>
         <BaseItem>4</BaseItem>
         <BaseItem>Time Zone</BaseItem>
-        <BaseItem>Time Zone</BaseItem>
+        <div className="border-b border-b-outlineVariant">
+          <GridSelectComponent options={TimeZoneOptions} />
+        </div>
         <BaseItem>5</BaseItem>
         <BaseItem>Language</BaseItem>
-        <BaseItem>Language</BaseItem>
+        <div className="border-b border-b-outlineVariant">
+          <GridSelectComponent options={LanguageOptions} />
+        </div>
       </div>
     </div>
   );

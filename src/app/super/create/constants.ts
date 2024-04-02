@@ -403,3 +403,51 @@ export const menuItems: MenuItemType[] = [
     ],
   },
 ];
+
+export const DateFormatOptions = [
+  "YYYY-MM-DD",
+  "YY-MM-DD",
+  "YY-MON-DD",
+  "MM-DD-YYYY",
+  "MM-DD-YY",
+  "MON-DD-YY",
+  "DD-MM-YYYY",
+  "DD-MM-YY",
+  "DD-MON-YY",
+  "YYYY/MM/DD",
+  "YY/MM-DD",
+  "YY/MON/DD",
+  "MM/DD/YYYY",
+  "MM/DD/YY",
+  "MON/DD-YY",
+  "DD/MM/YYYY",
+  "DD/MON/YY",
+];
+
+export const SearchPeriodOptions = [
+  "1 Week",
+  "2 Weeks",
+  "3 Weeks",
+  "1 Month",
+  "2 Months",
+  "3 Months",
+];
+
+export const TimeZoneOptions = [
+  "GMT-12:00",
+  "GMT-11:00",
+  "GMT-10:00",
+  "GMT-09:00",
+  "GMT-08:00",
+  "GMT-07:00",
+  "GMT+09:00",
+  "GMT+10:00",
+  "GMT+11:00",
+  "GMT+12:00",
+  "GMT+13:00",
+  "GMT+14:00",
+];
+
+export const MaxPageSizeOptions = ["25", "50", "75", "100"];
+
+export const LanguageOptions = ["English", "Korean", "Chinese", "Japanese"];
