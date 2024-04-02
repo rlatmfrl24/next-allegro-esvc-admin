@@ -56,6 +56,7 @@ export default function BusinessConfigurationStep(props: {
                 configuration: {
                   ...companyStore.configuration,
                   useSignUpTerms: !companyStore.configuration.useSignUpTerms,
+                  signUpTermsFile: null,
                 },
               });
             }}
@@ -107,6 +108,7 @@ export default function BusinessConfigurationStep(props: {
                   ...companyStore.configuration,
                   useOnlineQuotesTerms:
                     !companyStore.configuration.useOnlineQuotesTerms,
+                  onlineQuotesTermsFile: null,
                 },
               });
             }}

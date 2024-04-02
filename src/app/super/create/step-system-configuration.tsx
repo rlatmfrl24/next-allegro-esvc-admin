@@ -13,6 +13,7 @@ import {
 import { BaseItem } from "./components/base-configuration-item";
 import { useRecoilState } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";
+import { LanguageSelect } from "./components/language-select";
 
 export default function SystemConfigurationStep(props: {
   onStepMove: (step: number) => void;
@@ -125,7 +126,20 @@ export default function SystemConfigurationStep(props: {
         <BaseItem>5</BaseItem>
         <BaseItem>Language</BaseItem>
         <div className="border-b border-b-outlineVariant">
-          <GridSelectComponent options={LanguageOptions} />
+          <LanguageSelect
+            mainLanguage={companyStore.configuration.mainLanguage}
+            languages={companyStore.configuration.languages}
+            onChange={(result) => {
+              setCompanyStore((prev) => ({
+                ...prev,
+                configuration: {
+                  ...prev.configuration,
+                  mainLanguage: result.main,
+                  languages: result.selections,
+                },
+              }));
+            }}
+          />
         </div>
       </div>
     </div>
