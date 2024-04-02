@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import image1 from "@/../public/images/transfar_1.png";
 import image2 from "@/../public/images/transfar_2.png";
 import image3 from "@/../public/images/transfar_3.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/pagination";
