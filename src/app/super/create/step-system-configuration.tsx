@@ -10,18 +10,15 @@ import {
   SearchPeriodOptions,
   TimeZoneOptions,
 } from "./constants";
-
-type SystemConfigurationStepProps = {
-  dateFormat: string;
-  searchPeriod: string;
-  maxPageSize: number;
-  timeZone: string;
-  language: string[];
-};
+import { BaseItem } from "./components/base-configuration-item";
+import { useRecoilState } from "recoil";
+import { CurrentCompanyState } from "@/store/super.store";
 
 export default function SystemConfigurationStep(props: {
   onStepMove: (step: number) => void;
 }) {
+  const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
+
   return (
     <div className="flex flex-col gap-4 flex-1">
       <div className="flex items-center justify-between">
@@ -60,22 +57,70 @@ export default function SystemConfigurationStep(props: {
         <BaseItem>1</BaseItem>
         <BaseItem>Date Format</BaseItem>
         <div className="border-b border-b-outlineVariant">
-          <GridSelectComponent options={DateFormatOptions} />
+          <GridSelectComponent
+            initialSelection={companyStore.configuration.dateFormat}
+            options={DateFormatOptions}
+            onChange={(selection) => {
+              setCompanyStore((prev) => ({
+                ...prev,
+                configuration: {
+                  ...prev.configuration,
+                  dateFormat: selection,
+                },
+              }));
+            }}
+          />
         </div>
         <BaseItem>2</BaseItem>
         <BaseItem>Search Period</BaseItem>
         <div className="border-b border-b-outlineVariant">
-          <GridSelectComponent options={SearchPeriodOptions} />
+          <GridSelectComponent
+            initialSelection={companyStore.configuration.searchPeriod}
+            options={SearchPeriodOptions}
+            onChange={(selection) => {
+              setCompanyStore((prev) => ({
+                ...prev,
+                configuration: {
+                  ...prev.configuration,
+                  searchPeriod: selection,
+                },
+              }));
+            }}
+          />
         </div>
         <BaseItem>3</BaseItem>
         <BaseItem>Max Page Size</BaseItem>
         <div className="border-b border-b-outlineVariant">
-          <GridSelectComponent options={MaxPageSizeOptions} />
+          <GridSelectComponent
+            initialSelection={companyStore.configuration.maxPageSize.toString()}
+            onChange={(selection) => {
+              setCompanyStore((prev) => ({
+                ...prev,
+                configuration: {
+                  ...prev.configuration,
+                  maxPageSize: parseInt(selection),
+                },
+              }));
+            }}
+            options={MaxPageSizeOptions}
+          />
         </div>
         <BaseItem>4</BaseItem>
         <BaseItem>Time Zone</BaseItem>
         <div className="border-b border-b-outlineVariant">
-          <GridSelectComponent options={TimeZoneOptions} />
+          <GridSelectComponent
+            initialSelection={companyStore.configuration.timeZone}
+            onChange={(selection) => {
+              setCompanyStore((prev) => ({
+                ...prev,
+                configuration: {
+                  ...prev.configuration,
+                  timeZone: selection,
+                },
+              }));
+            }}
+            options={TimeZoneOptions}
+          />
         </div>
         <BaseItem>5</BaseItem>
         <BaseItem>Language</BaseItem>
@@ -86,25 +131,3 @@ export default function SystemConfigurationStep(props: {
     </div>
   );
 }
-
-const BaseItem = ({
-  children,
-  isHeader,
-  className,
-}: {
-  children: React.ReactNode;
-  isHeader?: boolean;
-  className?: string;
-}) => {
-  return (
-    <div
-      className={`h-12 p-2 flex items-center border-b border-b-outlineVariant ${
-        className ? className : ""
-      } ${isHeader ? "bg-surfaceVariant" : ""}`}
-    >
-      <MdTypography variant="body" size="medium">
-        {children}
-      </MdTypography>
-    </div>
-  );
-};

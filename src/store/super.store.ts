@@ -8,6 +8,18 @@ export const CurrentCompanyState = atom({
     basicInformation: {} as CompanyType,
     themeStyle: {} as CompanyThemeType,
     menuManagement: menuItems,
+    configuration: {
+      dateFormat: "YYYY-MM-DD",
+      searchPeriod: "1 Week",
+      maxPageSize: 25,
+      timeZone: "GMT-12:00",
+      language: ["English"],
+      useSignUpTerms: false,
+      signUpTermsFile: null as File | null,
+      useOnlineQuotesTerms: false,
+      onlineQuotesTermsFile: null as File | null,
+      dormantPeriod: 180,
+    },
   },
 });
 

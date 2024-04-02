@@ -22,18 +22,24 @@ import { ArrowDropDown, Check } from "@mui/icons-material";
 
 export const GridSelectComponent = ({
   className,
+  initialSelection,
   options,
   onChange,
 }: {
   className?: string;
+  initialSelection?: string;
   options: string[];
   onChange?: (value: string) => void;
 }) => {
   const [maxHeight, setMaxHeight] = useState<number | null>(null);
-  const [selection, setSelection] = useState(options[0]);
+  const [selection, setSelection] = useState(
+    initialSelection ? initialSelection : options[0]
+  );
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(
+    options.indexOf(selection)
+  );
 
   const listRef = useRef<any[]>([]);
   const { refs, floatingStyles, context } = useFloating({
@@ -81,7 +87,9 @@ export const GridSelectComponent = ({
     if (onChange) {
       onChange(selection);
     }
-  }, [onChange, selection]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selection]);
 
   return (
     <>
