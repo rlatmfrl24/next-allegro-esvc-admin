@@ -15,5 +15,6 @@ export const MenuManagementState = atom({
   key: "menuManagement",
   default: {
     deactivatedMenuIds: [] as string[],
+    currentEditingMenuId: "",
   },
 });
