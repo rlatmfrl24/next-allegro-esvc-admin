@@ -22,6 +22,7 @@
     "@material/web": "^1.4.0",
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
+    "@tanstack/react-table": "^8.15.3",
     "@types/lodash": "^4.17.0",
     "@types/luxon": "^3.4.2",
     "classnames": "^2.5.1",
