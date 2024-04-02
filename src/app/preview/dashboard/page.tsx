@@ -32,11 +32,15 @@ import {
 } from "@mui/icons-material";
 
 import QuickChart from "./chart";
+import { useRecoilValue } from "recoil";
+import { CurrentCompanyState } from "@/store/super.store";
 
 export default function DashboardPreview() {
+  const logo = useRecoilValue(CurrentCompanyState).themeStyle.logo;
+
   return (
     <div
-      className="bg-surfaceDim flex overflow-hidden relative rounded-3xl shadow-lg w-[1280px] flex-1"
+      className="bg-surfaceDim flex overflow-hidden relative rounded-3xl shadow-lg w-[1280px] h-[840px] flex-1"
       style={{
         zoom: 0.6,
       }}
@@ -80,7 +84,17 @@ export default function DashboardPreview() {
       </div>
       <div className="flex-1 bg-surfaceContainerHighest flex flex-col rounded-3xl">
         <div className="min-h-12 flex items-center px-5">
-          <DividerComponent orientation="vertical" />
+          {logo && (
+            <Image
+              src={URL.createObjectURL(logo)}
+              alt="logo"
+              objectFit="contain"
+              className="max-h-12"
+              width={120}
+              height={48}
+            />
+          )}
+          <DividerComponent orientation="vertical" className="mx-2" />
           <MdTypography variant="title" size="large" className="text-onSurface">
             E-SERVICE
           </MdTypography>
