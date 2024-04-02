@@ -16,7 +16,7 @@ import {
 } from "@dnd-kit/sortable";
 import { menuItems } from "./constants";
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { CurrentCompanyState, MenuManagementState } from "@/store/super.store";
 import { FirstMenuItem } from "./components/first-menu-item";
 
@@ -26,15 +26,7 @@ export default function MenuManagementStep(props: {
   const [activeId, setActiveId] = useState(null);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
-  const [menuStore, setMenuStore] = useRecoilState(MenuManagementState);
-
-  useEffect(() => {
-    console.log(menuStore);
-  }, [menuStore]);
-
-  useEffect(() => {
-    console.log(companyStore.menuManagement);
-  }, [companyStore.menuManagement]);
+  const setMenuStore = useSetRecoilState(MenuManagementState);
 
   return (
     <div className="flex flex-col gap-4 flex-1">

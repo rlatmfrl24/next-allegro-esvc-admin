@@ -15,6 +15,8 @@ import BasicInformationStep from "./step-basic-information";
 import ThemeStyleStep from "./step-theme-style";
 import MainPageStyleStep from "./step-main-page-style";
 import MenuManagementStep from "./step-menu-management";
+import SystemConfigurationStep from "./step-system-configuration";
+import BusinessConfigurationStep from "./step-business-configuration";
 
 export default function CreateCompany() {
   const tabBackgroundStyle = {
@@ -85,8 +87,16 @@ export default function CreateCompany() {
                   onStepMove={(step) => setCurrentStep(step)}
                 />
               ),
-              4: "System Configuration",
-              5: "Business Configuration",
+              4: (
+                <SystemConfigurationStep
+                  onStepMove={(step) => setCurrentStep(step)}
+                />
+              ),
+              5: (
+                <BusinessConfigurationStep
+                  onStepMove={(step) => setCurrentStep(step)}
+                />
+              ),
             }[currentStep]
           }
         </div>
