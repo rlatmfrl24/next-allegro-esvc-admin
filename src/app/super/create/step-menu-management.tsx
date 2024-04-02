@@ -190,6 +190,45 @@ const FirstMenuItem = (props: { item: MenuItemType }) => {
     }
   }, [menuStore.deactivatedMenuIds, props.item.id, subItems]);
 
+  function handleToggle(e: any) {
+    if (e.currentTarget.selected) {
+      setMenuStore((prev) => {
+        if (subItems.length === 0) {
+          return {
+            ...prev,
+            deactivatedMenuIds: [...prev.deactivatedMenuIds, props.item.id],
+          };
+        } else {
+          return {
+            ...prev,
+            deactivatedMenuIds: [
+              ...prev.deactivatedMenuIds,
+              ...subItems.map((item) => props.item.id + "/" + item.id),
+            ],
+          };
+        }
+      });
+    } else {
+      setMenuStore((prev) => {
+        if (subItems.length === 0) {
+          return {
+            ...prev,
+            deactivatedMenuIds: prev.deactivatedMenuIds.filter(
+              (id) => id !== props.item.id
+            ),
+          };
+        } else {
+          return {
+            ...prev,
+            deactivatedMenuIds: prev.deactivatedMenuIds.filter(
+              (id) => !id.startsWith(props.item.id + "/")
+            ),
+          };
+        }
+      });
+    }
+  }
+
   return (
     <div
       ref={setNodeRef}
@@ -219,45 +258,7 @@ const FirstMenuItem = (props: { item: MenuItemType }) => {
           selected={isActivated}
           onClick={(e) => {
             e.stopPropagation();
-            if (e.currentTarget.selected) {
-              setMenuStore((prev) => {
-                if (subItems.length === 0) {
-                  return {
-                    ...prev,
-                    deactivatedMenuIds: [
-                      ...prev.deactivatedMenuIds,
-                      props.item.id,
-                    ],
-                  };
-                } else {
-                  return {
-                    ...prev,
-                    deactivatedMenuIds: [
-                      ...prev.deactivatedMenuIds,
-                      ...subItems.map((item) => props.item.id + "/" + item.id),
-                    ],
-                  };
-                }
-              });
-            } else {
-              setMenuStore((prev) => {
-                if (subItems.length === 0) {
-                  return {
-                    ...prev,
-                    deactivatedMenuIds: prev.deactivatedMenuIds.filter(
-                      (id) => id !== props.item.id
-                    ),
-                  };
-                } else {
-                  return {
-                    ...prev,
-                    deactivatedMenuIds: prev.deactivatedMenuIds.filter(
-                      (id) => !id.startsWith(props.item.id + "/")
-                    ),
-                  };
-                }
-              });
-            }
+            handleToggle(e);
           }}
         />
         <MdIcon className="border border-onSurface rounded-full w-8 h-8 relative cursor-pointer ml-8">
@@ -321,6 +322,31 @@ const SecondMenuItem = (props: { item: MenuItemType; parentId: string }) => {
     );
   }, [menuStore.deactivatedMenuIds, props.item.id, props.parentId]);
 
+  function handleToggle() {
+    setMenuStore((prev) => {
+      if (
+        prev.deactivatedMenuIds.includes(props.parentId + "/" + props.item.id)
+      ) {
+        return {
+          ...prev,
+          deactivatedMenuIds: prev.deactivatedMenuIds.filter(
+            (id) =>
+              id !== props.parentId + "/" + props.item.id &&
+              !id.startsWith(props.parentId + "/" + props.item.id)
+          ),
+        };
+      } else {
+        return {
+          ...prev,
+          deactivatedMenuIds: [
+            ...prev.deactivatedMenuIds,
+            props.parentId + "/" + props.item.id,
+          ],
+        };
+      }
+    });
+  }
+
   return (
     <div
       ref={setNodeRef}
@@ -329,7 +355,7 @@ const SecondMenuItem = (props: { item: MenuItemType; parentId: string }) => {
     >
       <div className="border-2 rounded-lg border-secondaryContainer h-16 max-h-16 flex items-center px-4">
         <DragHandle
-          className="text-outlineVariant"
+          className="text-outlineVariant outline-none cursor-move"
           {...attributes}
           {...listeners}
         />
@@ -345,30 +371,7 @@ const SecondMenuItem = (props: { item: MenuItemType; parentId: string }) => {
           selected={isActivated}
           onClick={(e) => {
             e.stopPropagation();
-            setMenuStore((prev) => {
-              if (
-                prev.deactivatedMenuIds.includes(
-                  props.parentId + "/" + props.item.id
-                )
-              ) {
-                return {
-                  ...prev,
-                  deactivatedMenuIds: prev.deactivatedMenuIds.filter(
-                    (id) =>
-                      id !== props.parentId + "/" + props.item.id &&
-                      !id.startsWith(props.parentId + "/" + props.item.id)
-                  ),
-                };
-              } else {
-                return {
-                  ...prev,
-                  deactivatedMenuIds: [
-                    ...prev.deactivatedMenuIds,
-                    props.parentId + "/" + props.item.id,
-                  ],
-                };
-              }
-            });
+            handleToggle();
           }}
         />
         <MdIcon className="border border-onSurface rounded-full w-8 h-8 relative cursor-pointer ml-8 mr-10">
