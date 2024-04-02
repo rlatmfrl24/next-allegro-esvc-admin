@@ -25,3 +25,12 @@ export type CompanyThemeType = {
   mainText: string;
   subText: string;
 };
+
+export type MenuItemType = {
+  id: string;
+  name: string;
+  originName: string;
+  link?: string;
+  isAvailable: boolean;
+  subMenu?: MenuItemType[];
+};
