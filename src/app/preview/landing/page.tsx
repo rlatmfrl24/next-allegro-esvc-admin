@@ -1,3 +1,5 @@
+"use client";
+
 import { DividerComponent } from "@/app/components/divider";
 import { MdTypography } from "@/app/components/typography";
 import { CurrentCompanyState } from "@/store/super.store";
