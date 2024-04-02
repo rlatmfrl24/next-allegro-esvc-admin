@@ -19,7 +19,6 @@ import {
 } from "@dnd-kit/core";
 import {
   SortableContext,
-  arrayMove,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
@@ -28,15 +27,14 @@ import { MenuItemType } from "@/util/typeDef/super";
 import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { MenuManagementState } from "@/store/super.store";
+import { CurrentCompanyState, MenuManagementState } from "@/store/super.store";
 
 export default function MenuManagementStep(props: {
   onStepMove: (step: number) => void;
 }) {
-  const [items, setItems] = useState(menuItems);
   const [activeId, setActiveId] = useState(null);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
-
+  const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
   const [menuStore, setMenuStore] = useRecoilState(MenuManagementState);
 
   useEffect(() => {
@@ -88,16 +86,21 @@ export default function MenuManagementStep(props: {
           onDragEnd={handleDragEnd}
         >
           <SortableContext
-            items={items.map((item) => item.id)}
+            items={companyStore.menuManagement.map((item) => item.id)}
             strategy={verticalListSortingStrategy}
           >
-            {items.map((item) => (
+            {companyStore.menuManagement.map((item) => (
               <FirstMenuItem key={item.id} item={item} />
             ))}
           </SortableContext>
           <DragOverlay>
-            {activeId && items.find((i) => i.id === activeId) ? (
-              <FirstMenuItem item={items.find((i) => i.id === activeId)!} />
+            {activeId &&
+            companyStore.menuManagement.find((i) => i.id === activeId) ? (
+              <FirstMenuItem
+                item={
+                  companyStore.menuManagement.find((i) => i.id === activeId)!
+                }
+              />
             ) : null}
           </DragOverlay>
         </DndContext>
@@ -116,11 +119,15 @@ export default function MenuManagementStep(props: {
     }
 
     if (active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.findIndex((i) => i.id === active.id);
-        const newIndex = items.findIndex((i) => i.id === over.id);
-
-        return arrayMove(items, oldIndex, newIndex);
+      setCompanyStore((prev) => {
+        const newMenu = [...prev.menuManagement];
+        const oldIndex = newMenu.findIndex((i) => i.id === active.id);
+        const newIndex = newMenu.findIndex((i) => i.id === over.id);
+        newMenu.splice(newIndex, 0, newMenu.splice(oldIndex, 1)[0]);
+        return {
+          ...prev,
+          menuManagement: newMenu,
+        };
       });
     }
   }
@@ -130,7 +137,13 @@ export default function MenuManagementStep(props: {
   }
 
   function ResetToDefaultMenu() {
-    setItems(menuItems);
+    // setItems(menuItems);
+    setCompanyStore((prev) => {
+      return {
+        ...prev,
+        menuManagement: menuItems,
+      };
+    });
     setMenuStore({
       deactivatedMenuIds: [],
     });
@@ -152,8 +165,13 @@ const FirstMenuItem = (props: { item: MenuItemType }) => {
     transition,
   };
   const [isExpanded, setIsExpanded] = useState(false);
-  const [subItems, setSubItems] = useState(props.item.subMenu || []);
+  const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
   const [menuStore, setMenuStore] = useRecoilState(MenuManagementState);
+
+  const subItems = companyStore.menuManagement.find(
+    (item) => item.id === props.item.id
+  )!.subMenu!;
+
   const [isActivated, setIsActivated] = useState(
     subItems.length > 0
       ? !subItems.every((item) =>
@@ -169,11 +187,26 @@ const FirstMenuItem = (props: { item: MenuItemType }) => {
     }
 
     if (active.id !== over.id) {
-      setSubItems((items) => {
-        const oldIndex = items.findIndex((i) => i.id === active.id);
-        const newIndex = items.findIndex((i) => i.id === over.id);
-
-        return arrayMove(items, oldIndex, newIndex);
+      setCompanyStore((prev) => {
+        const newSubItems = [
+          ...prev.menuManagement.find((i) => i.id === props.item.id)!.subMenu!,
+        ];
+        const oldIndex = newSubItems.findIndex((i) => i.id === active.id);
+        const newIndex = newSubItems.findIndex((i) => i.id === over.id);
+        newSubItems.splice(newIndex, 0, newSubItems.splice(oldIndex, 1)[0]);
+        const newMenu = [...prev.menuManagement];
+        const index = newMenu.findIndex((i) => i.id === props.item.id);
+        return {
+          ...prev,
+          menuManagement: [
+            ...newMenu.slice(0, index),
+            {
+              ...newMenu[index],
+              subMenu: newSubItems,
+            },
+            ...newMenu.slice(index + 1),
+          ],
+        };
       });
     }
   }
