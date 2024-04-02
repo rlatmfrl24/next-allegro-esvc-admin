@@ -1,5 +1,5 @@
 import { MdTypography } from "@/app/components/typography";
-import { MenuManagementState } from "@/store/super.store";
+import { CurrentCompanyState, MenuManagementState } from "@/store/super.store";
 import {
   MdIcon,
   MdOutlinedTextField,
@@ -8,8 +8,8 @@ import {
 } from "@/util/md3";
 import { useSortable } from "@dnd-kit/sortable";
 import { Check, DragHandle, EditOutlined } from "@mui/icons-material";
-import { useState, useEffect, useMemo } from "react";
-import { useRecoilState } from "recoil";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { CSS } from "@dnd-kit/utilities";
 import { MenuItemType } from "@/util/typeDef/super";
 import { customerWebLink } from "../constants";
@@ -33,6 +33,8 @@ export const SecondMenuItem = (props: {
     transition,
   };
   const [menuStore, setMenuStore] = useRecoilState(MenuManagementState);
+  const setCompanyStore = useSetRecoilState(CurrentCompanyState);
+  const [newMenuName, setNewMenuName] = useState(props.item.name);
   const [isActivated, setIsActivated] = useState(
     !menuStore.deactivatedMenuIds.includes(
       props.parent.id + "/" + props.item.id
@@ -102,17 +104,21 @@ export const SecondMenuItem = (props: {
           <MdTypography
             variant="label"
             size="small"
-            className="text-outlineVariant mr-4"
+            className="text-outlineVariant"
           >
             {props.item.originName}
           </MdTypography>
-          <MdSwitch
-            selected={isActivated}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleToggle();
-            }}
-          />
+
+          {!isEditing && (
+            <MdSwitch
+              className="ml-4"
+              selected={isActivated}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggle();
+              }}
+            />
+          )}
 
           <MdIcon
             className={`border border-onSurface rounded-full w-8 h-8 relative cursor-pointer ml-8 mr-10 ${
@@ -126,6 +132,33 @@ export const SecondMenuItem = (props: {
                   ? ""
                   : props.parent.id + "/" + props.item.id,
               }));
+
+              if (isEditing) {
+                // update new name to current sub menu
+                setCompanyStore((prev) => {
+                  const newMenuManagement = prev.menuManagement.map((menu) => {
+                    if (menu.id === props.parent.id) {
+                      return {
+                        ...menu,
+                        subMenu: menu.subMenu!.map((subMenu) => {
+                          if (subMenu.id === props.item.id) {
+                            return {
+                              ...subMenu,
+                              name: newMenuName,
+                            };
+                          }
+                          return subMenu;
+                        }),
+                      };
+                    }
+                    return menu;
+                  });
+                  return {
+                    ...prev,
+                    menuManagement: newMenuManagement,
+                  };
+                });
+              }
             }}
           >
             <MdRippleEffect />
@@ -134,7 +167,13 @@ export const SecondMenuItem = (props: {
         </div>
         {isEditing && (
           <div className="px-4 py-6 flex gap-4">
-            <MdOutlinedTextField label="Name" value={props.item.name} />
+            <MdOutlinedTextField
+              label="Menu Name"
+              value={newMenuName}
+              onInput={(e) => {
+                setNewMenuName(e.currentTarget.value);
+              }}
+            />
             <NAOutlinedTextField
               readOnly
               className="flex-1"

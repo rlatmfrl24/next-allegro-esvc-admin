@@ -41,6 +41,7 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+  const [newMenuName, setNewMenuName] = useState(props.item.name);
   const [isExpanded, setIsExpanded] = useState(false);
   const currentEditingMenuId =
     useRecoilValue(MenuManagementState).currentEditingMenuId;
@@ -203,6 +204,27 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
                 ...prev,
                 currentEditingMenuId: isEditing ? "" : props.item.id,
               }));
+
+              if (isEditing) {
+                //update new menu name
+                setCompanyStore((prev) => {
+                  const newMenu = [...prev.menuManagement];
+                  const index = newMenu.findIndex(
+                    (i) => i.id === props.item.id
+                  );
+                  return {
+                    ...prev,
+                    menuManagement: [
+                      ...newMenu.slice(0, index),
+                      {
+                        ...newMenu[index],
+                        name: newMenuName,
+                      },
+                      ...newMenu.slice(index + 1),
+                    ],
+                  };
+                });
+              }
             }}
           >
             <MdRippleEffect />
@@ -218,7 +240,13 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
         </div>
         {isEditing && (
           <div className="px-4 py-6 flex gap-4">
-            <MdOutlinedTextField label="Name" value={props.item.name} />
+            <MdOutlinedTextField
+              label="Name"
+              value={newMenuName}
+              onInput={(e) => {
+                setNewMenuName(e.currentTarget.value);
+              }}
+            />
             <NAOutlinedTextField
               readOnly
               className="flex-1"

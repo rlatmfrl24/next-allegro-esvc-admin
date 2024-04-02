@@ -32,6 +32,10 @@ export default function MenuManagementStep(props: {
     console.log(menuStore);
   }, [menuStore]);
 
+  useEffect(() => {
+    console.log(companyStore.menuManagement);
+  }, [companyStore.menuManagement]);
+
   return (
     <div className="flex flex-col gap-4 flex-1">
       <div className="flex items-center justify-between">
