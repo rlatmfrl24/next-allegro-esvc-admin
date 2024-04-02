@@ -16,6 +16,7 @@ import {
   useFloating,
   useInteractions,
   useListNavigation,
+  useTransitionStyles,
 } from "@floating-ui/react";
 import { ArrowDropDown, Check } from "@mui/icons-material";
 
@@ -29,11 +30,11 @@ export const GridSelectComponent = ({
   onChange?: (value: string) => void;
 }) => {
   const [maxHeight, setMaxHeight] = useState<number | null>(null);
-
   const [selection, setSelection] = useState(options[0]);
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
   const listRef = useRef<any[]>([]);
   const { refs, floatingStyles, context } = useFloating({
     open: isOptionOpen,
@@ -51,6 +52,16 @@ export const GridSelectComponent = ({
       }),
     ],
     whileElementsMounted: autoUpdate,
+  });
+
+  const { isMounted, styles } = useTransitionStyles(context, {
+    duration: {
+      open: 200,
+      close: 100,
+    },
+    initial: { opacity: 0, transform: "translateY(-8px)" },
+    open: { opacity: 1, transform: "translateY(0)" },
+    close: { opacity: 0, transform: "translateY(-8px)" },
   });
 
   const { getFloatingProps, getReferenceProps, getItemProps } = useInteractions(
@@ -92,57 +103,62 @@ export const GridSelectComponent = ({
           />
         </MdIcon>
       </div>
-      {isOptionOpen && (
+      {isMounted && (
         <FloatingFocusManager context={context}>
           <div
             ref={refs.setFloating}
-            style={
-              {
-                "--md-elevation-level": 3,
-                ...floatingStyles,
-              } as CSSProperties
-            }
+            style={floatingStyles}
             {...getFloatingProps()}
-            className="relative rounded outline-none z-10"
+            className="z-10"
           >
-            <MdElevation />
-            <MdList
-              className="relative rounded overflow-y-auto"
-              style={{ maxHeight } as CSSProperties}
+            <div
+              style={
+                {
+                  "--md-elevation-level": 3,
+                  ...styles,
+                } as CSSProperties
+              }
+              className="relative rounded outline-none"
             >
-              <OverlayScrollbarsComponent defer>
-                {options.map((option, index) => (
-                  <MdListItem
-                    key={option}
-                    tabIndex={activeIndex === index ? 0 : -1}
-                    ref={(node) => {
-                      listRef.current[index] = node;
-                    }}
-                    {...getItemProps()}
-                    className={`hover:bg-surfaceDim cursor-pointer select-none ${
-                      activeIndex === index ? "bg-surfaceDim" : ""
-                    } ${selection === option ? "bg-surfaceDim" : ""}`}
-                    onClick={() => {
-                      setSelectedIndex(index);
-                      setSelection(option);
-                      setIsOptionOpen(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
+              <MdElevation />
+              <MdList
+                className="relative rounded overflow-y-auto"
+                style={{ maxHeight } as CSSProperties}
+              >
+                <OverlayScrollbarsComponent defer>
+                  {options.map((option, index) => (
+                    <MdListItem
+                      key={option}
+                      tabIndex={activeIndex === index ? 0 : -1}
+                      ref={(node) => {
+                        listRef.current[index] = node;
+                      }}
+                      {...getItemProps()}
+                      className={`hover:bg-surfaceDim cursor-pointer select-none ${
+                        activeIndex === index ? "bg-surfaceDim" : ""
+                      } ${selection === option ? "bg-surfaceDim" : ""}`}
+                      onClick={() => {
                         setSelectedIndex(index);
                         setSelection(option);
                         setIsOptionOpen(false);
-                      }
-                    }}
-                  >
-                    <MdIcon slot="start">
-                      {selection === option && <Check />}
-                    </MdIcon>
-                    {option}
-                  </MdListItem>
-                ))}
-              </OverlayScrollbarsComponent>
-            </MdList>
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          setSelectedIndex(index);
+                          setSelection(option);
+                          setIsOptionOpen(false);
+                        }
+                      }}
+                    >
+                      <MdIcon slot="start">
+                        {selection === option && <Check />}
+                      </MdIcon>
+                      {option}
+                    </MdListItem>
+                  ))}
+                </OverlayScrollbarsComponent>
+              </MdList>
+            </div>
           </div>
         </FloatingFocusManager>
       )}
