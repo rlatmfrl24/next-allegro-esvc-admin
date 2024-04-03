@@ -14,7 +14,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { menuItems } from "./constants";
+import { defaultMenuItems } from "./constants";
 import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { CurrentCompanyState, MenuManagementState } from "@/store/super.store";
@@ -86,7 +86,7 @@ export default function MenuManagementStep() {
     setCompanyStore((prev) => {
       return {
         ...prev,
-        menuManagement: menuItems,
+        menuManagement: defaultMenuItems,
       };
     });
     setMenuStore({

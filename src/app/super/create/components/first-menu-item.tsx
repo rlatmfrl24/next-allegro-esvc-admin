@@ -247,12 +247,15 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
                 setNewMenuName(e.currentTarget.value);
               }}
             />
-            <NAOutlinedTextField
-              readOnly
-              className="flex-1"
-              label="URL"
-              value={customerWebLink + props.item.link}
-            />
+            {!props.item.subMenu ||
+              (props.item.subMenu.length === 0 && (
+                <NAOutlinedTextField
+                  readOnly
+                  className="flex-1"
+                  label="URL"
+                  value={customerWebLink + props.item.link}
+                />
+              ))}
           </div>
         )}
       </div>

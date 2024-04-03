@@ -1,4 +1,4 @@
-import { menuItems } from "@/app/super/create/constants";
+import { defaultMenuItems } from "@/app/super/create/constants";
 import { CompanyThemeType, CompanyType } from "@/util/typeDef/super";
 import { atom } from "recoil";
 
@@ -7,7 +7,7 @@ export const CurrentCompanyState = atom({
   default: {
     basicInformation: {} as CompanyType,
     themeStyle: {} as CompanyThemeType,
-    menuManagement: menuItems,
+    menuManagement: defaultMenuItems,
     configuration: {
       dateFormat: "YYYY-MM-DD",
       searchPeriod: "1 Week",

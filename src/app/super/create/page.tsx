@@ -19,8 +19,15 @@ import MainPageStyleStep from "./step-main-page-style";
 import MenuManagementStep from "./step-menu-management";
 import SystemConfigurationStep from "./step-system-configuration";
 import BusinessConfigurationStep from "./step-business-configuration";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import {
+  ChevronLeft,
+  ChevronRight,
+  RestartAltOutlined,
+} from "@mui/icons-material";
 import { DividerComponent } from "@/app/components/divider";
+import { useSetRecoilState } from "recoil";
+import { CurrentCompanyState } from "@/store/super.store";
+import { defaultMenuItems } from "./constants";
 
 export default function CreateCompany() {
   const tabBackgroundStyle = {
@@ -28,6 +35,7 @@ export default function CreateCompany() {
   } as CSSProperties;
 
   const [currentStep, setCurrentStep] = useState(0);
+  const setCompanyStore = useSetRecoilState(CurrentCompanyState);
 
   return (
     <div className="px-12 py-6 flex flex-col flex-1">
@@ -88,6 +96,21 @@ export default function CreateCompany() {
                 }
               </MdTypography>
               <div className="flex gap-2 items-center">
+                {currentStep === 3 && (
+                  <MdTextButton
+                    onClick={() => {
+                      setCompanyStore((prev) => ({
+                        ...prev,
+                        menuManagement: defaultMenuItems,
+                      }));
+                    }}
+                  >
+                    <MdIcon slot="icon">
+                      <RestartAltOutlined fontSize="small" />
+                    </MdIcon>
+                    Reset to Default Menu
+                  </MdTextButton>
+                )}
                 <MdTextButton
                   disabled={currentStep === 0}
                   onClick={() => {
