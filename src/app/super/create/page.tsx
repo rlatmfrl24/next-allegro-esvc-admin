@@ -26,7 +26,7 @@ import {
 } from "@mui/icons-material";
 import { DividerComponent } from "@/app/components/divider";
 import { useSetRecoilState } from "recoil";
-import { CurrentCompanyState } from "@/store/super.store";
+import { CurrentCompanyState, MenuManagementState } from "@/store/super.store";
 import { defaultMenuItems } from "../../constants";
 
 export default function CreateCompany() {
@@ -36,6 +36,7 @@ export default function CreateCompany() {
 
   const [currentStep, setCurrentStep] = useState(0);
   const setCompanyStore = useSetRecoilState(CurrentCompanyState);
+  const setMenuStore = useSetRecoilState(MenuManagementState);
 
   return (
     <div className="px-12 py-6 flex flex-col flex-1">
@@ -103,6 +104,10 @@ export default function CreateCompany() {
                         ...prev,
                         menuManagement: defaultMenuItems,
                       }));
+                      setMenuStore({
+                        deactivatedMenuIds: [],
+                        currentEditingMenuId: "",
+                      });
                     }}
                   >
                     <MdIcon slot="icon">

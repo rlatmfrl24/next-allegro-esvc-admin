@@ -1,7 +1,3 @@
-import { DividerComponent } from "@/app/components/divider";
-import { MdTypography } from "@/app/components/typography";
-import { MdIcon, MdTextButton } from "@/util/md3";
-import { ChevronLeft, ChevronRight, Refresh } from "@mui/icons-material";
 import {
   DndContext,
   DragOverlay,
@@ -14,17 +10,15 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { defaultMenuItems } from "../constants";
-import { useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { CurrentCompanyState, MenuManagementState } from "@/store/super.store";
+import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { CurrentCompanyState } from "@/store/super.store";
 import { FirstMenuItem } from "./components/first-menu-item";
 
 export default function MenuManagementStep() {
   const [activeId, setActiveId] = useState(null);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
-  const setMenuStore = useSetRecoilState(MenuManagementState);
 
   return (
     <div className="flex-1 flex flex-col gap-4">
@@ -80,18 +74,5 @@ export default function MenuManagementStep() {
 
   function handleDragEnd() {
     setActiveId(null);
-  }
-
-  function ResetToDefaultMenu() {
-    setCompanyStore((prev) => {
-      return {
-        ...prev,
-        menuManagement: defaultMenuItems,
-      };
-    });
-    setMenuStore({
-      deactivatedMenuIds: [],
-      currentEditingMenuId: "",
-    });
   }
 }
