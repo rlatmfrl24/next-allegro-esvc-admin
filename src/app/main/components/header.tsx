@@ -7,7 +7,7 @@ import {
   MdListItem,
   MdRippleEffect,
 } from "@/util/md3";
-import { MdTypography } from "../components/typography";
+import { MdTypography } from "../../components/typography";
 import { ExpandMore } from "@mui/icons-material";
 import { CSSProperties, useState } from "react";
 import CompanyLogo from "@/../public/logo_transfar_shipping.svg";

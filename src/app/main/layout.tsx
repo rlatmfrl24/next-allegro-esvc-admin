@@ -1,5 +1,5 @@
-import { HeaderComponent } from "./header";
-import SideNavigation from "./side-nav";
+import { HeaderComponent } from "./components/header";
+import SideNavigation from "./components/side-nav";
 
 export default function MainLayout({
   children,
@@ -11,7 +11,7 @@ export default function MainLayout({
       <SideNavigation />
       <nav className="bg-surfaceContainerLow flex-1 rounded-3xl flex flex-col">
         <HeaderComponent />
-        <main className="bg-surfaceContainerLowest flex-1 rounded-3xl">
+        <main className="bg-surfaceContainerLowest flex-1 rounded-3xl px-8 py-6 flex flex-col">
           {children}
         </main>
       </nav>

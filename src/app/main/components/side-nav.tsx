@@ -15,8 +15,8 @@ import { MdIcon, MdRippleEffect } from "@/util/md3";
 import { MenuItemType } from "@/util/typeDef/super";
 import { ArrowDropDown, SettingsOutlined } from "@mui/icons-material";
 
-import { MdTypography } from "../components/typography";
-import { mainMenuItems } from "../constants";
+import { MdTypography } from "../../components/typography";
+import { mainMenuItems } from "../../constants";
 
 export default function SideNavigation() {
   const router = useRouter();
