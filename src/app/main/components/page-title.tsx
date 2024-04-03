@@ -5,13 +5,19 @@ export const PageTitle = ({
   title,
   category,
   updatedDate,
+  className,
 }: {
   category: string;
   title: string;
   updatedDate: DateTime;
+  className?: string;
 }) => {
   return (
-    <div className="flex items-center justify-between">
+    <div
+      className={`flex items-center justify-between ${
+        className ? className : ""
+      }`}
+    >
       <div>
         <MdTypography
           variant="body"

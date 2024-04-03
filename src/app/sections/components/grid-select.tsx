@@ -117,7 +117,7 @@ export const GridSelectComponent = ({
             ref={refs.setFloating}
             style={floatingStyles}
             {...getFloatingProps()}
-            className="z-10"
+            className="z-10 outline-none"
           >
             <div
               style={
@@ -130,7 +130,7 @@ export const GridSelectComponent = ({
             >
               <MdElevation />
               <MdList
-                className="relative rounded overflow-y-auto"
+                className="relative rounded overflow-y-auto outline-none"
                 style={{ maxHeight } as CSSProperties}
               >
                 <OverlayScrollbarsComponent defer>
