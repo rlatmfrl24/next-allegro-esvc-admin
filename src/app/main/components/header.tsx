@@ -62,7 +62,7 @@ export const HeaderComponent = () => {
   ]);
 
   return (
-    <header className="h-16 flex items-center">
+    <header className="min-h-16 flex items-center">
       <div
         className="px-6 relative h-full flex items-center rounded-3xl select-none cursor-pointer"
         ref={refs.setReference}

@@ -1,3 +1,4 @@
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { HeaderComponent } from "./components/header";
 import SideNavigation from "./components/side-nav";
 
@@ -11,7 +12,7 @@ export default function MainLayout({
       <SideNavigation />
       <nav className="bg-surfaceContainerLow flex-1 rounded-3xl flex flex-col">
         <HeaderComponent />
-        <main className="bg-surfaceContainerLowest flex-1 rounded-3xl px-8 py-6 flex flex-col">
+        <main className="bg-surfaceContainerLowest flex-1 rounded-3xl px-8 py-6 flex flex-col overflow-auto">
           {children}
         </main>
       </nav>

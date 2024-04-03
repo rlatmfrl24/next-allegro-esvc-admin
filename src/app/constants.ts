@@ -98,10 +98,10 @@ export const mainMenuItems: MenuItemType[] = [
         subMenu: [],
       },
       {
-        id: "menu-management",
+        id: "menu",
         name: "Menu Management",
         originName: "Menu Management",
-        link: "menu-management",
+        link: "menu",
         isAvailable: true,
         subMenu: [],
       },
