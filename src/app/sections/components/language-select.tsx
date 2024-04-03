@@ -22,7 +22,7 @@ import {
 } from "@floating-ui/react";
 import { ArrowDropDown } from "@mui/icons-material";
 import { CSSProperties, useEffect, useState } from "react";
-import { LanguageOptions } from "../constants";
+import { LanguageOptions } from "../../constants";
 import { flushSync } from "react-dom";
 import { DividerComponent } from "@/app/components/divider";
 

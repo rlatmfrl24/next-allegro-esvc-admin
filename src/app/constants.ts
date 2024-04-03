@@ -65,7 +65,7 @@ export const colorThemes = [
 
 export const customerWebLink = "https://next-allegro-esvc-md3.vercel.app/";
 
-export const menuItems: MenuItemType[] = [
+export const defaultMenuItems: MenuItemType[] = [
   {
     id: "dashboard",
     name: "Dashboard",

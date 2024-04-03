@@ -17,6 +17,7 @@ import CyberlogitecLogo from "@/../public/logo_cyberlogitec.svg";
 import TSLineLogo from "@/../public/logo_tsline.svg";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SuperHome() {
   return (
@@ -63,11 +64,13 @@ const CompanyCard = (props: {
   isTemporarySaved?: boolean;
   companyLogo?: React.ReactNode;
 }) => {
+  const router = useRouter();
+
   return (
     <div
       className="h-72 rounded-lg flex flex-col bg-surfaceContainerLowest border-2 border-secondaryContainer overflow-hidden relative cursor-pointer "
       onClick={() => {
-        console.log("Company Card Clicked");
+        router.push("/main?companyCode=" + props.companyCode);
       }}
     >
       <div className="bg-surfaceContainerLow h-14 flex justify-between items-center pl-4 pr-2">
