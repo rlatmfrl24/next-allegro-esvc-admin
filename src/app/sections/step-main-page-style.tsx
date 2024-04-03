@@ -3,7 +3,7 @@
 import { DividerComponent } from "@/app/components/divider";
 import RemovableChip from "@/app/components/removable-chip";
 import { MdTypography } from "@/app/components/typography";
-import LandingPreview from "@/app/preview/landing/page";
+import LandingPreview from "@/app/preview/landing/landing";
 import { CurrentCompanyState } from "@/store/super.store";
 
 import {

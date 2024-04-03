@@ -11,7 +11,7 @@ import {
 import { Upload } from "@mui/icons-material";
 import Image from "next/image";
 
-import DashboardPreview from "@/app/preview/dashboard/page";
+import DashboardPreview from "@/app/preview/dashboard/dashboard";
 import { useEffect, useRef, useState } from "react";
 import { createMDTheme } from "@/util/theme";
 import ColorPicker from "@/app/components/color-picker";
