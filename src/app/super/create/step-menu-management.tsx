@@ -20,78 +20,37 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { CurrentCompanyState, MenuManagementState } from "@/store/super.store";
 import { FirstMenuItem } from "./components/first-menu-item";
 
-export default function MenuManagementStep(props: {
-  onStepMove: (step: number) => void;
-}) {
+export default function MenuManagementStep() {
   const [activeId, setActiveId] = useState(null);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
   const setMenuStore = useSetRecoilState(MenuManagementState);
 
   return (
-    <div className="flex flex-col gap-4 flex-1">
-      <div className="flex items-center justify-between">
-        <MdTypography variant="title" size="large">
-          Menu Management
-        </MdTypography>
-        <div className="flex gap-2 items-center">
-          <MdTextButton onClick={ResetToDefaultMenu}>
-            <MdIcon slot="icon">
-              <Refresh fontSize="small" />
-            </MdIcon>
-            Reset to Default Menu
-          </MdTextButton>
-          <MdTextButton
-            onClick={() => {
-              props.onStepMove(2);
-            }}
-          >
-            <MdIcon slot="icon">
-              <ChevronLeft />
-            </MdIcon>
-            Previous
-          </MdTextButton>
-          <DividerComponent orientation="vertical" className="h-6" />
-          <MdTextButton
-            onClick={() => {
-              props.onStepMove(4);
-            }}
-            trailingIcon
-          >
-            Next
-            <MdIcon slot="icon">
-              <ChevronRight />
-            </MdIcon>
-          </MdTextButton>
-        </div>
-      </div>
-      <div className="flex-1 flex flex-col gap-4">
-        <DndContext
-          sensors={sensors}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
+    <div className="flex-1 flex flex-col gap-4">
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={companyStore.menuManagement.map((item) => item.id)}
+          strategy={verticalListSortingStrategy}
         >
-          <SortableContext
-            items={companyStore.menuManagement.map((item) => item.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            {companyStore.menuManagement.map((item) => (
-              <FirstMenuItem key={item.id} item={item} />
-            ))}
-          </SortableContext>
-          <DragOverlay>
-            {activeId &&
-            companyStore.menuManagement.find((i) => i.id === activeId) ? (
-              <FirstMenuItem
-                item={
-                  companyStore.menuManagement.find((i) => i.id === activeId)!
-                }
-              />
-            ) : null}
-          </DragOverlay>
-        </DndContext>
-      </div>
+          {companyStore.menuManagement.map((item) => (
+            <FirstMenuItem key={item.id} item={item} />
+          ))}
+        </SortableContext>
+        <DragOverlay>
+          {activeId &&
+          companyStore.menuManagement.find((i) => i.id === activeId) ? (
+            <FirstMenuItem
+              item={companyStore.menuManagement.find((i) => i.id === activeId)!}
+            />
+          ) : null}
+        </DragOverlay>
+      </DndContext>
     </div>
   );
 

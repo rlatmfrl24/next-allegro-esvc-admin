@@ -8,7 +8,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/super");
+    router.push("/login");
   }, [router]);
 
   return (

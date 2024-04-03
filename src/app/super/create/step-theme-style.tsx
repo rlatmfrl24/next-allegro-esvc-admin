@@ -19,9 +19,7 @@ import { useRecoilState } from "recoil";
 import RemovableChip from "@/app/components/removable-chip";
 import { colorThemes } from "./constants";
 
-export default function ThemeStyleStep(props: {
-  onStepMove: (step: number) => void;
-}) {
+export default function ThemeStyleStep() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [currentCompanyStore, setCurrentCompanyStore] =
     useRecoilState(CurrentCompanyState);
@@ -49,144 +47,113 @@ export default function ThemeStyleStep(props: {
   }, [currentCompanyStore]);
 
   return (
-    <div className="flex flex-col gap-4 flex-1">
-      <div className="flex items-center justify-between">
-        <MdTypography variant="title" size="large">
-          Theme & Style
+    <div className="flex flex-1 gap-6">
+      <div className="min-w-[480px] border border-outlineVariant rounded-lg px-6 py-4 flex flex-col gap-4">
+        <MdTypography variant="body" size="large" prominent>
+          Logo Upload
         </MdTypography>
-        <div className="flex gap-2 items-center">
-          <MdTextButton
+        <div className="flex items-center gap-2">
+          <MdOutlinedButton
+            className="w-fit"
+            disabled={currentCompanyStore.themeStyle.logo ? true : false}
             onClick={() => {
-              props.onStepMove(0);
+              fileRef.current?.click();
             }}
           >
             <MdIcon slot="icon">
-              <ChevronLeft />
+              <Upload fontSize="small" />
             </MdIcon>
-            Previous
-          </MdTextButton>
-          <DividerComponent orientation="vertical" className="h-6" />
-          <MdTextButton
-            onClick={() => {
-              props.onStepMove(2);
-            }}
-            trailingIcon
-          >
-            Next
-            <MdIcon slot="icon">
-              <ChevronRight />
-            </MdIcon>
-          </MdTextButton>
+            Upload
+          </MdOutlinedButton>
+          <MdChipSet>
+            {currentCompanyStore.themeStyle.logo && (
+              <RemovableChip
+                label={currentCompanyStore.themeStyle.logo.name}
+                onRemove={() => {
+                  setCurrentCompanyStore((prev) => {
+                    return {
+                      ...prev,
+                      themeStyle: {
+                        ...prev.themeStyle,
+                        logo: null,
+                      },
+                    };
+                  });
+                }}
+              />
+            )}
+          </MdChipSet>
         </div>
-      </div>
-      <div className="flex flex-1 gap-6">
-        <div className="min-w-[480px] border border-outlineVariant rounded-lg px-6 py-4 flex flex-col gap-4">
-          <MdTypography variant="body" size="large" prominent>
-            Logo Upload
-          </MdTypography>
-          <div className="flex items-center gap-2">
-            <MdOutlinedButton
-              className="w-fit"
-              disabled={currentCompanyStore.themeStyle.logo ? true : false}
-              onClick={() => {
-                fileRef.current?.click();
-              }}
-            >
-              <MdIcon slot="icon">
-                <Upload fontSize="small" />
-              </MdIcon>
-              Upload
-            </MdOutlinedButton>
-            <MdChipSet>
-              {currentCompanyStore.themeStyle.logo && (
-                <RemovableChip
-                  label={currentCompanyStore.themeStyle.logo.name}
-                  onRemove={() => {
-                    setCurrentCompanyStore((prev) => {
-                      return {
-                        ...prev,
-                        themeStyle: {
-                          ...prev.themeStyle,
-                          logo: null,
-                        },
-                      };
-                    });
-                  }}
+
+        <input
+          type="file"
+          ref={fileRef}
+          hidden
+          accept="image/*"
+          onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              setCurrentCompanyStore((prev) => {
+                return {
+                  ...prev,
+                  themeStyle: {
+                    ...prev.themeStyle,
+                    logo: file,
+                  },
+                };
+              });
+
+              e.target.value = "";
+            }
+          }}
+        />
+        <DividerComponent className="border-dotted my-2" />
+        <MdTypography variant="body" size="large" prominent>
+          Color Theme
+        </MdTypography>
+        <div className="grid grid-cols-4 gap-4">
+          {colorThemes.map((theme) => {
+            return (
+              <div
+                key={theme.name}
+                className={`relative rounded-lg flex cursor-pointer ${
+                  selectedTheme.name === theme.name
+                    ? "bg-surfaceContainerLowest border-2 border-primary"
+                    : "bg-surfaceContainerLow border border-outlineVariant"
+                }`}
+                onClick={() => setSelectedTheme(theme)}
+              >
+                <MdRippleEffect />
+                <Image
+                  src={theme.icon}
+                  alt={theme.name}
+                  className="m-6 flex-1 w-12 h-12"
                 />
-              )}
-            </MdChipSet>
-          </div>
-
-          <input
-            type="file"
-            ref={fileRef}
-            hidden
-            accept="image/*"
-            onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                setCurrentCompanyStore((prev) => {
-                  return {
-                    ...prev,
-                    themeStyle: {
-                      ...prev.themeStyle,
-                      logo: file,
-                    },
-                  };
-                });
-
-                e.target.value = "";
-              }
+              </div>
+            );
+          })}
+        </div>
+        {selectedTheme.name === "custom" && (
+          <ColorPicker
+            className="mt-4"
+            color="#000000"
+            onColorChange={(color) => {
+              createMDTheme(color);
             }}
           />
-          <DividerComponent className="border-dotted my-2" />
-          <MdTypography variant="body" size="large" prominent>
-            Color Theme
-          </MdTypography>
-          <div className="grid grid-cols-4 gap-4">
-            {colorThemes.map((theme) => {
-              return (
-                <div
-                  key={theme.name}
-                  className={`relative rounded-lg flex cursor-pointer ${
-                    selectedTheme.name === theme.name
-                      ? "bg-surfaceContainerLowest border-2 border-primary"
-                      : "bg-surfaceContainerLow border border-outlineVariant"
-                  }`}
-                  onClick={() => setSelectedTheme(theme)}
-                >
-                  <MdRippleEffect />
-                  <Image
-                    src={theme.icon}
-                    alt={theme.name}
-                    className="m-6 flex-1 w-12 h-12"
-                  />
-                </div>
-              );
-            })}
-          </div>
-          {selectedTheme.name === "custom" && (
-            <ColorPicker
-              className="mt-4"
-              color="#000000"
-              onColorChange={(color) => {
-                createMDTheme(color);
-              }}
-            />
-          )}
-        </div>
-        <div className="flex-1 rounded-lg bg-surfaceContainerLow px-6 py-4 flex flex-col">
-          <MdTypography
-            variant="body"
-            size="large"
-            prominent
-            className="text-outlineVariant"
-          >
-            Preview
-          </MdTypography>
-          <div className="flex justify-center py-12 px-12 overflow-hidden flex-auto h-0">
-            <DashboardPreview />
-          </div>
+        )}
+      </div>
+      <div className="flex-1 rounded-lg bg-surfaceContainerLow px-6 py-4 flex flex-col">
+        <MdTypography
+          variant="body"
+          size="large"
+          prominent
+          className="text-outlineVariant"
+        >
+          Preview
+        </MdTypography>
+        <div className="flex justify-center py-12 px-12 overflow-hidden flex-auto h-0">
+          <DashboardPreview />
         </div>
       </div>
     </div>
