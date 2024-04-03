@@ -1,4 +1,4 @@
-import { defaultMenuItems } from "@/app/super/create/constants";
+import { defaultMenuItems } from "@/app/constants";
 import { CompanyThemeType, CompanyType } from "@/util/typeDef/super";
 import { atom } from "recoil";
 

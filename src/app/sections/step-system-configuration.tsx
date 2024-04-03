@@ -4,7 +4,7 @@ import {
   MaxPageSizeOptions,
   SearchPeriodOptions,
   TimeZoneOptions,
-} from "./constants";
+} from "../constants";
 import { BaseItem } from "./components/base-configuration-item";
 import { useRecoilState } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";

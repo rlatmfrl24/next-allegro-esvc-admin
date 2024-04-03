@@ -24,7 +24,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { CSS } from "@dnd-kit/utilities";
 import { SecondMenuItem } from "./second-menu-item";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
-import { customerWebLink } from "../constants";
+import { customerWebLink } from "../../constants";
 import { AnimatePresence, motion } from "framer-motion";
 
 export const FirstMenuItem = (props: { item: MenuItemType }) => {

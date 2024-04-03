@@ -17,7 +17,7 @@ import ColorPicker from "@/app/components/color-picker";
 import { CurrentCompanyState } from "@/store/super.store";
 import { useRecoilState } from "recoil";
 import RemovableChip from "@/app/components/removable-chip";
-import { colorThemes } from "./constants";
+import { colorThemes } from "../constants";
 
 export default function ThemeStyleStep() {
   const fileRef = useRef<HTMLInputElement>(null);

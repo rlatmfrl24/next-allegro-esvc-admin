@@ -13,12 +13,12 @@ import {
   MdTextButton,
 } from "@/util/md3";
 
-import BasicInformationStep from "./step-basic-information";
-import ThemeStyleStep from "./step-theme-style";
-import MainPageStyleStep from "./step-main-page-style";
-import MenuManagementStep from "./step-menu-management";
-import SystemConfigurationStep from "./step-system-configuration";
-import BusinessConfigurationStep from "./step-business-configuration";
+import BasicInformationStep from "../../sections/step-basic-information";
+import ThemeStyleStep from "../../sections/step-theme-style";
+import MainPageStyleStep from "../../sections/step-main-page-style";
+import MenuManagementStep from "../../sections/step-menu-management";
+import SystemConfigurationStep from "../../sections/step-system-configuration";
+import BusinessConfigurationStep from "../../sections/step-business-configuration";
 import {
   ChevronLeft,
   ChevronRight,
@@ -27,7 +27,7 @@ import {
 import { DividerComponent } from "@/app/components/divider";
 import { useSetRecoilState } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";
-import { defaultMenuItems } from "./constants";
+import { defaultMenuItems } from "../../constants";
 
 export default function CreateCompany() {
   const tabBackgroundStyle = {
