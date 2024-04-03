@@ -70,7 +70,7 @@ export const mainMenuItems: MenuItemType[] = [
     id: "setup",
     name: "Setting up of System",
     originName: "Setting up of System",
-    link: "main",
+    link: "setup",
     isAvailable: true,
     subMenu: [
       {
