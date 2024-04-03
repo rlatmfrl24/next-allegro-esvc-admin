@@ -1,3 +1,5 @@
+"use client";
+
 import { DividerComponent } from "@/app/components/divider";
 import { MdTypography } from "@/app/components/typography";
 import {
@@ -5,9 +7,8 @@ import {
   MdIcon,
   MdOutlinedButton,
   MdRippleEffect,
-  MdTextButton,
 } from "@/util/md3";
-import { ChevronLeft, ChevronRight, Upload } from "@mui/icons-material";
+import { Upload } from "@mui/icons-material";
 import Image from "next/image";
 
 import DashboardPreview from "@/app/preview/dashboard/page";
@@ -19,7 +20,19 @@ import { useRecoilState } from "recoil";
 import RemovableChip from "@/app/components/removable-chip";
 import { colorThemes } from "../constants";
 
-export default function ThemeStyleStep() {
+export default function ThemeStyleStep({
+  previewOption = {
+    width: 1280,
+    height: 840,
+    zoom: 0.6,
+  },
+}: {
+  previewOption?: {
+    width: number;
+    height: number;
+    zoom: number;
+  };
+}) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [currentCompanyStore, setCurrentCompanyStore] =
     useRecoilState(CurrentCompanyState);
@@ -153,7 +166,11 @@ export default function ThemeStyleStep() {
           Preview
         </MdTypography>
         <div className="flex justify-center py-12 px-12 overflow-hidden flex-auto h-0">
-          <DashboardPreview />
+          <DashboardPreview
+            width={previewOption.width}
+            height={previewOption.height}
+            zoom={previewOption.zoom}
+          />
         </div>
       </div>
     </div>

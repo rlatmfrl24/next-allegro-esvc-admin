@@ -1,3 +1,5 @@
+"use client";
+
 import { GridSelectComponent } from "./components/grid-select";
 import {
   DateFormatOptions,

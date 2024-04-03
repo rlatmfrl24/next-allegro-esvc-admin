@@ -35,14 +35,24 @@ import QuickChart from "./chart";
 import { useRecoilValue } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";
 
-export default function DashboardPreview() {
+export default function DashboardPreview({
+  width = 1280,
+  height = 840,
+  zoom = 0.6,
+}: {
+  width?: number;
+  height?: number;
+  zoom?: number;
+}) {
   const logo = useRecoilValue(CurrentCompanyState).themeStyle.logo;
 
   return (
     <div
-      className="bg-surfaceDim flex overflow-hidden relative rounded-3xl shadow-lg w-[1280px] h-[840px] flex-1"
+      className="bg-surfaceDim flex overflow-hidden relative rounded-3xl shadow-lg flex-1"
       style={{
-        zoom: 0.6,
+        width: width,
+        height: height,
+        zoom: zoom,
       }}
     >
       <div className="absolute top-0 left-0 w-full h-full z-10"></div>
