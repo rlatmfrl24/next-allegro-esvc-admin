@@ -1,19 +1,17 @@
-import { MdTypography } from "@/app/components/typography";
-import { MdFilledButton, MdIcon, MdTextButton } from "@/util/md3";
-import { useCallback, useMemo, useState } from "react";
-import { faker } from "@faker-js/faker";
+"use client";
+
+import { useMemo } from "react";
+import { useRecoilState } from "recoil";
+
+import { MdRangeDatePicker } from "@/app/components/datepickers/range-picker";
+import { DividerComponent } from "@/app/components/divider";
 import NAMultiAutoComplete from "@/app/components/na-multi-autocomplete";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
-import { DividerComponent } from "@/app/components/divider";
-import { CompanyType } from "@/util/typeDef/super";
-import { useRecoilState } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";
-import { MdRangeDatePicker } from "@/app/components/datepickers/range-picker";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { CompanyType } from "@/util/typeDef/super";
+import { faker } from "@faker-js/faker";
 
-export default function BasicInformationStep(props: {
-  onStepMove: (step: number) => void;
-}) {
+export default function BasicInformationStep() {
   const [currentCompanyStore, setCurrentCompanyStore] =
     useRecoilState(CurrentCompanyState);
 
@@ -39,40 +37,8 @@ export default function BasicInformationStep(props: {
     );
   }, []);
 
-  const moveToStep = useCallback(
-    (step: number) => {
-      props.onStepMove(step);
-    },
-    [props]
-  );
-
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <MdTypography variant="title" size="large">
-          Basic Information
-        </MdTypography>
-        <div className="flex gap-2 items-center">
-          <MdTextButton disabled>
-            <MdIcon slot="icon">
-              <ChevronLeft />
-            </MdIcon>
-            Previous
-          </MdTextButton>
-          <DividerComponent orientation="vertical" className="h-6" />
-          <MdTextButton
-            onClick={() => {
-              props.onStepMove(1);
-            }}
-            trailingIcon
-          >
-            Next
-            <MdIcon slot="icon">
-              <ChevronRight />
-            </MdIcon>
-          </MdTextButton>
-        </div>
-      </div>
+    <>
       <div className="flex gap-2">
         <NAMultiAutoComplete
           className="w-80"
@@ -263,6 +229,6 @@ export default function BasicInformationStep(props: {
           }}
         />
       </div>
-    </div>
+    </>
   );
 }

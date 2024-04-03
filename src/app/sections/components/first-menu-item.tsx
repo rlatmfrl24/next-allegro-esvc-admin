@@ -24,8 +24,18 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { CSS } from "@dnd-kit/utilities";
 import { SecondMenuItem } from "./second-menu-item";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
-import { customerWebLink } from "../constants";
+import { customerWebLink } from "../../constants";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import DashboardIcon from "@/../public/icon_menu_dashboard.svg";
+import ScheduleIcon from "@/../public/icon_menu_schedule.svg";
+import BookingIcon from "@/../public/icon_menu_booking.svg";
+import PricingIcon from "@/../public/icon_menu_pricing.svg";
+import DocumentsIcon from "@/../public/icon_menu_documents.svg";
+import TrackTraceIcon from "@/../public/icon_menu_tracktrace.svg";
+import ImportIcon from "@/../public/icon_menu_import.svg";
+import ManageShipmentIcon from "@/../public/icon_menu_manage_shipment.svg";
+import DententionIcon from "@/../public/icon_menu_dentention.svg";
 
 export const FirstMenuItem = (props: { item: MenuItemType }) => {
   const {
@@ -36,6 +46,18 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
     transition,
     isDragging,
   } = useSortable({ id: props.item.id });
+
+  const itemIcon = {
+    Dashboard: DashboardIcon,
+    Schedule: ScheduleIcon,
+    Booking: BookingIcon,
+    Pricing: PricingIcon,
+    Documents: DocumentsIcon,
+    "Track & Trace": TrackTraceIcon,
+    "Import (Inbound)": ImportIcon,
+    "Manage Shipment": ManageShipmentIcon,
+    "Detention & Demurrage": DententionIcon,
+  }[props.item.name];
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -169,6 +191,7 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
             {...listeners}
             className="text-outlineVariant outline-none cursor-move"
           />
+          <Image src={itemIcon} alt="Menu Icon" className="ml-2" />
           <MdTypography
             variant="label"
             size="large"
@@ -247,12 +270,15 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
                 setNewMenuName(e.currentTarget.value);
               }}
             />
-            <NAOutlinedTextField
-              readOnly
-              className="flex-1"
-              label="URL"
-              value={customerWebLink + props.item.link}
-            />
+            {!props.item.subMenu ||
+              (props.item.subMenu.length === 0 && (
+                <NAOutlinedTextField
+                  readOnly
+                  className="flex-1"
+                  label="URL"
+                  value={customerWebLink + props.item.link}
+                />
+              ))}
           </div>
         )}
       </div>

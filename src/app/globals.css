@@ -96,3 +96,5 @@ body {
     text-wrap: balance;
   }
 }
+
+@import "overlayscrollbars/overlayscrollbars.css";

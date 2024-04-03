@@ -1,4 +1,4 @@
-import { menuItems } from "@/app/super/create/constants";
+import { defaultMenuItems } from "@/app/constants";
 import { CompanyThemeType, CompanyType } from "@/util/typeDef/super";
 import { atom } from "recoil";
 
@@ -7,7 +7,20 @@ export const CurrentCompanyState = atom({
   default: {
     basicInformation: {} as CompanyType,
     themeStyle: {} as CompanyThemeType,
-    menuManagement: menuItems,
+    menuManagement: defaultMenuItems,
+    configuration: {
+      dateFormat: "YYYY-MM-DD",
+      searchPeriod: "1 Week",
+      maxPageSize: 25,
+      timeZone: "GMT-12:00",
+      mainLanguage: "English",
+      languages: ["English"],
+      useSignUpTerms: false,
+      signUpTermsFile: null as File | null,
+      useOnlineQuotesTerms: false,
+      onlineQuotesTermsFile: null as File | null,
+      dormantPeriod: 180,
+    },
   },
 });
 

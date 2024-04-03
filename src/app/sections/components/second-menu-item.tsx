@@ -12,7 +12,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { CSS } from "@dnd-kit/utilities";
 import { MenuItemType } from "@/util/typeDef/super";
-import { customerWebLink } from "../constants";
+import { customerWebLink } from "../../constants";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
 
 export const SecondMenuItem = (props: {

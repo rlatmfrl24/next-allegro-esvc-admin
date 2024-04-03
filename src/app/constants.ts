@@ -65,7 +65,149 @@ export const colorThemes = [
 
 export const customerWebLink = "https://next-allegro-esvc-md3.vercel.app/";
 
-export const menuItems: MenuItemType[] = [
+export const mainMenuItems: MenuItemType[] = [
+  {
+    id: "setup",
+    name: "Setting up of System",
+    originName: "Setting up of System",
+    link: "setup",
+    isAvailable: true,
+    subMenu: [
+      {
+        id: "basic",
+        name: "Basic Information",
+        originName: "Basic Information",
+        link: "basic",
+        isAvailable: true,
+        subMenu: [],
+      },
+      {
+        id: "theme",
+        name: "Theme & Style",
+        originName: "Theme & Style",
+        link: "theme",
+        isAvailable: true,
+        subMenu: [],
+      },
+      {
+        id: "main-page",
+        name: "Main Page Style",
+        originName: "Main Page Style",
+        link: "main-page",
+        isAvailable: true,
+        subMenu: [],
+      },
+      {
+        id: "menu",
+        name: "Menu Management",
+        originName: "Menu Management",
+        link: "menu",
+        isAvailable: true,
+        subMenu: [],
+      },
+      {
+        id: "system-config",
+        name: "System Configuration",
+        originName: "System Configuration",
+        link: "system-config",
+        isAvailable: true,
+        subMenu: [],
+      },
+      {
+        id: "business-config",
+        name: "Business Configuration",
+        originName: "Business Configuration",
+        link: "business-config",
+        isAvailable: true,
+        subMenu: [],
+      },
+      {
+        id: "message",
+        name: "Message Management",
+        originName: "Message Management",
+        link: "message ",
+        isAvailable: true,
+        subMenu: [],
+      },
+    ],
+  },
+  {
+    id: "user",
+    name: "User Management",
+    originName: "User Management",
+    link: "user",
+    isAvailable: true,
+    subMenu: [
+      {
+        id: "admin",
+        name: "Admin User",
+        originName: "Admin User",
+        link: "admin",
+        isAvailable: true,
+        subMenu: [],
+      },
+      {
+        id: "customer",
+        name: "Customer User",
+        originName: "Customer User",
+        link: "customer",
+        isAvailable: true,
+        subMenu: [],
+      },
+    ],
+  },
+  {
+    id: "notice",
+    name: "Notice Management",
+    originName: "Notice Management",
+    link: "notice",
+    isAvailable: true,
+    subMenu: [],
+  },
+  {
+    id: "notification",
+    name: "Notification Setup",
+    originName: "Notification Setup",
+    link: "notification",
+    isAvailable: true,
+    subMenu: [
+      {
+        id: "email-setting",
+        name: "Email Setting",
+        originName: "Email Setting",
+        link: "email-setting",
+        isAvailable: true,
+        subMenu: [],
+      },
+      {
+        id: "email-history",
+        name: "Email Sending History",
+        originName: "Email Sending History",
+        link: "email-history",
+        isAvailable: true,
+        subMenu: [],
+      },
+      {
+        id: "email-report",
+        name: "Email Sending Report",
+        originName: "Email Sending Report",
+        link: "email-report",
+        isAvailable: true,
+        subMenu: [],
+      },
+      {
+        id: "office",
+        name: "Office Email Setting (Booking & SI)",
+        originName: "Office Email Setting (Booking & SI)",
+        link: "office",
+        isAvailable: true,
+        subMenu: [],
+      },
+    ],
+  },
+];
+
+export const defaultMenuItems: MenuItemType[] = [
   {
     id: "dashboard",
     name: "Dashboard",
@@ -403,3 +545,51 @@ export const menuItems: MenuItemType[] = [
     ],
   },
 ];
+
+export const DateFormatOptions = [
+  "YYYY-MM-DD",
+  "YY-MM-DD",
+  "YY-MON-DD",
+  "MM-DD-YYYY",
+  "MM-DD-YY",
+  "MON-DD-YY",
+  "DD-MM-YYYY",
+  "DD-MM-YY",
+  "DD-MON-YY",
+  "YYYY/MM/DD",
+  "YY/MM-DD",
+  "YY/MON/DD",
+  "MM/DD/YYYY",
+  "MM/DD/YY",
+  "MON/DD-YY",
+  "DD/MM/YYYY",
+  "DD/MON/YY",
+];
+
+export const SearchPeriodOptions = [
+  "1 Week",
+  "2 Weeks",
+  "3 Weeks",
+  "1 Month",
+  "2 Months",
+  "3 Months",
+];
+
+export const TimeZoneOptions = [
+  "GMT-12:00",
+  "GMT-11:00",
+  "GMT-10:00",
+  "GMT-09:00",
+  "GMT-08:00",
+  "GMT-07:00",
+  "GMT+09:00",
+  "GMT+10:00",
+  "GMT+11:00",
+  "GMT+12:00",
+  "GMT+13:00",
+  "GMT+14:00",
+];
+
+export const MaxPageSizeOptions = ["25", "50", "75", "100"];
+
+export const LanguageOptions = ["English", "Korean", "Chinese", "Japanese"];

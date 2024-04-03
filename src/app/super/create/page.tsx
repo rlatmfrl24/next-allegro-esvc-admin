@@ -6,17 +6,28 @@ import { CSSProperties, useState } from "react";
 import { MdTypography } from "@/app/components/typography";
 import {
   MdFilledButton,
+  MdIcon,
   MdOutlinedButton,
   MdPrimaryTab,
   MdTabs,
+  MdTextButton,
 } from "@/util/md3";
 
-import BasicInformationStep from "./step-basic-information";
-import ThemeStyleStep from "./step-theme-style";
-import MainPageStyleStep from "./step-main-page-style";
-import MenuManagementStep from "./step-menu-management";
-import SystemConfigurationStep from "./step-system-configuration";
-import BusinessConfigurationStep from "./step-business-configuration";
+import BasicInformationStep from "../../sections/step-basic-information";
+import ThemeStyleStep from "../../sections/step-theme-style";
+import MainPageStyleStep from "../../sections/step-main-page-style";
+import MenuManagementStep from "../../sections/step-menu-management";
+import SystemConfigurationStep from "../../sections/step-system-configuration";
+import BusinessConfigurationStep from "../../sections/step-business-configuration";
+import {
+  ChevronLeft,
+  ChevronRight,
+  RestartAltOutlined,
+} from "@mui/icons-material";
+import { DividerComponent } from "@/app/components/divider";
+import { useSetRecoilState } from "recoil";
+import { CurrentCompanyState, MenuManagementState } from "@/store/super.store";
+import { defaultMenuItems } from "../../constants";
 
 export default function CreateCompany() {
   const tabBackgroundStyle = {
@@ -24,6 +35,8 @@ export default function CreateCompany() {
   } as CSSProperties;
 
   const [currentStep, setCurrentStep] = useState(0);
+  const setCompanyStore = useSetRecoilState(CurrentCompanyState);
+  const setMenuStore = useSetRecoilState(MenuManagementState);
 
   return (
     <div className="px-12 py-6 flex flex-col flex-1">
@@ -69,36 +82,77 @@ export default function CreateCompany() {
           </MdPrimaryTab>
         </MdTabs>
         <div className="px-8 py-6 flex-1 flex flex-col">
-          {
+          <div className="flex flex-col gap-4 flex-1">
+            <div className="flex items-center justify-between">
+              <MdTypography variant="title" size="large">
+                {
+                  {
+                    0: "Basic Information",
+                    1: "Theme & Style",
+                    2: "Main Page Style",
+                    3: "Menu Management",
+                    4: "System Configuration",
+                    5: "Business Configuration",
+                  }[currentStep]
+                }
+              </MdTypography>
+              <div className="flex gap-2 items-center">
+                {currentStep === 3 && (
+                  <MdTextButton
+                    onClick={() => {
+                      setCompanyStore((prev) => ({
+                        ...prev,
+                        menuManagement: defaultMenuItems,
+                      }));
+                      setMenuStore({
+                        deactivatedMenuIds: [],
+                        currentEditingMenuId: "",
+                      });
+                    }}
+                  >
+                    <MdIcon slot="icon">
+                      <RestartAltOutlined fontSize="small" />
+                    </MdIcon>
+                    Reset to Default Menu
+                  </MdTextButton>
+                )}
+                <MdTextButton
+                  disabled={currentStep === 0}
+                  onClick={() => {
+                    setCurrentStep(currentStep - 1);
+                  }}
+                >
+                  <MdIcon slot="icon">
+                    <ChevronLeft />
+                  </MdIcon>
+                  Previous
+                </MdTextButton>
+                <DividerComponent orientation="vertical" className="h-6" />
+                <MdTextButton
+                  trailingIcon
+                  disabled={currentStep === 5}
+                  onClick={() => {
+                    setCurrentStep(currentStep + 1);
+                  }}
+                >
+                  Next
+                  <MdIcon slot="icon">
+                    <ChevronRight />
+                  </MdIcon>
+                </MdTextButton>
+              </div>
+            </div>
             {
-              0: (
-                <BasicInformationStep
-                  onStepMove={(step) => setCurrentStep(step)}
-                />
-              ),
-              1: <ThemeStyleStep onStepMove={(step) => setCurrentStep(step)} />,
-              2: (
-                <MainPageStyleStep
-                  onStepMove={(step) => setCurrentStep(step)}
-                />
-              ),
-              3: (
-                <MenuManagementStep
-                  onStepMove={(step) => setCurrentStep(step)}
-                />
-              ),
-              4: (
-                <SystemConfigurationStep
-                  onStepMove={(step) => setCurrentStep(step)}
-                />
-              ),
-              5: (
-                <BusinessConfigurationStep
-                  onStepMove={(step) => setCurrentStep(step)}
-                />
-              ),
-            }[currentStep]
-          }
+              {
+                0: <BasicInformationStep />,
+                1: <ThemeStyleStep />,
+                2: <MainPageStyleStep />,
+                3: <MenuManagementStep />,
+                4: <SystemConfigurationStep />,
+                5: <BusinessConfigurationStep />,
+              }[currentStep]
+            }
+          </div>
         </div>
       </div>
     </div>
