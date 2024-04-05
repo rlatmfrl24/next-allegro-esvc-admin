@@ -14,18 +14,6 @@ import { Add } from "@mui/icons-material";
 import { MdTypography } from "@/app/components/typography";
 import { MessageModule, MessageType } from "@/util/typeDef/message";
 
-// const ModuleOptions = [
-//   "All Module",
-//   "Booking",
-//   "Import",
-//   "Track & Trace",
-//   "Management Setup",
-//   "Dumrrage & Detention",
-//   "Document",
-// ];
-
-// const TypeOptions = ["Success", "Error", "Warning", "Confirmation"];
-
 export default function MessageManagementSetup() {
   return (
     <div className="flex flex-col gap-4 flex-1">
