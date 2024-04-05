@@ -12,18 +12,19 @@ import {
 } from "@/util/md3";
 import { Add } from "@mui/icons-material";
 import { MdTypography } from "@/app/components/typography";
+import { MessageModule, MessageType } from "@/util/typeDef/message";
 
-const ModuleOptions = [
-  "All Module",
-  "Booking",
-  "Import",
-  "Track & Trace",
-  "Management Setup",
-  "Dumrrage & Detention",
-  "Document",
-];
+// const ModuleOptions = [
+//   "All Module",
+//   "Booking",
+//   "Import",
+//   "Track & Trace",
+//   "Management Setup",
+//   "Dumrrage & Detention",
+//   "Document",
+// ];
 
-const TypeOptions = ["Success", "Error", "Warning", "Confirmation"];
+// const TypeOptions = ["Success", "Error", "Warning", "Confirmation"];
 
 export default function MessageManagementSetup() {
   return (
@@ -37,10 +38,10 @@ export default function MessageManagementSetup() {
         <NAOutlinedListBox
           label="Module"
           initialValue="All Module"
-          options={ModuleOptions}
+          options={Object.values(MessageModule)}
         />
         <NAOutlinedTextField className="flex-1" label="Message or ID" />
-        <NAOutlinedListBox label="Type" options={TypeOptions} />
+        <NAOutlinedListBox label="Type" options={Object.values(MessageType)} />
       </div>
       <div className="flex items-center justify-end gap-2">
         <MdTextButton>Reset</MdTextButton>
