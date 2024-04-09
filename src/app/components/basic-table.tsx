@@ -1,5 +1,5 @@
 import { Column, Row, Table, flexRender } from "@tanstack/react-table";
-import styles from "@/app/styles/table.module.css";
+import styles from "@/styles/table.module.css";
 import { MdTypography } from "./typography";
 import { CSSProperties } from "react";
 

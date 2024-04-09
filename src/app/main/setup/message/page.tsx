@@ -13,6 +13,7 @@ import {
 import { Add } from "@mui/icons-material";
 import { MdTypography } from "@/app/components/typography";
 import { MessageModule, MessageType } from "@/util/typeDef/message";
+import { MessageManagementTable } from "./table";
 
 export default function MessageManagementSetup() {
   return (
@@ -47,9 +48,11 @@ export default function MessageManagementSetup() {
             Total: 0
           </MdTypography>
         </div>
-        <div className="flex gap-8 flex-1 ">
-          <div className="basis-2/3">table</div>
-          <div className="basis-1/3 px-6 py-4 rounded-lg h-full flex flex-col gap-4 bg-surface border-2 border-secondaryContainer">
+        <div className="relative flex gap-8 flex-1 ">
+          <div className="basis-2/3 flex">
+            <MessageManagementTable />
+          </div>
+          <div className="sticky top-0 basis-1/3 px-6 py-4 rounded-lg h-fit flex flex-col gap-4 bg-surface border-2 border-secondaryContainer">
             <MdTypography variant="label" size="large" prominent>
               Language Detail
             </MdTypography>

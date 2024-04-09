@@ -4,6 +4,8 @@ import {
   MdFilledButton,
   MdIcon,
   MdIconButton,
+  MdMenu,
+  MdMenuItem,
   MdOutlinedButton,
   MdRippleEffect,
   MdSwitch,
@@ -77,7 +79,7 @@ const CompanyCard = (props: {
         <MdTypography variant="body" size="medium" prominent>
           {props.companyName}
         </MdTypography>
-        <div className="flex items-center">
+        <div className="flex items-center relative">
           {props.isTemporarySaved && (
             <MdTypography
               variant="label"
@@ -88,6 +90,7 @@ const CompanyCard = (props: {
             </MdTypography>
           )}
           <MdIconButton
+            id="menu-anchor"
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -96,6 +99,11 @@ const CompanyCard = (props: {
               <MoreVert />
             </MdIcon>
           </MdIconButton>
+          <MdMenu id="menu" anchor="menu-anchor">
+            <MdMenuItem>
+              <div slot="headline">Copy</div>
+            </MdMenuItem>
+          </MdMenu>
         </div>
       </div>
       <div className="flex-1 flex-col flex justify-center items-center">
