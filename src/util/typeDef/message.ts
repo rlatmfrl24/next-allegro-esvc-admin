@@ -18,6 +18,11 @@ export enum MessageType {
 export interface MessageProps {
   module: MessageModule;
   id: string;
-  message: string;
+  message: {
+    en: string;
+    ko: string;
+    ja: string;
+    zh_CN: string;
+  };
   type: MessageType;
 }
