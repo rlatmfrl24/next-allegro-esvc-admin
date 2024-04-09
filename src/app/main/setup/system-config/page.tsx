@@ -4,7 +4,7 @@ import SystemConfigurationStep from "@/app/sections/step-system-configuration";
 
 export default function SystemConfigurationSetup() {
   return (
-    <div className="flex flex-col gap-4 flex-1">
+    <div className="flex flex-col gap-4 ">
       <PageTitle
         title="System Configuration"
         category="Setting up of System"

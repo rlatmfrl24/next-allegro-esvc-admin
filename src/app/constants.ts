@@ -590,6 +590,17 @@ export const TimeZoneOptions = [
   "GMT+14:00",
 ];
 
-export const MaxPageSizeOptions = ["25", "50", "75", "100"];
+export const MaxPageSizeOptions = [
+  "10",
+  "20",
+  "30",
+  "40",
+  "50",
+  "60",
+  "70",
+  "80",
+  "90",
+  "100",
+];
 
 export const LanguageOptions = ["English", "Korean", "Chinese", "Japanese"];

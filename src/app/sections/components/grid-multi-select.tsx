@@ -21,28 +21,29 @@ import {
   useTransitionStyles,
 } from "@floating-ui/react";
 import { ArrowDropDown } from "@mui/icons-material";
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import { LanguageOptions } from "../../constants";
 import { flushSync } from "react-dom";
 import { DividerComponent } from "@/app/components/divider";
 
-export const LanguageSelect = ({
+export const GridMultiSelect = ({
   className,
   onChange,
-  mainLanguage,
-  languages,
+  primarySelection,
+  options,
 }: {
   className?: string;
   onChange?: (result: { main: string; selections: string[] }) => void;
-  mainLanguage?: string;
-  languages?: string[];
+  primarySelection?: string;
+  options?: string[];
 }) => {
+  const defaultSelectionRef = useRef<HTMLDivElement>(null);
   const [maxHeight, setMaxHeight] = useState<number | null>(null);
   const [mainSelection, setMainSelection] = useState<string>(
-    mainLanguage ? mainLanguage : ""
+    primarySelection ? primarySelection : ""
   );
   const [selections, setSelections] = useState<string[]>(
-    languages ? languages : []
+    options ? options : []
   );
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
@@ -56,7 +57,13 @@ export const LanguageSelect = ({
           Object.assign(elements.floating.style, {
             width: `${rects.reference.width}px`,
           });
-          flushSync(() => setMaxHeight(availableHeight));
+          flushSync(() => {
+            return setMaxHeight(
+              availableHeight -
+                defaultSelectionRef.current?.getBoundingClientRect().height! -
+                20
+            );
+          });
         },
       }),
     ],
@@ -132,9 +139,12 @@ export const LanguageSelect = ({
               className="relative rounded outline-none"
             >
               <MdElevation />
-              <div className="bg-surfaceContainerLow px-3 py-4">
+              <div
+                ref={defaultSelectionRef}
+                className="bg-surfaceContainerLow px-3 py-4"
+              >
                 <MdTypography variant="body" size="large">
-                  Select Default Languages
+                  Select Default Values
                 </MdTypography>
                 <MdChipSet className="mt-2">
                   {selections.map((selection, index) => (
@@ -159,27 +169,28 @@ export const LanguageSelect = ({
                 className="relative rounded overflow-y-auto"
                 style={{ maxHeight } as CSSProperties}
               >
-                {LanguageOptions.map((option, index) => (
-                  <MdListItem
-                    key={option}
-                    type="button"
-                    onClick={() => {
-                      if (selections.includes(option)) {
-                        setSelections(
-                          selections.filter((item) => item !== option)
-                        );
-                      } else {
-                        setSelections([...selections, option]);
-                      }
-                    }}
-                  >
-                    <MdCheckbox
-                      slot="start"
-                      checked={selections.includes(option)}
-                    />
-                    {option}
-                  </MdListItem>
-                ))}
+                {options &&
+                  options.map((option, index) => (
+                    <MdListItem
+                      key={option}
+                      type="button"
+                      onClick={() => {
+                        if (selections.includes(option)) {
+                          setSelections(
+                            selections.filter((item) => item !== option)
+                          );
+                        } else {
+                          setSelections([...selections, option]);
+                        }
+                      }}
+                    >
+                      <MdCheckbox
+                        slot="start"
+                        checked={selections.includes(option)}
+                      />
+                      {option}
+                    </MdListItem>
+                  ))}
               </MdList>
             </div>
           </div>
