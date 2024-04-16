@@ -106,24 +106,6 @@ export default function BasicInformationStep() {
             });
           }}
         />
-        {/* <MdRangeDatePicker
-          className="w-80"
-          defaultStartDate={
-            currentCompanyStore.basicInformation.effectiveDate?.[0]
-          }
-          defaultEndDate={
-            currentCompanyStore.basicInformation.effectiveDate?.[1]
-          }
-          handleDateRangeSelected={(dateRange) => {
-            setCurrentCompanyStore({
-              ...currentCompanyStore,
-              basicInformation: {
-                ...currentCompanyStore.basicInformation,
-                effectiveDate: dateRange,
-              },
-            });
-          }}
-        /> */}
       </div>
       <div className="flex gap-2">
         <NAOutlinedTextField

@@ -1,15 +1,13 @@
-import { BasicTable } from "@/app/components/basic-table";
-import { MessageModule, MessageProps } from "@/util/typeDef/message";
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import { createDummyMessageDataset } from "./util";
+
+import { NewBasicTable } from "@/app/components/table/new-table";
 import { GridSelectComponent } from "@/app/sections/components/grid-select";
 import { MdIconButton, MdMenu, MdMenuItem } from "@/util/md3";
+import { MessageModule, MessageProps } from "@/util/typeDef/message";
 import { MoreVert } from "@mui/icons-material";
+import { createColumnHelper } from "@tanstack/react-table";
+
+import { createDummyMessageDataset } from "./util";
 
 export const MessageManagementTable = () => {
   const columnHelper = createColumnHelper<MessageProps>();
@@ -67,13 +65,7 @@ export const MessageManagementTable = () => {
     }),
   ];
 
-  const table = useReactTable({
-    columns,
-    data: tableData,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return <BasicTable table={table} />;
+  return <NewBasicTable columns={columns} data={tableData} isSingleSelect />;
 };
 
 const DeleteActionButton = ({ onClick }: { onClick?: () => void }) => {
