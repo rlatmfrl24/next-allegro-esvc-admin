@@ -1,3 +1,18 @@
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+
+import BookingIcon from "@/../public/icon_menu_booking.svg";
+import DashboardIcon from "@/../public/icon_menu_dashboard.svg";
+import DententionIcon from "@/../public/icon_menu_dentention.svg";
+import DocumentsIcon from "@/../public/icon_menu_documents.svg";
+import ImportIcon from "@/../public/icon_menu_import.svg";
+import ManageShipmentIcon from "@/../public/icon_menu_manage_shipment.svg";
+import PricingIcon from "@/../public/icon_menu_pricing.svg";
+import ScheduleIcon from "@/../public/icon_menu_schedule.svg";
+import TrackTraceIcon from "@/../public/icon_menu_tracktrace.svg";
+import { NAOutlinedTextField } from "@/app/components/na-textfield";
 import { MdTypography } from "@/app/components/typography";
 import { CurrentCompanyState, MenuManagementState } from "@/store/super.store";
 import {
@@ -9,33 +24,20 @@ import {
 import { MenuItemType } from "@/util/typeDef/super";
 import { DndContext } from "@dnd-kit/core";
 import {
-  useSortable,
   SortableContext,
+  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
-  DragHandle,
-  EditOutlined,
   ArrowDropDown,
   Check,
+  DragHandle,
+  EditOutlined,
 } from "@mui/icons-material";
-import { useState, useEffect, useMemo } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { CSS } from "@dnd-kit/utilities";
-import { SecondMenuItem } from "./second-menu-item";
-import { NAOutlinedTextField } from "@/app/components/na-textfield";
+
 import { customerWebLink } from "../../constants";
-import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
-import DashboardIcon from "@/../public/icon_menu_dashboard.svg";
-import ScheduleIcon from "@/../public/icon_menu_schedule.svg";
-import BookingIcon from "@/../public/icon_menu_booking.svg";
-import PricingIcon from "@/../public/icon_menu_pricing.svg";
-import DocumentsIcon from "@/../public/icon_menu_documents.svg";
-import TrackTraceIcon from "@/../public/icon_menu_tracktrace.svg";
-import ImportIcon from "@/../public/icon_menu_import.svg";
-import ManageShipmentIcon from "@/../public/icon_menu_manage_shipment.svg";
-import DententionIcon from "@/../public/icon_menu_dentention.svg";
+import { SecondMenuItem } from "./second-menu-item";
 
 export const FirstMenuItem = (props: { item: MenuItemType }) => {
   const {
@@ -48,16 +50,16 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
   } = useSortable({ id: props.item.id });
 
   const itemIcon = {
-    Dashboard: DashboardIcon,
-    Schedule: ScheduleIcon,
-    Booking: BookingIcon,
-    Pricing: PricingIcon,
-    Documents: DocumentsIcon,
-    "Track & Trace": TrackTraceIcon,
-    "Import (Inbound)": ImportIcon,
-    "Manage Shipment": ManageShipmentIcon,
-    "Detention & Demurrage": DententionIcon,
-  }[props.item.name];
+    dashboard: DashboardIcon,
+    schedule: ScheduleIcon,
+    booking: BookingIcon,
+    pricing: PricingIcon,
+    documents: DocumentsIcon,
+    tracking: TrackTraceIcon,
+    import: ImportIcon,
+    shipment: ManageShipmentIcon,
+    tariff: DententionIcon,
+  }[props.item.id];
 
   const style = {
     transform: CSS.Transform.toString(transform),
