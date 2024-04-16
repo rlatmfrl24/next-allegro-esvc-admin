@@ -1,4 +1,4 @@
-import { MdSingleDatePicker } from "@/app/components/datepickers/date-picker";
+import { DatePicker } from "@/app/components/datepicker/date-picker";
 import { MdTypography } from "@/app/components/typography";
 import {
   MdElevatedCard,
@@ -49,7 +49,7 @@ export default function QuickMenu() {
                 <ArrowDropDown />
               </MdIcon>
             </MdOutlinedTextField>
-            <MdSingleDatePicker />
+            <DatePicker />
           </div>
           <div className="text-right">
             <MdTextButton>Reset</MdTextButton>

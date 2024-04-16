@@ -604,3 +604,13 @@ export const MaxPageSizeOptions = [
 ];
 
 export const LanguageOptions = ["English", "Korean", "Chinese", "Japanese"];
+
+export const basicPopoverStyles = {
+  duration: {
+    open: 200,
+    close: 150,
+  },
+  initial: { opacity: 0, transform: "translateY(-8px)" },
+  open: { opacity: 1, transform: "translateY(0px)" },
+  close: { opacity: 0, transform: "translateY(-8px)" },
+};

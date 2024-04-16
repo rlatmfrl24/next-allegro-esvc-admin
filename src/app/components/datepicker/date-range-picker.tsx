@@ -4,7 +4,7 @@ import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { ComponentProps, useEffect, useState } from "react";
 import { flushSync } from "react-dom";
 
-import { basicPopoverStyles } from "@/app/util/constants";
+import { basicPopoverStyles } from "@/app/constants";
 import {
   MdElevatedCard,
   MdFilledButton,
@@ -15,7 +15,7 @@ import {
   MdOutlinedButton,
   MdOutlinedTextField,
   MdTextButton,
-} from "@/app/util/md3";
+} from "@/util/md3";
 import {
   autoUpdate,
   FloatingFocusManager,
@@ -41,7 +41,7 @@ import {
 
 import { MdTypography } from "../typography";
 import { MonthList } from "./util";
-import styles from "@/app/styles/datepicker.module.css";
+import styles from "@/styles/datepicker.module.css";
 import classNames from "classnames";
 
 type DateRange = {
