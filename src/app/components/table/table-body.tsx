@@ -8,10 +8,12 @@ export const TableBody = ({
   table,
   selectedCell,
   onCellSelected,
+  ignoreSelectionColumns,
 }: {
   table: Table<any>;
   selectedCell?: Cell<any, unknown> | null;
   onCellSelected?: Dispatch<SetStateAction<any>>;
+  ignoreSelectionColumns?: string[];
 }) => {
   const [hoverInfo, setHoverInfo] = useState<{
     row: Row<any>;
@@ -64,12 +66,7 @@ export const TableBody = ({
     <tbody>
       {table.getRowModel().rows.map((row) => {
         return (
-          <tr
-            key={row.id}
-            // style={{
-            //   borderBottom: `1px solid var(--md-sys-color-outline-variant)`,
-            // }}
-          >
+          <tr key={row.id}>
             {row.getVisibleCells().map((cell) => {
               return (
                 <td
@@ -88,6 +85,8 @@ export const TableBody = ({
                     setHoverInfo((prev) => (prev?.row === row ? null : prev));
                   }}
                   onClick={(e) => {
+                    if (ignoreSelectionColumns?.includes(cell.column.id))
+                      return;
                     row.getIsSelected()
                       ? onCellSelected?.(null)
                       : onCellSelected?.(cell);

@@ -39,6 +39,7 @@ export const NewBasicTable = ({
   columns,
   pinningColumns = [],
   controlColumns = [],
+  ignoreSelectionColumns = [],
   isSingleSelect = false,
   getSelectionRows,
   actionComponent,
@@ -47,6 +48,7 @@ export const NewBasicTable = ({
   columns: any[];
   pinningColumns?: string[];
   controlColumns?: string[];
+  ignoreSelectionColumns?: string[];
   isSingleSelect?: boolean;
   getSelectionRows?: (Rows: any[]) => void;
   actionComponent?: React.ReactNode;
@@ -200,12 +202,14 @@ export const NewBasicTable = ({
                 table={table}
                 selectedCell={selectedCell}
                 onCellSelected={setSelectedCell}
+                ignoreSelectionColumns={ignoreSelectionColumns}
               />
             ) : (
               <TableBody
                 table={table}
                 selectedCell={selectedCell}
                 onCellSelected={setSelectedCell}
+                ignoreSelectionColumns={ignoreSelectionColumns}
               />
             )}
           </table>
