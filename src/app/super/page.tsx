@@ -4,6 +4,8 @@ import {
   MdFilledButton,
   MdIcon,
   MdIconButton,
+  MdMenu,
+  MdMenuItem,
   MdOutlinedButton,
   MdRippleEffect,
   MdSwitch,
@@ -18,6 +20,7 @@ import TSLineLogo from "@/../public/logo_tsline.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function SuperHome() {
   return (
@@ -65,6 +68,7 @@ const CompanyCard = (props: {
   companyLogo?: React.ReactNode;
 }) => {
   const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <div
@@ -77,7 +81,7 @@ const CompanyCard = (props: {
         <MdTypography variant="body" size="medium" prominent>
           {props.companyName}
         </MdTypography>
-        <div className="flex items-center">
+        <div className="flex items-center relative">
           {props.isTemporarySaved && (
             <MdTypography
               variant="label"
@@ -87,15 +91,43 @@ const CompanyCard = (props: {
               Temporary Saved
             </MdTypography>
           )}
-          <MdIconButton
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <MdIcon>
-              <MoreVert />
-            </MdIcon>
-          </MdIconButton>
+          <div className="relative z-10">
+            <MdIconButton
+              id="menu-anchor"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsMenuOpen(!isMenuOpen);
+              }}
+            >
+              <MdIcon>
+                <MoreVert />
+              </MdIcon>
+            </MdIconButton>
+            <MdMenu
+              open={isMenuOpen}
+              anchor="menu-anchor"
+              anchorCorner="end-end"
+              menuCorner="start-end"
+              close={() => setIsMenuOpen(false)}
+            >
+              <MdMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMenuOpen(false);
+                }}
+              >
+                <div slot="headline">Copy</div>
+              </MdMenuItem>
+              <MdMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMenuOpen(false);
+                }}
+              >
+                <div slot="headline">Delete</div>
+              </MdMenuItem>
+            </MdMenu>
+          </div>
         </div>
       </div>
       <div className="flex-1 flex-col flex justify-center items-center">

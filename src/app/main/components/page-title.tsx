@@ -9,7 +9,7 @@ export const PageTitle = ({
 }: {
   category: string;
   title: string;
-  updatedDate: DateTime;
+  updatedDate?: DateTime;
   className?: string;
 }) => {
   return (
@@ -31,9 +31,11 @@ export const PageTitle = ({
           {title}
         </MdTypography>
       </div>
-      <MdTypography variant="body" size="medium" className="text-outline">
-        {`Updated at ${updatedDate.toFormat("yyyy-MM-dd HH:mm:ss")}`}
-      </MdTypography>
+      {updatedDate && (
+        <MdTypography variant="body" size="medium" className="text-outline">
+          {`Updated at ${updatedDate.toFormat("yyyy-MM-dd HH:mm:ss")}`}
+        </MdTypography>
+      )}
     </div>
   );
 };
