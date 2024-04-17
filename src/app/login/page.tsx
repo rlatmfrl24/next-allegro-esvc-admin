@@ -11,6 +11,7 @@ import { MdCheckbox, MdElevatedCard, MdFilledButton } from "@/util/md3";
 import Logo from "../components/logo";
 import { NAOutlinedTextField } from "../components/na-textfield";
 import { MdTypography } from "../components/typography";
+import NAOutlinedListBox from "../components/na-outline-listbox";
 
 export default function LoginPage() {
   const [id, setId] = useState("");
@@ -39,6 +40,17 @@ export default function LoginPage() {
           >
             Login to your Account
           </MdTypography>
+          <NAOutlinedListBox
+            className="w-full mt-12"
+            initialValue="System Admin"
+            options={[
+              "System Admin",
+              "Cyberlogitec-Busan",
+              "Cyberlogitec-Seoul",
+              "Cyberlogitec-Singapore",
+              "Cyberlogitec-Vietnam",
+            ]}
+          />
           <NAOutlinedTextField
             label="ID"
             className="w-full"

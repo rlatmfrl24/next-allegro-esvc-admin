@@ -22,6 +22,7 @@ export default function BasicInformationStep() {
         ({
           companyCode: faker.string.alphanumeric(5).toUpperCase(),
           companyName: faker.company.name(),
+          urlContextPath: "",
           representative: faker.person.fullName(),
           location: faker.location.country(),
           locationDetail: faker.lorem.sentence(),
@@ -86,6 +87,20 @@ export default function BasicInformationStep() {
           readOnly
           className="w-80"
           value={currentCompanyStore.basicInformation.companyCode || ""}
+        />
+        <NAOutlinedTextField
+          label="URL Context Path"
+          className="flex-1"
+          value={currentCompanyStore.basicInformation.urlContextPath || ""}
+          handleValueChange={(value) => {
+            setCurrentCompanyStore({
+              ...currentCompanyStore,
+              basicInformation: {
+                ...currentCompanyStore.basicInformation,
+                urlContextPath: value,
+              },
+            });
+          }}
         />
       </div>
       <DividerComponent className="border-dotted my-2" />

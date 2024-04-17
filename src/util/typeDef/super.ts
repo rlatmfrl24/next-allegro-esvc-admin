@@ -3,6 +3,7 @@ import { DateTime } from "luxon";
 export type CompanyType = {
   companyName: string;
   companyCode: string;
+  urlContextPath: string;
   effectiveDate?: [DateTime, DateTime];
   representative: string;
   location: string;
