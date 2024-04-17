@@ -125,7 +125,7 @@ export const mainMenuItems: MenuItemType[] = [
         id: "message",
         name: "Message Management",
         originName: "Message Management",
-        link: "message ",
+        link: "message",
         isAvailable: true,
         subMenu: [],
       },

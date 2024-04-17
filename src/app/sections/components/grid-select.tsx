@@ -51,9 +51,9 @@ export const GridSelectComponent = ({
       flip(),
       size({
         apply({ rects, elements, availableHeight }) {
-          // Object.assign(elements.floating.style, {
-          //   width: `${rects.reference.width}px`,
-          // });
+          Object.assign(elements.floating.style, {
+            width: `${rects.reference.width}px`,
+          });
           flushSync(() => setMaxHeight(availableHeight));
         },
       }),
@@ -95,7 +95,7 @@ export const GridSelectComponent = ({
   return (
     <>
       <div
-        className={`relative h-10 flex items-center cursor-pointer ${
+        className={`relative p-2 h-full flex items-center cursor-pointer ${
           className ? className : ""
         } ${isOptionOpen ? "" : ""}`}
         ref={refs.setReference}
