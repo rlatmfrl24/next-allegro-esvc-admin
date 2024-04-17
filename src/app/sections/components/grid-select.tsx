@@ -51,9 +51,9 @@ export const GridSelectComponent = ({
       flip(),
       size({
         apply({ rects, elements, availableHeight }) {
-          Object.assign(elements.floating.style, {
-            width: `${rects.reference.width}px`,
-          });
+          // Object.assign(elements.floating.style, {
+          //   width: `${rects.reference.width}px`,
+          // });
           flushSync(() => setMaxHeight(availableHeight));
         },
       }),
@@ -135,7 +135,7 @@ export const GridSelectComponent = ({
             >
               <MdElevation />
               <MdList
-                className="relative rounded overflow-y-auto outline-none"
+                className="relative rounded overflow-y-auto outline-none bg-surfaceContainer"
                 style={{ maxHeight } as CSSProperties}
               >
                 <OverlayScrollbarsComponent defer>

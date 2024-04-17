@@ -24,7 +24,7 @@ export default function MessageManagementSetup() {
         <NAOutlinedListBox
           label="Module"
           initialValue="All Module"
-          options={Object.values(MessageModule)}
+          options={["All Module", ...Object.values(MessageModule)]}
         />
         <NAOutlinedTextField className="flex-1" label="Message or ID" />
         <NAOutlinedListBox label="Type" options={Object.values(MessageType)} />
@@ -38,7 +38,6 @@ export default function MessageManagementSetup() {
           <div className="basis-2/3 flex-auto w-0 ">
             <MessageManagementTable
               onMessageSelect={(message) => {
-                console.log(message);
                 setSelectedMessage(message);
               }}
             />

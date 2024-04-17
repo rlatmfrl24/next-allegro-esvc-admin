@@ -2,23 +2,18 @@ import { useEffect, useState } from "react";
 
 import { NewBasicTable } from "@/app/components/table/new-table";
 import { GridSelectComponent } from "@/app/sections/components/grid-select";
-import {
-  MdIcon,
-  MdIconButton,
-  MdMenu,
-  MdMenuItem,
-  MdTextButton,
-} from "@/util/md3";
+import { MdIcon, MdTextButton } from "@/util/md3";
 import {
   MessageModule,
   MessageProps,
   MessageType,
 } from "@/util/typeDef/message";
-import { Add, ArrowDropDown, MoreVert } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 
 import { createDummyMessageDataset } from "./util";
 import { MdTypography } from "@/app/components/typography";
+import { DeleteActionButton, GridStateSelectComponent } from "./components";
 
 export const MessageManagementTable = ({
   onMessageSelect,
@@ -58,13 +53,9 @@ export const MessageManagementTable = ({
         );
       },
     }),
-    columnHelper.accessor("message", {
-      id: "message",
+    columnHelper.accessor("defaultMessage", {
+      id: "defaultMessage",
       header: "Message (Default)",
-      cell: (info) => {
-        const message = info.getValue();
-        return message.en;
-      },
       size: 320,
     }),
     columnHelper.accessor("type", {
@@ -73,7 +64,20 @@ export const MessageManagementTable = ({
       size: 150,
       minSize: 150,
       cell: (info) => {
-        return GridStateSelectComponent(info.getValue());
+        return GridStateSelectComponent(
+          info.getValue(),
+          (type: MessageType) => {
+            const rowIndex = parseInt(info.row.id);
+            setTableData((prev) => [
+              ...prev.slice(0, rowIndex),
+              {
+                ...prev[rowIndex],
+                type,
+              },
+              ...prev.slice(rowIndex + 1),
+            ]);
+          }
+        );
       },
     }),
     columnHelper.display({
@@ -82,8 +86,11 @@ export const MessageManagementTable = ({
         return (
           <DeleteActionButton
             onClick={() => {
-              const id = info.row.original.id;
-              setTableData((prev) => prev.filter((data) => data.id !== id));
+              const rowIndex = parseInt(info.row.id);
+              setTableData((prev) => [
+                ...prev.slice(0, rowIndex),
+                ...prev.slice(rowIndex + 1),
+              ]);
             }}
           />
         );
@@ -98,7 +105,25 @@ export const MessageManagementTable = ({
     <NewBasicTable
       actionComponent={
         <div className="flex flex-1">
-          <MdTextButton>
+          <MdTextButton
+            onClick={() => {
+              setTableData((prev) => [
+                {
+                  id: "-",
+                  defaultMessage: "",
+                  message: {
+                    en: "",
+                    ja: "",
+                    ko: "",
+                    zh_CN: "",
+                  },
+                  module: MessageModule.BOOKING,
+                  type: MessageType.CONFIRMATION,
+                },
+                ...prev,
+              ]);
+            }}
+          >
             <MdIcon slot="icon">
               <Add fontSize="small" />
             </MdIcon>
@@ -110,68 +135,12 @@ export const MessageManagementTable = ({
       data={tableData}
       isSingleSelect
       ignoreSelectionColumns={["module", "type"]}
+      disableColumns={["id"]}
+      editableColumns={["defaultMessage"]}
       getSelectionRows={(rows) => {
         onMessageSelect && onMessageSelect(rows[0]?.message);
       }}
+      updater={setTableData}
     />
-  );
-};
-
-const GridStateSelectComponent = (state: MessageType) => {
-  const bgStyles = {
-    [MessageType.SUCCESS]: "bg-primaryContainer",
-    [MessageType.ERROR]: "bg-errorContainer",
-    [MessageType.WARNING]: "bg-[#FCE186]",
-    [MessageType.CONFIRMATION]: "bg-[#B4F1BD]",
-  }[state];
-
-  return (
-    <>
-      <div className="h-10 flex items-center justify-between cursor-pointer">
-        <MdTypography
-          variant="label"
-          size="medium"
-          className={`px-2 py-1 ${bgStyles} rounded-lg`}
-        >
-          {state}
-        </MdTypography>
-        <ArrowDropDown />
-      </div>
-    </>
-  );
-};
-
-const DeleteActionButton = ({ onClick }: { onClick?: () => void }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  return (
-    <div className="relative">
-      <MdIconButton
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsMenuOpen(!isMenuOpen);
-        }}
-        id="menu-anchor"
-      >
-        <MoreVert />
-      </MdIconButton>
-      <MdMenu
-        open={isMenuOpen}
-        anchor="menu-anchor"
-        anchorCorner="end-end"
-        menuCorner="start-end"
-        close={() => setIsMenuOpen(false)}
-      >
-        <MdMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsMenuOpen(false);
-            onClick && onClick();
-          }}
-        >
-          <div slot="headline">Delete</div>
-        </MdMenuItem>
-      </MdMenu>
-    </div>
   );
 };

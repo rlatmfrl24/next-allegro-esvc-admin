@@ -1,5 +1,4 @@
 export enum MessageModule {
-  ALL_MODULE = "All Module",
   BOOKING = "Booking",
   IMPORT = "Import",
   TRACK_AND_TRACE = "Track & Trace",
@@ -18,6 +17,7 @@ export enum MessageType {
 export interface MessageProps {
   module: MessageModule;
   id: string;
+  defaultMessage: string;
   message: {
     en: string;
     ko: string;

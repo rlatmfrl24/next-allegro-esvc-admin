@@ -55,10 +55,6 @@ export default function ThemeStyleStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTheme, setCurrentCompanyStore]);
 
-  useEffect(() => {
-    console.log(currentCompanyStore.themeStyle.logo);
-  }, [currentCompanyStore]);
-
   return (
     <div className="flex flex-1 gap-6">
       <div className="min-w-[480px] border border-outlineVariant rounded-lg px-6 py-4 flex flex-col gap-4">

@@ -10,6 +10,7 @@ export function createDummyMessageDataset(): MessageProps[] {
     id: faker.string.alphanumeric(10).toUpperCase(),
     module: faker.helpers.arrayElement(Object.values(MessageModule)),
     type: faker.helpers.arrayElement(Object.values(MessageType)),
+    defaultMessage: faker.lorem.sentence(),
     message: {
       en: faker.lorem.sentence(),
       ko: fakerKO.lorem.sentence(),

@@ -85,9 +85,6 @@ export const MdOutlinedTextField = createComponent({
   tagName: "md-outlined-text-field",
   elementClass: MdOutlinedTextFieldWebComponent,
   react: React,
-  events: {
-    focus: "focus",
-  },
 });
 
 export const MdCheckbox = createComponent({
