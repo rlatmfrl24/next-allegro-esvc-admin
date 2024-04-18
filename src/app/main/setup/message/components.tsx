@@ -1,5 +1,5 @@
 import { MdTypography } from "@/app/components/typography";
-import { basicDropdownStyles } from "@/app/constants";
+import { getBasicDropdownStyles } from "@/app/constants";
 import {
   MdElevatedCard,
   MdIconButton,
@@ -55,7 +55,7 @@ export const GridStateSelectComponent = (
 
   const { isMounted, styles: floatingTransitionStyles } = useTransitionStyles(
     context,
-    basicDropdownStyles
+    getBasicDropdownStyles("down")
   );
 
   const { getReferenceProps, getFloatingProps } = useInteractions([

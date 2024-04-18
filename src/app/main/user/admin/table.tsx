@@ -1,24 +1,19 @@
 import { DividerComponent } from "@/app/components/divider";
 import { NewBasicTable } from "@/app/components/table/new-table";
 import { MdTypography } from "@/app/components/typography";
-import {
-  MdIcon,
-  MdIconButton,
-  MdMenu,
-  MdMenuItem,
-  MdTextButton,
-} from "@/util/md3";
+import { MdDialog, MdIcon, MdTextButton } from "@/util/md3";
 import {
   AdminUserProps,
   AdminUserStatus,
   AdminUserType,
 } from "@/util/typeDef/user";
 import { faker } from "@faker-js/faker";
-import { Add, MoreVert } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { useMemo, useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
+import { AddAdminUserDialog } from "./dialog";
 
 function createDummaryAdminUser(): AdminUserProps {
   return {
@@ -65,6 +60,8 @@ export const AdminUserTable = () => {
 
   const [tableData, setTableData] = useState<AdminUserProps[]>(dummyData);
   const [selectedUser, setSelectedUser] = useState<AdminUserProps | null>(null);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const columnHelper = createColumnHelper<AdminUserProps>();
 
   const columnDefs = [
@@ -149,30 +146,48 @@ export const AdminUserTable = () => {
   ];
 
   return (
-    <NewBasicTable
-      actionComponent={
-        <div className="flex flex-1 items-center gap-2">
-          <MdTextButton>
-            <MdIcon slot="icon">
-              <Add fontSize="small" />
-            </MdIcon>
-            Add Admin
-          </MdTextButton>
-          {selectedUser && (
-            <>
-              <DividerComponent orientation="vertical" className="h-6" />
-              <MdTextButton>Edit</MdTextButton>
-            </>
-          )}
-        </div>
-      }
-      data={tableData}
-      columns={columnDefs}
-      isSingleSelect
-      ignoreSelectionColumns={["action"]}
-      getSelectionRows={(rows) => {
-        setSelectedUser(rows[0]);
-      }}
-    />
+    <>
+      <NewBasicTable
+        actionComponent={
+          <div className="flex flex-1 items-center gap-2">
+            <MdTextButton
+              onClick={() => {
+                setIsAddDialogOpen(true);
+              }}
+            >
+              <MdIcon slot="icon">
+                <Add fontSize="small" />
+              </MdIcon>
+              Add Admin
+            </MdTextButton>
+            {selectedUser && (
+              <>
+                <DividerComponent orientation="vertical" className="h-6" />
+                <MdTextButton
+                  onClick={() => {
+                    setIsEditDialogOpen(true);
+                  }}
+                >
+                  Edit
+                </MdTextButton>
+              </>
+            )}
+          </div>
+        }
+        data={tableData}
+        columns={columnDefs}
+        isSingleSelect
+        ignoreSelectionColumns={["action"]}
+        getSelectionRows={(rows) => {
+          setSelectedUser(rows[0]);
+        }}
+      />
+      <AddAdminUserDialog
+        isOpen={isAddDialogOpen}
+        onOpenChage={() => {
+          setIsAddDialogOpen(false);
+        }}
+      />
+    </>
   );
 };

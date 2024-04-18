@@ -1,4 +1,4 @@
-import { basicDropdownStyles } from "@/app/constants";
+import { getBasicDropdownStyles } from "@/app/constants";
 import {
   MdElevatedCard,
   MdIcon,
@@ -49,7 +49,7 @@ export const TableActionButton = ({
 
   const { isMounted, styles: floatingTransitionStyles } = useTransitionStyles(
     context,
-    basicDropdownStyles
+    getBasicDropdownStyles("down")
   );
 
   const { getReferenceProps, getFloatingProps } = useInteractions([

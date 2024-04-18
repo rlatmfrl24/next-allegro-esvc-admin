@@ -7,6 +7,7 @@ import {
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import {
   autoUpdate,
+  flip,
   offset,
   shift,
   size,
@@ -21,6 +22,8 @@ import {
 import { ArrowDropDown } from "@mui/icons-material";
 import { MdTypography } from "./typography";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import { flushSync } from "react-dom";
+import { getBasicDropdownStyles } from "../constants";
 
 type MdOutlinedTextFieldProps = React.ComponentProps<
   typeof MdOutlinedTextField
@@ -41,6 +44,7 @@ export default function NAOutlinedListBox({
   className?: string;
 } & MdOutlinedTextFieldProps) {
   const [query, setQuery] = useState(initialValue || "");
+  const [maxHeight, setMaxHeight] = useState(0);
   const [isListOpen, setIsListOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const listRef = useRef<any[]>([]);
@@ -57,22 +61,25 @@ export default function NAOutlinedListBox({
     setIsListOpen(false);
   }
 
-  const { refs, floatingStyles, context } = useFloating({
-    open: isListOpen,
-    onOpenChange: setIsListOpen,
-    middleware: [
-      offset(2),
-      shift(),
-      size({
-        apply({ rects, elements }) {
-          Object.assign(elements.floating.style, {
-            width: `${rects.reference.width}px`,
-          });
-        },
-      }),
-    ],
-    whileElementsMounted: autoUpdate,
-  });
+  const { refs, floatingStyles, context, middlewareData, placement } =
+    useFloating({
+      open: isListOpen,
+      onOpenChange: setIsListOpen,
+      middleware: [
+        offset(2),
+        shift(),
+        flip(),
+        size({
+          apply({ rects, elements, availableHeight }) {
+            Object.assign(elements.floating.style, {
+              width: `${rects.reference.width}px`,
+            });
+            flushSync(() => setMaxHeight(availableHeight));
+          },
+        }),
+      ],
+      whileElementsMounted: autoUpdate,
+    });
 
   const focus = useFocus(context);
   const click = useClick(context);
@@ -87,27 +94,12 @@ export default function NAOutlinedListBox({
     [focus, click, dismiss, listNavigation]
   );
 
-  const { isMounted, styles } = useTransitionStyles(context, {
-    duration: {
-      open: 200,
-      close: 100,
-    },
-    initial: {
-      opacity: 0,
-      transformOrigin: "top",
-      transform: "scaleY(0.55) translateY(-10px)",
-    },
-    open: {
-      opacity: 1,
-      transformOrigin: "top",
-      transform: "scaleY(1) translateY(0)",
-    },
-    close: {
-      opacity: 0,
-      transformOrigin: "top",
-      transform: "scaleY(0.55) translateY(-10px)",
-    },
-  });
+  const { isMounted, styles } = useTransitionStyles(
+    context,
+    placement === "top"
+      ? getBasicDropdownStyles("up")
+      : getBasicDropdownStyles("down")
+  );
 
   return (
     <div
@@ -147,9 +139,10 @@ export default function NAOutlinedListBox({
                 boxShadow:
                   "0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3) ",
                 ...styles,
+                maxHeight: maxHeight,
               } as CSSProperties
             }
-            className="relative max-h-[600px] overflow-y-auto rounded bg-surfaceContainerLow shadow"
+            className="relative overflow-y-auto rounded bg-surfaceContainerLow shadow"
           >
             <OverlayScrollbarsComponent defer>
               {options.map((option, index) => (
