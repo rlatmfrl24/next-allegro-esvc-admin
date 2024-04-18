@@ -60,7 +60,6 @@ export const AdminUserDialog = ({
   }
 
   useEffect(() => {
-    console.log("initialData", initialData);
     setCurrentInfo(
       initialData ||
         ({
@@ -213,8 +212,8 @@ export const AdminUserDialog = ({
             </MdTypography>
             <NAOutlinedMultiListBox
               options={["Seoul", "Busan", "Incheon", "Vietnam", "Singapore"]}
+              initialValue={currentInfo?.noficication?.officeNotification || []}
               onSelectionChange={(selection) => {
-                // console.log(selection);
                 setCurrentInfo((prev: AdminUserProps) => ({
                   ...prev,
                   noficication: {

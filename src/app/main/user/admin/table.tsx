@@ -183,18 +183,20 @@ export const AdminUserTable = () => {
           setSelectedUser(rows[0]);
         }}
       />
-      <AdminUserDialog
-        isOpen={isAddDialogOpen}
-        mode="add"
-        onOpenChage={() => {
-          setIsAddDialogOpen(false);
-        }}
-        onConfirm={(data) => {
-          setSelectedUser(null);
-          setTableData((prev) => [data, ...prev]);
-        }}
-      />
-      {selectedUser && (
+      {isAddDialogOpen && (
+        <AdminUserDialog
+          isOpen={isAddDialogOpen}
+          mode="add"
+          onOpenChage={() => {
+            setIsAddDialogOpen(false);
+          }}
+          onConfirm={(data) => {
+            setSelectedUser(null);
+            setTableData((prev) => [data, ...prev]);
+          }}
+        />
+      )}
+      {selectedUser && isEditDialogOpen && (
         <AdminUserDialog
           isOpen={isEditDialogOpen}
           mode="edit"
