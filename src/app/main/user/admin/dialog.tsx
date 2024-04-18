@@ -60,17 +60,14 @@ export const AdminUserDialog = ({
   }
 
   useEffect(() => {
+    console.log("initialData", initialData);
     setCurrentInfo(
       initialData ||
         ({
           type: AdminUserType.CompanyAdmin,
         } as AdminUserProps)
     );
-  }, [initialData]);
-
-  useEffect(() => {
-    console.log(currentInfo);
-  }, [currentInfo]);
+  }, [initialData, isOpen]);
 
   return (
     <MdDialog
@@ -575,6 +572,7 @@ export const AdminUserDialog = ({
             onConfirm &&
               onConfirm({
                 ...currentInfo,
+                uuid: currentInfo.uuid || faker.string.uuid(),
                 status: AdminUserStatus.Confirm,
                 updatedAt: DateTime.now(),
               });

@@ -1,7 +1,7 @@
 import { DividerComponent } from "@/app/components/divider";
 import { NewBasicTable } from "@/app/components/table/new-table";
 import { MdTypography } from "@/app/components/typography";
-import { MdDialog, MdIcon, MdTextButton } from "@/util/md3";
+import { MdIcon, MdTextButton } from "@/util/md3";
 import {
   AdminUserProps,
   AdminUserStatus,
@@ -177,6 +177,7 @@ export const AdminUserTable = () => {
         data={tableData}
         columns={columnDefs}
         isSingleSelect
+        controlColumns={["action"]}
         ignoreSelectionColumns={["action"]}
         getSelectionRows={(rows) => {
           setSelectedUser(rows[0]);
@@ -189,6 +190,7 @@ export const AdminUserTable = () => {
           setIsAddDialogOpen(false);
         }}
         onConfirm={(data) => {
+          setSelectedUser(null);
           setTableData((prev) => [data, ...prev]);
         }}
       />
@@ -201,13 +203,11 @@ export const AdminUserTable = () => {
           }}
           initialData={selectedUser}
           onConfirm={(data) => {
+            setSelectedUser(data);
             setTableData((prev) =>
-              prev.map((item) => {
-                if (item.uuid === data.uuid) {
-                  return data;
-                }
-                return item;
-              })
+              prev.map((item) =>
+                item.uuid === data.uuid ? { ...item, ...data } : item
+              )
             );
           }}
         />
