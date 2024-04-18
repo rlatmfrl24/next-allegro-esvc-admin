@@ -1,18 +1,19 @@
 import { DividerComponent } from "@/app/components/divider";
 import { NewBasicTable } from "@/app/components/table/new-table";
-import { MdIcon, MdTextButton } from "@/util/md3";
+import { MdIcon, MdIconButton, MdTextButton } from "@/util/md3";
 import {
   CompanyType,
   CustomerUserProps,
   CustomerUserStatus,
 } from "@/util/typeDef/user";
 import { faker } from "@faker-js/faker";
-import { Add } from "@mui/icons-material";
+import { Add, Launch } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
 import { MdTypography } from "@/app/components/typography";
+import Link from "next/link";
 
 function createDummyCustomerUser(): CustomerUserProps {
   return {
@@ -62,16 +63,58 @@ export const CustomerUserTable = () => {
       id: "userId",
       header: "User ID",
       minSize: 120,
+      cell: (info) => {
+        return (
+          <div className="flex items-center gap-2 justify-between">
+            <MdTypography variant="body" size="medium">
+              {info.getValue()}
+            </MdTypography>
+            <Link
+              href={`https://next-allegro-esvc-md3.vercel.app/main/dashboard`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <MdIconButton>
+                <MdIcon>
+                  <Launch />
+                </MdIcon>
+              </MdIconButton>
+            </Link>
+          </div>
+        );
+      },
     }),
     columnHelper.accessor("status", {
       id: "status",
       header: "Status",
       minSize: 120,
+      cell: (info) => {
+        const bgColor = {
+          [CustomerUserStatus.newRegist]: "bg-surfaceContainerHigh",
+          [CustomerUserStatus.update]: "bg-surfaceContainerHigh",
+          [CustomerUserStatus.confirm]: "bg-[#B4F1BD]",
+          [CustomerUserStatus.rejectForRegist]: "bg-errorContainer text-error",
+          [CustomerUserStatus.rejectForUpdate]: "bg-errorContainer text-error",
+          [CustomerUserStatus.block]: "bg-errorContainer text-error",
+          [CustomerUserStatus.withdraw]: "bg-errorContainer text-error",
+        }[info.getValue()];
+
+        return (
+          <MdTypography
+            variant="label"
+            size="medium"
+            className={`px-2 py-1 rounded-lg w-fit ${bgColor}`}
+          >
+            {info.getValue()}
+          </MdTypography>
+        );
+      },
     }),
     columnHelper.accessor("email", {
       id: "email",
       header: "Email",
       minSize: 120,
+      size: 200,
     }),
     columnHelper.accessor("companyName", {
       id: "companyName",
@@ -178,7 +221,7 @@ export const CustomerUserTable = () => {
         data={tableData}
         isSingleSelect
         controlColumns={["action"]}
-        ignoreSelectionColumns={["action"]}
+        ignoreSelectionColumns={["action", "userId"]}
         getSelectionRows={(rows) => {
           setSelectedUser(rows[0]);
         }}
