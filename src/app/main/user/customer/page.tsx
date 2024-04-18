@@ -20,7 +20,9 @@ export default function CustomerUserPage() {
   const tempCountrySet = useMemo(() => {
     return Array.from({ length: 100 }, (_, i) => {
       return faker.location.country();
-    });
+    })
+      .filter((v, i, a) => a.indexOf(v) === i)
+      .sort();
   }, []);
 
   return (
@@ -73,7 +75,7 @@ export default function CustomerUserPage() {
           />
           <NAOutlinedTextField placeholder="Customer Code" />
         </div>
-        <NAOutlinedTextField label="Company Name" className="flex-1" />
+        <NAOutlinedTextField label="Company Name" className="flex-1" value="" />
         <NAOutlinedListBox
           label="Company Type"
           className="flex-1"

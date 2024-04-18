@@ -24,7 +24,7 @@ export const NAOutlinedTextField = ({
   className?: string;
 } & MdOutlinedTextFieldProps) => {
   const [hasValue, setHasValue] = useState(false);
-  const inputRef = useRef(null);
+  const inputRef = useRef<any>(null);
 
   useEffect(() => {
     if (!props.value || props.value.length === 0) {
@@ -76,6 +76,11 @@ export const NAOutlinedTextField = ({
         onInput={(e) => {
           if (props.type !== "number") {
             handleValueChange?.(e.currentTarget.value);
+          }
+          if (e.currentTarget.value.length > 0) {
+            setHasValue(true);
+          } else {
+            setHasValue(false);
           }
         }}
         onBlur={(e) => {
