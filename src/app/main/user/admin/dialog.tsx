@@ -1,4 +1,9 @@
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
+
+import SubsumIndicator from "@/../public/icon_subsum_indicator.svg";
 import { DividerComponent } from "@/app/components/divider";
+import NAOutlinedAutoComplete from "@/app/components/na-autocomplete";
 import NAOutlinedListBox from "@/app/components/na-outline-listbox";
 import NAOutlinedMultiListBox from "@/app/components/na-outline-multi-listbox";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
@@ -11,9 +16,7 @@ import {
   MdOutlinedButton,
 } from "@/util/md3";
 import { AdminUserProps, AdminUserType } from "@/util/typeDef/user";
-import { useEffect, useState } from "react";
-import SubsumIndicator from "@/../public/icon_subsum_indicator.svg";
-import Image from "next/image";
+import { faker } from "@faker-js/faker";
 
 export const AdminUserDialog = ({
   isOpen,
@@ -29,12 +32,17 @@ export const AdminUserDialog = ({
   onConfirm?: (data: AdminUserProps) => void;
 }) => {
   const [currentInfo, setCurrentInfo] = useState<AdminUserProps>(
-    initialData || ({} as AdminUserProps)
+    initialData ||
+      ({
+        type: AdminUserType.CompanyAdmin,
+      } as AdminUserProps)
   );
 
-  useEffect(() => {
-    setCurrentInfo(initialData || ({} as AdminUserProps));
-  }, [initialData]);
+  const tempOfficeCodeSet = useMemo(() => {
+    return Array.from({ length: 10 }, (_, i) =>
+      faker.string.alphanumeric(5).toUpperCase()
+    );
+  }, []);
 
   function CheckValidity() {
     const invalid =
@@ -46,12 +54,27 @@ export const AdminUserDialog = ({
     return !invalid;
   }
 
+  useEffect(() => {
+    setCurrentInfo(
+      initialData ||
+        ({
+          type: AdminUserType.CompanyAdmin,
+        } as AdminUserProps)
+    );
+  }, [initialData]);
+
+  useEffect(() => {
+    console.log(currentInfo);
+  }, [currentInfo]);
+
   return (
     <MdDialog
       className="min-w-[960px] min-h-fit"
       open={isOpen}
       closed={() => {
-        setCurrentInfo({} as AdminUserProps);
+        setCurrentInfo({
+          type: AdminUserType.CompanyAdmin,
+        } as AdminUserProps);
         onOpenChage();
       }}
     >
@@ -108,11 +131,19 @@ export const AdminUserDialog = ({
               }));
             }}
           />
-          <NAOutlinedTextField
+          <NAOutlinedAutoComplete
             className="flex-1"
             label="Office Code"
             required
-            value={currentInfo.office || ""}
+            itemList={tempOfficeCodeSet}
+            initialValue={currentInfo.office || ""}
+            showAllonFocus
+            onItemSelection={(value) => {
+              setCurrentInfo((prev: AdminUserProps) => ({
+                ...prev,
+                office: value,
+              }));
+            }}
           />
           <NAOutlinedTextField
             className="flex-1"
@@ -534,12 +565,11 @@ export const AdminUserDialog = ({
           Cancel
         </MdOutlinedButton>
         <MdFilledButton
+          disabled={!CheckValidity()}
           onClick={() => {
-            if (CheckValidity()) {
-              onConfirm && onConfirm(currentInfo);
-              setCurrentInfo({} as AdminUserProps);
-              onOpenChage();
-            }
+            onConfirm && onConfirm(currentInfo);
+            setCurrentInfo({} as AdminUserProps);
+            onOpenChage();
           }}
         >
           {

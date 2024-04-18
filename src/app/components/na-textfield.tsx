@@ -64,7 +64,17 @@ export const NAOutlinedTextField = ({
             ) {
               e.preventDefault();
             }
+          } else {
+            props.onKeyDown?.(e);
           }
+        }}
+        onInput={(e) => {
+          if (props.type === "number") {
+            let intValue = parseFloat(e.currentTarget.value);
+            if (isNaN(intValue)) intValue = 0;
+            e.currentTarget.value = intValue.toString();
+          }
+          handleValueChange?.(e.currentTarget.value);
         }}
         onBlur={(e) => {
           if (props.type === "number") {
