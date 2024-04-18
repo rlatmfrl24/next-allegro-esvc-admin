@@ -26,19 +26,25 @@ export default function AdminUserPage() {
         />
         <NAOutlinedListBox
           label="User Type"
-          options={["All Type"]}
+          options={[
+            "All Type",
+            "System Admin",
+            "Company Admin",
+            "General Staff",
+          ]}
           initialValue="All Type"
         />
         <NAOutlinedListBox
           label="Status"
-          options={["All Status"]}
+          options={["All Status", "Confirm", "Delete"]}
           initialValue="All Status"
         />
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 justify-end">
         <MdTextButton>Reset</MdTextButton>
         <MdFilledButton>Search</MdFilledButton>
       </div>
+      <div className="px-6 py-4 rounded-lg border border-outlineVariant flex flex-col flex-1"></div>
     </div>
   );
 }
