@@ -188,6 +188,9 @@ export const AdminUserTable = () => {
         onOpenChage={() => {
           setIsAddDialogOpen(false);
         }}
+        onConfirm={(data) => {
+          setTableData((prev) => [data, ...prev]);
+        }}
       />
       {selectedUser && (
         <AdminUserDialog
@@ -197,6 +200,16 @@ export const AdminUserTable = () => {
             setIsEditDialogOpen(false);
           }}
           initialData={selectedUser}
+          onConfirm={(data) => {
+            setTableData((prev) =>
+              prev.map((item) => {
+                if (item.uuid === data.uuid) {
+                  return data;
+                }
+                return item;
+              })
+            );
+          }}
         />
       )}
     </>

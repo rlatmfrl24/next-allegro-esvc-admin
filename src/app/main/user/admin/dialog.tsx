@@ -15,8 +15,13 @@ import {
   MdFilledButton,
   MdOutlinedButton,
 } from "@/util/md3";
-import { AdminUserProps, AdminUserType } from "@/util/typeDef/user";
+import {
+  AdminUserProps,
+  AdminUserStatus,
+  AdminUserType,
+} from "@/util/typeDef/user";
 import { faker } from "@faker-js/faker";
+import { DateTime } from "luxon";
 
 export const AdminUserDialog = ({
   isOpen,
@@ -567,7 +572,12 @@ export const AdminUserDialog = ({
         <MdFilledButton
           disabled={!CheckValidity()}
           onClick={() => {
-            onConfirm && onConfirm(currentInfo);
+            onConfirm &&
+              onConfirm({
+                ...currentInfo,
+                status: AdminUserStatus.Confirm,
+                updatedAt: DateTime.now(),
+              });
             setCurrentInfo({} as AdminUserProps);
             onOpenChage();
           }}

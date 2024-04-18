@@ -60,7 +60,12 @@ export const NAOutlinedTextField = ({
                 e.key === "ArrowLeft" ||
                 e.key === "ArrowRight" ||
                 e.key === "Tab"
-              )
+              ) ||
+              (e.key === "-" && e.currentTarget.selectionStart !== 0) ||
+              (e.key === "." && e.currentTarget.value.includes(".")) ||
+              (e.key === "0" &&
+                e.currentTarget.value === "0" &&
+                e.currentTarget.selectionStart === 1)
             ) {
               e.preventDefault();
             }
@@ -69,12 +74,9 @@ export const NAOutlinedTextField = ({
           }
         }}
         onInput={(e) => {
-          if (props.type === "number") {
-            let intValue = parseFloat(e.currentTarget.value);
-            if (isNaN(intValue)) intValue = 0;
-            e.currentTarget.value = intValue.toString();
+          if (props.type !== "number") {
+            handleValueChange?.(e.currentTarget.value);
           }
-          handleValueChange?.(e.currentTarget.value);
         }}
         onBlur={(e) => {
           if (props.type === "number") {
