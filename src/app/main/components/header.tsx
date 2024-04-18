@@ -90,6 +90,7 @@ export const HeaderComponent = () => {
           ref={refs.setFloating}
           {...getFloatingProps()}
           style={{ ...floatingStyles }}
+          className="z-10"
         >
           <MdElevatedCard style={{ ...styles }}>
             <MdList className="rounded-2xl overflow-hidden">

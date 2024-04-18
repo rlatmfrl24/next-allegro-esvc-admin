@@ -125,7 +125,7 @@ export const mainMenuItems: MenuItemType[] = [
         id: "message",
         name: "Message Management",
         originName: "Message Management",
-        link: "message ",
+        link: "message",
         isAvailable: true,
         subMenu: [],
       },
@@ -590,6 +590,49 @@ export const TimeZoneOptions = [
   "GMT+14:00",
 ];
 
-export const MaxPageSizeOptions = ["25", "50", "75", "100"];
+export const MaxPageSizeOptions = [
+  "10",
+  "20",
+  "30",
+  "40",
+  "50",
+  "60",
+  "70",
+  "80",
+  "90",
+  "100",
+];
 
 export const LanguageOptions = ["English", "Korean", "Chinese", "Japanese"];
+
+export const basicPopoverStyles = {
+  duration: {
+    open: 200,
+    close: 150,
+  },
+  initial: { opacity: 0, transform: "translateY(-8px)" },
+  open: { opacity: 1, transform: "translateY(0px)" },
+  close: { opacity: 0, transform: "translateY(-8px)" },
+};
+
+export const basicDropdownStyles = {
+  duration: {
+    open: 200,
+    close: 100,
+  },
+  initial: {
+    opacity: 0,
+    transformOrigin: "top",
+    transform: "scaleY(0.55) translateY(-10px)",
+  },
+  open: {
+    opacity: 1,
+    transformOrigin: "top",
+    transform: "scaleY(1) translateY(0)",
+  },
+  close: {
+    opacity: 0,
+    transformOrigin: "top",
+    transform: "scaleY(0.55) translateY(-10px)",
+  },
+};

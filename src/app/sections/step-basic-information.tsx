@@ -3,13 +3,13 @@
 import { useMemo } from "react";
 import { useRecoilState } from "recoil";
 
-import { MdRangeDatePicker } from "@/app/components/datepickers/range-picker";
 import { DividerComponent } from "@/app/components/divider";
 import NAMultiAutoComplete from "@/app/components/na-multi-autocomplete";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
 import { CurrentCompanyState } from "@/store/super.store";
 import { CompanyType } from "@/util/typeDef/super";
 import { faker } from "@faker-js/faker";
+import { DateRangePicker } from "../components/datepicker/date-range-picker";
 
 export default function BasicInformationStep() {
   const [currentCompanyStore, setCurrentCompanyStore] =
@@ -22,6 +22,7 @@ export default function BasicInformationStep() {
         ({
           companyCode: faker.string.alphanumeric(5).toUpperCase(),
           companyName: faker.company.name(),
+          urlContextPath: "",
           representative: faker.person.fullName(),
           location: faker.location.country(),
           locationDetail: faker.lorem.sentence(),
@@ -87,23 +88,35 @@ export default function BasicInformationStep() {
           className="w-80"
           value={currentCompanyStore.basicInformation.companyCode || ""}
         />
-      </div>
-      <DividerComponent className="border-dotted my-2" />
-      <div className="flex">
-        <MdRangeDatePicker
-          className="w-80"
-          defaultStartDate={
-            currentCompanyStore.basicInformation.effectiveDate?.[0]
-          }
-          defaultEndDate={
-            currentCompanyStore.basicInformation.effectiveDate?.[1]
-          }
-          handleDateRangeSelected={(dateRange) => {
+        <NAOutlinedTextField
+          label="URL Context Path"
+          className="flex-1"
+          value={currentCompanyStore.basicInformation.urlContextPath || ""}
+          handleValueChange={(value) => {
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {
                 ...currentCompanyStore.basicInformation,
-                effectiveDate: dateRange,
+                urlContextPath: value,
+              },
+            });
+          }}
+        />
+      </div>
+      <DividerComponent className="border-dotted my-2" />
+      <div className="flex">
+        <DateRangePicker
+          className="w-80"
+          initial={{
+            start: currentCompanyStore.basicInformation.effectiveDate?.[0],
+            end: currentCompanyStore.basicInformation.effectiveDate?.[1],
+          }}
+          onDateChange={(dateRange) => {
+            setCurrentCompanyStore({
+              ...currentCompanyStore,
+              basicInformation: {
+                ...currentCompanyStore.basicInformation,
+                effectiveDate: [dateRange.start!, dateRange.end!],
               },
             });
           }}

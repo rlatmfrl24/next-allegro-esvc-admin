@@ -46,7 +46,6 @@ export default function MainPageStyleStep() {
           multiple
           accept="image/*"
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
-            console.log(e.target.files);
             const files = e.target.files;
             setCurrentCompanyStore((prev) => {
               return {

@@ -48,6 +48,7 @@ export const GridSelectComponent = ({
     middleware: [
       offset(2),
       shift(),
+      flip(),
       size({
         apply({ rects, elements, availableHeight }) {
           Object.assign(elements.floating.style, {
@@ -94,13 +95,17 @@ export const GridSelectComponent = ({
   return (
     <>
       <div
-        className={`relative h-full flex items-center p-2 cursor-pointer ${
+        className={`relative p-2 h-full flex items-center cursor-pointer ${
           className ? className : ""
-        } ${isOptionOpen ? "bg-surfaceContainerLowest" : ""}`}
+        } ${isOptionOpen ? "" : ""}`}
         ref={refs.setReference}
         {...getReferenceProps()}
       >
-        <MdTypography variant="body" size="medium" className="flex-1">
+        <MdTypography
+          variant="body"
+          size="medium"
+          className="flex-1 h-full flex items-center"
+        >
           {selection}
         </MdTypography>
         <MdIcon>
@@ -130,7 +135,7 @@ export const GridSelectComponent = ({
             >
               <MdElevation />
               <MdList
-                className="relative rounded overflow-y-auto outline-none"
+                className="relative rounded overflow-y-auto outline-none bg-surfaceContainer"
                 style={{ maxHeight } as CSSProperties}
               >
                 <OverlayScrollbarsComponent defer>

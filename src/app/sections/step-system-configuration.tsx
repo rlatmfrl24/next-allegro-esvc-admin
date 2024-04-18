@@ -3,6 +3,7 @@
 import { GridSelectComponent } from "./components/grid-select";
 import {
   DateFormatOptions,
+  LanguageOptions,
   MaxPageSizeOptions,
   SearchPeriodOptions,
   TimeZoneOptions,
@@ -10,7 +11,7 @@ import {
 import { BaseItem } from "./components/base-configuration-item";
 import { useRecoilState } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";
-import { LanguageSelect } from "./components/language-select";
+import { GridMultiSelect } from "./components/grid-multi-select";
 
 export default function SystemConfigurationStep() {
   const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
@@ -57,18 +58,18 @@ export default function SystemConfigurationStep() {
       <BaseItem>3</BaseItem>
       <BaseItem>Max Page Size</BaseItem>
       <div className="border-b border-b-outlineVariant">
-        <GridSelectComponent
-          initialSelection={companyStore.configuration.maxPageSize.toString()}
-          onChange={(selection) => {
+        <GridMultiSelect
+          primarySelection={companyStore.configuration.maxPageSize.toString()}
+          options={MaxPageSizeOptions}
+          onChange={(result) => {
             setCompanyStore((prev) => ({
               ...prev,
               configuration: {
                 ...prev.configuration,
-                maxPageSize: parseInt(selection),
+                maxPageSize: parseInt(result.main),
               },
             }));
           }}
-          options={MaxPageSizeOptions}
         />
       </div>
       <BaseItem>4</BaseItem>
@@ -91,9 +92,9 @@ export default function SystemConfigurationStep() {
       <BaseItem>5</BaseItem>
       <BaseItem>Language</BaseItem>
       <div className="border-b border-b-outlineVariant">
-        <LanguageSelect
-          mainLanguage={companyStore.configuration.mainLanguage}
-          languages={companyStore.configuration.languages}
+        <GridMultiSelect
+          primarySelection={companyStore.configuration.mainLanguage}
+          options={LanguageOptions}
           onChange={(result) => {
             setCompanyStore((prev) => ({
               ...prev,
