@@ -6,6 +6,7 @@ import NAOutlinedListBox from "@/app/components/na-outline-listbox";
 import { faker } from "@faker-js/faker";
 import { useMemo } from "react";
 import { MdFilledButton, MdTextButton } from "@/util/md3";
+import { AdminUserTable } from "./table";
 
 export default function AdminUserPage() {
   const tempOfficeOptions = useMemo(() => {
@@ -44,7 +45,13 @@ export default function AdminUserPage() {
         <MdTextButton>Reset</MdTextButton>
         <MdFilledButton>Search</MdFilledButton>
       </div>
-      <div className="px-6 py-4 rounded-lg border border-outlineVariant flex flex-col flex-1"></div>
+      <div className="px-6 py-4 rounded-lg border border-outlineVariant flex flex-1">
+        <div className="relative flex flex-1 w-full">
+          <div className="basis-0 flex-auto w-0">
+            <AdminUserTable />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

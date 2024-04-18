@@ -39,6 +39,7 @@ export interface UserInterface {
 export interface AdminUserProps extends UserInterface {
   userName: string;
   office: string;
+  type: AdminUserType;
   status: AdminUserStatus;
   noficication: {
     booking: boolean;

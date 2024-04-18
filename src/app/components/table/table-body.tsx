@@ -46,7 +46,7 @@ export const TableBody = ({
       return {
         backgroundColor: `color-mix(in srgb, var(--md-sys-color-primary) 12%, white)`,
         border: `2px solid var(--md-sys-color-primary)`,
-        zIndex: 10,
+        // zIndex: 10,
       } as CSSProperties;
     } else {
       if (cell.row.getIsSelected()) {
