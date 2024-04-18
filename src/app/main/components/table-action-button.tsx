@@ -10,6 +10,7 @@ import {
   FloatingFocusManager,
   autoUpdate,
   flip,
+  shift,
   size,
   useClick,
   useDismiss,
@@ -32,12 +33,12 @@ export const TableActionButton = ({
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [maxHeight, setMaxHeight] = useState(0);
 
-  const { refs, floatingStyles, context } = useFloating({
+  const { refs, floatingStyles, context, placement } = useFloating({
     open: isOptionOpen,
     onOpenChange: setIsOptionOpen,
-    placement: "bottom-end",
     middleware: [
       flip(),
+      shift(),
       size({
         apply({ rects, elements, availableHeight }) {
           flushSync(() => setMaxHeight(availableHeight));
@@ -49,7 +50,9 @@ export const TableActionButton = ({
 
   const { isMounted, styles: floatingTransitionStyles } = useTransitionStyles(
     context,
-    getBasicDropdownStyles("down")
+    placement === "top"
+      ? getBasicDropdownStyles("up")
+      : getBasicDropdownStyles("down")
   );
 
   const { getReferenceProps, getFloatingProps } = useInteractions([

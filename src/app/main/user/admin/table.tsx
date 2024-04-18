@@ -15,7 +15,7 @@ import { useMemo, useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
 import { AdminUserDialog } from "./dialog";
 
-function createDummaryAdminUser(): AdminUserProps {
+function createDummyAdminUser(): AdminUserProps {
   return {
     uuid: faker.string.uuid(),
     userId: faker.internet.userName(),
@@ -55,7 +55,7 @@ function createDummaryAdminUser(): AdminUserProps {
 
 export const AdminUserTable = () => {
   const dummyData = useMemo(() => {
-    return Array.from({ length: 70 }, () => createDummaryAdminUser());
+    return Array.from({ length: 70 }, () => createDummyAdminUser());
   }, []);
 
   const [tableData, setTableData] = useState<AdminUserProps[]>(dummyData);
