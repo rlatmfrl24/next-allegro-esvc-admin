@@ -11,20 +11,40 @@ import {
   MdOutlinedButton,
 } from "@/util/md3";
 import { AdminUserProps, AdminUserType } from "@/util/typeDef/user";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SubsumIndicator from "@/../public/icon_subsum_indicator.svg";
 import Image from "next/image";
 
-export const AddAdminUserDialog = ({
+export const AdminUserDialog = ({
   isOpen,
   onOpenChage,
+  mode = "add",
+  initialData,
+  onConfirm,
 }: {
   isOpen: boolean;
   onOpenChage: () => void;
+  mode?: "add" | "edit";
+  initialData?: AdminUserProps;
+  onConfirm?: (data: AdminUserProps) => void;
 }) => {
   const [currentInfo, setCurrentInfo] = useState<AdminUserProps>(
-    {} as AdminUserProps
+    initialData || ({} as AdminUserProps)
   );
+
+  useEffect(() => {
+    setCurrentInfo(initialData || ({} as AdminUserProps));
+  }, [initialData]);
+
+  function CheckValidity() {
+    const invalid =
+      !currentInfo.userId ||
+      !currentInfo.userName ||
+      !currentInfo.email ||
+      !currentInfo.type ||
+      !currentInfo.office;
+    return !invalid;
+  }
 
   return (
     <MdDialog
@@ -35,11 +55,19 @@ export const AddAdminUserDialog = ({
         onOpenChage();
       }}
     >
-      <div slot="headline">Add Admin User</div>
+      <div slot="headline">
+        {
+          {
+            add: "Add Admin User",
+            edit: "Admin Detail",
+          }[mode]
+        }
+      </div>
       <div slot="content">
         <div className="grid grid-cols-2 gap-4">
           <NAOutlinedTextField
             label="User ID"
+            className="h-fit"
             required
             value={currentInfo.userId || ""}
             handleValueChange={(value) => {
@@ -48,9 +76,11 @@ export const AddAdminUserDialog = ({
                 userId: value,
               }));
             }}
+            errorText="This field is required."
           />
           <NAOutlinedTextField
             label="User Name"
+            className="h-fit"
             required
             value={currentInfo.userName || ""}
             handleValueChange={(value) => {
@@ -59,6 +89,7 @@ export const AddAdminUserDialog = ({
                 userName: value,
               }));
             }}
+            errorText="This field is required."
           />
           <NAOutlinedTextField label="Password" />
           <NAOutlinedTextField label="Confirm Password" />
@@ -504,11 +535,19 @@ export const AddAdminUserDialog = ({
         </MdOutlinedButton>
         <MdFilledButton
           onClick={() => {
-            console.log(currentInfo);
-            // onOpenChage();
+            if (CheckValidity()) {
+              onConfirm && onConfirm(currentInfo);
+              setCurrentInfo({} as AdminUserProps);
+              onOpenChage();
+            }
           }}
         >
-          Add
+          {
+            {
+              add: "Add",
+              edit: "Save",
+            }[mode]
+          }
         </MdFilledButton>
       </div>
     </MdDialog>

@@ -13,7 +13,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { useMemo, useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
-import { AddAdminUserDialog } from "./dialog";
+import { AdminUserDialog } from "./dialog";
 
 function createDummaryAdminUser(): AdminUserProps {
   return {
@@ -182,12 +182,23 @@ export const AdminUserTable = () => {
           setSelectedUser(rows[0]);
         }}
       />
-      <AddAdminUserDialog
+      <AdminUserDialog
         isOpen={isAddDialogOpen}
+        mode="add"
         onOpenChage={() => {
           setIsAddDialogOpen(false);
         }}
       />
+      {selectedUser && (
+        <AdminUserDialog
+          isOpen={isEditDialogOpen}
+          mode="edit"
+          onOpenChage={() => {
+            setIsEditDialogOpen(false);
+          }}
+          initialData={selectedUser}
+        />
+      )}
     </>
   );
 };
