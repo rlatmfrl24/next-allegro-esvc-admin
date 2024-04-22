@@ -1,6 +1,12 @@
 import { DividerComponent } from "@/app/components/divider";
 import { NewBasicTable } from "@/app/components/table/new-table";
-import { MdIcon, MdIconButton, MdTextButton } from "@/util/md3";
+import {
+  MdDialog,
+  MdFilledButton,
+  MdIcon,
+  MdIconButton,
+  MdTextButton,
+} from "@/util/md3";
 import {
   CompanyType,
   CustomerUserProps,
@@ -10,10 +16,11 @@ import { faker } from "@faker-js/faker";
 import { Add, Launch } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
 import { MdTypography } from "@/app/components/typography";
 import Link from "next/link";
+import { set } from "lodash";
 
 function createDummyCustomerUser(): CustomerUserProps {
   return {
@@ -57,6 +64,49 @@ export const CustomerUserTable = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const columnHelper = createColumnHelper<CustomerUserProps>();
+  const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
+    useState(false);
+
+  const DeleteConfirmDialog = ({
+    isOpen,
+    onOpenChage,
+    targetUser,
+  }: {
+    isOpen: boolean;
+    onOpenChage: Dispatch<SetStateAction<boolean>>;
+    targetUser: CustomerUserProps;
+  }) => {
+    return (
+      <MdDialog
+        open={isOpen}
+        closed={() => {
+          onOpenChage(false);
+        }}
+      >
+        <div slot="headline">Do you want to delete the customer user?</div>
+        <div slot="content">{targetUser.userId}</div>
+        <div slot="actions">
+          <MdTextButton
+            onClick={() => {
+              onOpenChage(false);
+            }}
+          >
+            Cancel
+          </MdTextButton>
+          <MdFilledButton
+            onClick={() => {
+              onOpenChage(false);
+              setTableData((prev) =>
+                prev.filter((item) => item.uuid !== targetUser.uuid)
+              );
+            }}
+          >
+            OK
+          </MdFilledButton>
+        </div>
+      </MdDialog>
+    );
+  };
 
   const columDefs = [
     columnHelper.accessor("userId", {
@@ -177,7 +227,10 @@ export const CustomerUserTable = () => {
           <TableActionButton
             options={["Delete"]}
             onMenuSelect={(option) => {
-              console.log(option);
+              if (option === "Delete") {
+                setIsDeleteConfirmDialogOpen(true);
+                setSelectedUser(info.row.original);
+              }
             }}
           />
         );
@@ -190,6 +243,11 @@ export const CustomerUserTable = () => {
 
   return (
     <>
+      <DeleteConfirmDialog
+        isOpen={isDeleteConfirmDialogOpen}
+        onOpenChage={setIsDeleteConfirmDialogOpen}
+        targetUser={selectedUser || ({} as CustomerUserProps)}
+      />
       <NewBasicTable
         actionComponent={
           <div className="flex flex-1 items-center gap-2">

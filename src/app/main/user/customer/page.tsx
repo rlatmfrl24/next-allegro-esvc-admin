@@ -4,11 +4,12 @@ import NAOutlinedListBox from "@/app/components/na-outline-listbox";
 import { PageTitle } from "../../components/page-title";
 import { DatePicker } from "@/app/components/datepicker/date-picker";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { faker } from "@faker-js/faker";
 import { CompanyType, CustomerUserStatus } from "@/util/typeDef/user";
 import { MdFilledButton, MdTextButton } from "@/util/md3";
 import { CustomerUserTable } from "./table";
+import { DateTime } from "luxon";
 
 export default function CustomerUserPage() {
   const tempCodeSet = useMemo(() => {
@@ -25,6 +26,21 @@ export default function CustomerUserPage() {
       .sort();
   }, []);
 
+  const [searchCondition, setSearchCondition] = useState({
+    dateType: "Lastest Login Date",
+    date: DateTime.now(),
+    userId: "",
+    status: "All",
+    email: "",
+    rhq: "All",
+    office: "All",
+    country: "All",
+    userCustomerCode: "All",
+    customerCode: "",
+    companyName: "",
+    companyType: "All",
+  });
+
   return (
     <div className="flex flex-col gap-4 flex-1">
       <PageTitle title="Customer User" category="User Management" />
@@ -32,30 +48,62 @@ export default function CustomerUserPage() {
         <div className="flex gap-2">
           <NAOutlinedListBox
             className="w-44"
-            initialValue="Update Date"
+            label="Date"
+            initialValue={searchCondition.dateType}
             options={["Update Date", "Lastest Login Date"]}
+            onSelection={(value) =>
+              setSearchCondition({ ...searchCondition, dateType: value })
+            }
           />
-          <DatePicker className="w-44" />
+          <DatePicker
+            className="w-44"
+            initialDate={searchCondition.date}
+            onDateChange={(date) =>
+              setSearchCondition({ ...searchCondition, date })
+            }
+          />
         </div>
-        <NAOutlinedTextField label="User ID" />
+        <NAOutlinedTextField
+          label="User ID"
+          value={searchCondition.userId}
+          handleValueChange={(value) => {
+            setSearchCondition({ ...searchCondition, userId: value });
+          }}
+        />
         <NAOutlinedListBox
           label="Status"
-          initialValue="All"
+          initialValue={searchCondition.status}
           options={["All", ...Object.values(CustomerUserStatus)]}
+          onSelection={(value) =>
+            setSearchCondition({ ...searchCondition, status: value })
+          }
         />
 
-        <NAOutlinedTextField label="Email " />
+        <NAOutlinedTextField
+          label="Email"
+          value={searchCondition.email}
+          handleValueChange={(value) => {
+            setSearchCondition({ ...searchCondition, email: value });
+          }}
+        />
         <div className="flex gap-2">
           <NAOutlinedListBox
             className="w-36"
             label="RHQ / Office"
-            initialValue="All"
+            initialValue={searchCondition.rhq}
             options={["All", ...tempCodeSet]}
+            onSelection={(value) => {
+              setSearchCondition({ ...searchCondition, rhq: value });
+            }}
           />
           <NAOutlinedListBox
             className="w-36"
-            initialValue="All"
+            readOnly={searchCondition.rhq === "All"}
+            initialValue={searchCondition.office}
             options={["All", ...tempCodeSet]}
+            onSelection={(value) => {
+              setSearchCondition({ ...searchCondition, office: value });
+            }}
           />
         </div>
       </div>
@@ -63,28 +111,79 @@ export default function CustomerUserPage() {
         <NAOutlinedListBox
           label="Country"
           className="w-44"
-          initialValue="All"
+          initialValue={searchCondition.country}
           options={["All", ...tempCountrySet]}
+          onSelection={(value) =>
+            setSearchCondition({ ...searchCondition, country: value })
+          }
         />
         <div className="flex gap-2">
           <NAOutlinedListBox
             className="w-36"
             label="User Customer Code"
-            initialValue="All"
+            initialValue={searchCondition.userCustomerCode}
             options={["All", "Yes", "No"]}
+            onSelection={(value) => {
+              setSearchCondition({
+                ...searchCondition,
+                userCustomerCode: value,
+              });
+            }}
           />
-          <NAOutlinedTextField placeholder="Customer Code" />
+          <NAOutlinedTextField
+            placeholder="Customer Code"
+            value={searchCondition.customerCode}
+            handleValueChange={(value) => {
+              setSearchCondition({ ...searchCondition, customerCode: value });
+            }}
+          />
         </div>
-        <NAOutlinedTextField label="Company Name" className="flex-1" value="" />
+        <NAOutlinedTextField
+          label="Company Name"
+          className="flex-1"
+          value={searchCondition.companyName}
+          handleValueChange={(value) => {
+            setSearchCondition({ ...searchCondition, companyName: value });
+          }}
+        />
         <NAOutlinedListBox
           label="Company Type"
           className="flex-1"
-          options={Object.values(CompanyType)}
+          options={["All", ...(Object.values(CompanyType) as string[])]}
+          initialValue={searchCondition.companyType}
+          onSelection={(value) =>
+            setSearchCondition({ ...searchCondition, companyType: value })
+          }
         />
       </div>
       <div className="flex gap-2 justify-end">
-        <MdTextButton>Reset</MdTextButton>
-        <MdFilledButton>Search</MdFilledButton>
+        <MdTextButton
+          onClick={() => {
+            setSearchCondition({
+              dateType: "Lastest Login Date",
+              date: DateTime.now(),
+              userId: "",
+              status: "All",
+              email: "",
+              rhq: "All",
+              office: "All",
+              country: "All",
+              userCustomerCode: "All",
+              customerCode: "",
+              companyName: "",
+              companyType: "All",
+            });
+          }}
+        >
+          Reset
+        </MdTextButton>
+        <MdFilledButton
+          onClick={() => {
+            console.log(searchCondition);
+          }}
+        >
+          Search
+        </MdFilledButton>
       </div>
       <div className="px-6 py-4 rounded-lg border border-outlineVariant flex flex-1">
         <div className="relative flex flex-1 w-full">
