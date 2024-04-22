@@ -1,7 +1,7 @@
 "use client";
 
 import { DateTime } from "luxon";
-import { PageTitle } from "../../components/page-title";
+import { PageTitle } from "../components/page-title";
 import NAOutlinedListBox from "@/app/components/na-outline-listbox";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
 import { MdFilledButton, MdOutlinedTextField, MdTextButton } from "@/util/md3";

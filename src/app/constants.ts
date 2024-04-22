@@ -121,15 +121,15 @@ export const mainMenuItems: MenuItemType[] = [
         isAvailable: true,
         subMenu: [],
       },
-      {
-        id: "message",
-        name: "Message Management",
-        originName: "Message Management",
-        link: "message",
-        isAvailable: true,
-        subMenu: [],
-      },
     ],
+  },
+  {
+    id: "message",
+    name: "Message Management",
+    originName: "Message Management",
+    link: "message",
+    isAvailable: true,
+    subMenu: [],
   },
   {
     id: "user",
