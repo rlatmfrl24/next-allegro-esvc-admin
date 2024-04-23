@@ -7,7 +7,7 @@ import {
   AdminUserStatus,
   AdminUserType,
 } from "@/util/typeDef/user";
-import { faker } from "@faker-js/faker";
+import { faker, ro } from "@faker-js/faker";
 import { Add } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
@@ -148,32 +148,65 @@ export const AdminUserTable = () => {
   return (
     <>
       <BasicTable
-        actionComponent={
-          <div className="flex flex-1 items-center gap-2">
-            <MdTextButton
-              onClick={() => {
-                setIsAddDialogOpen(true);
-              }}
-            >
-              <MdIcon slot="icon">
-                <Add fontSize="small" />
-              </MdIcon>
-              Add Admin
-            </MdTextButton>
-            {selectedUser && (
-              <>
-                <DividerComponent orientation="vertical" className="h-6" />
-                <MdTextButton
-                  onClick={() => {
-                    setIsEditDialogOpen(true);
+        ActionComponent={(table) => {
+          return (
+            <div className="flex flex-1 items-center gap-2">
+              <MdTextButton
+                onClick={() => {
+                  setIsAddDialogOpen(true);
+                }}
+              >
+                <MdIcon slot="icon">
+                  <Add fontSize="small" />
+                </MdIcon>
+                Add Admin
+              </MdTextButton>
+              {selectedUser && (
+                <>
+                  <DividerComponent orientation="vertical" className="h-6" />
+                  <MdTextButton
+                    onClick={() => {
+                      setIsEditDialogOpen(true);
+                    }}
+                  >
+                    Edit
+                  </MdTextButton>
+                </>
+              )}
+              {isAddDialogOpen && (
+                <AdminUserDialog
+                  isOpen={isAddDialogOpen}
+                  mode="add"
+                  onOpenChage={() => {
+                    setIsAddDialogOpen(false);
                   }}
-                >
-                  Edit
-                </MdTextButton>
-              </>
-            )}
-          </div>
-        }
+                  onConfirm={(data) => {
+                    setSelectedUser(null);
+                    setTableData((prev) => [data, ...prev]);
+                  }}
+                />
+              )}
+              {selectedUser && isEditDialogOpen && (
+                <AdminUserDialog
+                  isOpen={isEditDialogOpen}
+                  mode="edit"
+                  onOpenChage={() => {
+                    setIsEditDialogOpen(false);
+                  }}
+                  initialData={selectedUser}
+                  onConfirm={(data) => {
+                    setSelectedUser(data);
+                    const rowIndex = tableData.findIndex(
+                      (item) => item.uuid === data.uuid
+                    );
+                    rowIndex !== -1 &&
+                      table.options.meta?.updateRow(rowIndex, data);
+                  }}
+                />
+              )}
+            </div>
+          );
+        }}
         data={tableData}
         columns={columnDefs}
         isSingleSelect
@@ -183,37 +216,6 @@ export const AdminUserTable = () => {
           setSelectedUser(rows[0]);
         }}
       />
-      {isAddDialogOpen && (
-        <AdminUserDialog
-          isOpen={isAddDialogOpen}
-          mode="add"
-          onOpenChage={() => {
-            setIsAddDialogOpen(false);
-          }}
-          onConfirm={(data) => {
-            setSelectedUser(null);
-            setTableData((prev) => [data, ...prev]);
-          }}
-        />
-      )}
-      {selectedUser && isEditDialogOpen && (
-        <AdminUserDialog
-          isOpen={isEditDialogOpen}
-          mode="edit"
-          onOpenChage={() => {
-            setIsEditDialogOpen(false);
-          }}
-          initialData={selectedUser}
-          onConfirm={(data) => {
-            setSelectedUser(data);
-            setTableData((prev) =>
-              prev.map((item) =>
-                item.uuid === data.uuid ? { ...item, ...data } : item
-              )
-            );
-          }}
-        />
-      )}
     </>
   );
 };
