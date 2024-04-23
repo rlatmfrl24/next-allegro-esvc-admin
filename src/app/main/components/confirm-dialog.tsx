@@ -21,7 +21,14 @@ export const ConfirmDialog = (props: {
         <MdTextButton onClick={() => props.onOpenChange(false)}>
           Cancel
         </MdTextButton>
-        <MdFilledButton onClick={props.onConfirm}>Confirm</MdFilledButton>
+        <MdFilledButton
+          onClick={() => {
+            props.onOpenChange(false);
+            props.onConfirm();
+          }}
+        >
+          Confirm
+        </MdFilledButton>
       </div>
     </MdDialog>
   );

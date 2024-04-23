@@ -13,17 +13,17 @@ export enum EmailType {
 }
 
 export interface EmailSettingProps {
+  uuid: string;
   type: EmailType;
   template: string;
   title: string;
-  sender: {
-    name: string;
-    email: string;
-  };
+  senderName: string;
+  senderEmail: string;
 }
 
 export interface EmailSendingHistoryProps {
-  sender: DateTime;
+  uuid: string;
+  sentDate: DateTime;
   type: EmailType;
   title: string;
   userId: string;
@@ -42,6 +42,7 @@ export interface EmailSendingReportProps {
 }
 
 export interface OfficeEmailSettingProps {
+  uuid: string;
   officeCode: string;
   officeName: string;
   bookingNotificationReceiver: string;
