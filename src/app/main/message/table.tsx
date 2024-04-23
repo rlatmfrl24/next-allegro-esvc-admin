@@ -14,6 +14,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { createDummyMessageDataset } from "./util";
 import { MdTypography } from "@/app/components/typography";
 import { DeleteActionButton, GridStateSelectComponent } from "./components";
+import { TableActionButton } from "../components/table-action-button";
+import { ConfirmDialog } from "../components/confirm-dialog";
 
 export const MessageManagementTable = ({
   onMessageSelect,
@@ -22,6 +24,10 @@ export const MessageManagementTable = ({
 }) => {
   const columnHelper = createColumnHelper<MessageProps>();
   const [tableData, setTableData] = useState<MessageProps[]>([]);
+  const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
+    useState(false);
+
+  const [targetMessage, setTargetMessage] = useState<MessageProps | null>(null);
 
   useEffect(() => {
     setTableData(createDummyMessageDataset());
@@ -84,13 +90,18 @@ export const MessageManagementTable = ({
       id: "action",
       cell: (info) => {
         return (
-          <DeleteActionButton
-            onClick={() => {
-              const rowIndex = parseInt(info.row.id);
-              setTableData((prev) => [
-                ...prev.slice(0, rowIndex),
-                ...prev.slice(rowIndex + 1),
-              ]);
+          <TableActionButton
+            options={["Delete"]}
+            onMenuSelect={(option) => {
+              if (option === "Delete") {
+                // const rowIndex = parseInt(info.row.id);
+                // setTableData((prev) => [
+                //   ...prev.slice(0, rowIndex),
+                //   ...prev.slice(rowIndex + 1),
+                // ]);
+                setTargetMessage(info.row.original);
+                setIsDeleteConfirmDialogOpen(true);
+              }
             }}
           />
         );
@@ -102,45 +113,58 @@ export const MessageManagementTable = ({
   ];
 
   return (
-    <BasicTable
-      actionComponent={
-        <div className="flex flex-1">
-          <MdTextButton
-            onClick={() => {
-              setTableData((prev) => [
-                {
-                  id: "-",
-                  defaultMessage: "",
-                  message: {
-                    en: "",
-                    ja: "",
-                    ko: "",
-                    zh_CN: "",
+    <>
+      <ConfirmDialog
+        isOpen={isDeleteConfirmDialogOpen}
+        onOpenChange={setIsDeleteConfirmDialogOpen}
+        title="Delete Message"
+        onConfirm={() => {
+          setIsDeleteConfirmDialogOpen(false);
+          setTableData((prev) =>
+            prev.filter((message) => message.id !== targetMessage?.id)
+          );
+        }}
+      />
+      <BasicTable
+        actionComponent={
+          <div className="flex flex-1">
+            <MdTextButton
+              onClick={() => {
+                setTableData((prev) => [
+                  {
+                    id: "-",
+                    defaultMessage: "",
+                    message: {
+                      en: "",
+                      ja: "",
+                      ko: "",
+                      zh_CN: "",
+                    },
+                    module: MessageModule.BOOKING,
+                    type: MessageType.CONFIRMATION,
                   },
-                  module: MessageModule.BOOKING,
-                  type: MessageType.CONFIRMATION,
-                },
-                ...prev,
-              ]);
-            }}
-          >
-            <MdIcon slot="icon">
-              <Add fontSize="small" />
-            </MdIcon>
-            Add Message
-          </MdTextButton>
-        </div>
-      }
-      columns={columns}
-      data={tableData}
-      isSingleSelect
-      ignoreSelectionColumns={["module", "type"]}
-      disableColumns={["id"]}
-      editableColumns={["defaultMessage"]}
-      getSelectionRows={(rows) => {
-        onMessageSelect && onMessageSelect(rows[0]?.message);
-      }}
-      updater={setTableData}
-    />
+                  ...prev,
+                ]);
+              }}
+            >
+              <MdIcon slot="icon">
+                <Add fontSize="small" />
+              </MdIcon>
+              Add Message
+            </MdTextButton>
+          </div>
+        }
+        columns={columns}
+        data={tableData}
+        isSingleSelect
+        ignoreSelectionColumns={["module", "type", "action"]}
+        disableColumns={["id"]}
+        editableColumns={["defaultMessage"]}
+        getSelectionRows={(rows) => {
+          onMessageSelect && onMessageSelect(rows[0]?.message);
+        }}
+        updater={setTableData}
+      />
+    </>
   );
 };
