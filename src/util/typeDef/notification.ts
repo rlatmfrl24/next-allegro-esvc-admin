@@ -22,7 +22,8 @@ export interface EmailSettingProps {
 }
 
 export interface EmailSendingHistoryProps {
-  sender: DateTime;
+  uuid: string;
+  sentDate: DateTime;
   type: EmailType;
   title: string;
   userId: string;

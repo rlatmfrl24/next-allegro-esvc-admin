@@ -3,11 +3,72 @@
 import { DateRangePicker } from "@/app/components/datepicker/date-range-picker";
 import { PageTitle } from "../../components/page-title";
 import NAOutlinedListBox from "@/app/components/na-outline-listbox";
-import { EmailType } from "@/util/typeDef/notification";
+import {
+  EmailSendingHistoryProps,
+  EmailType,
+} from "@/util/typeDef/notification";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
-import { MdFilledButton, MdTextButton } from "@/util/md3";
+import { MdFilledButton, MdIcon, MdTextButton } from "@/util/md3";
+import { faker } from "@faker-js/faker";
+import { useState } from "react";
+import { createColumnHelper } from "@tanstack/react-table";
+import { DateTime } from "luxon";
+import { BasicTable } from "@/app/components/table/basic-table";
+import { Download } from "@mui/icons-material";
 
 export default function EmailHistoryPage() {
+  const tempEmailHistoryData = Array.from(
+    { length: 900 },
+    (_, i) =>
+      ({
+        uuid: faker.string.uuid(),
+        sentDate: DateTime.fromJSDate(faker.date.recent()),
+        type: faker.helpers.arrayElement(Object.values(EmailType)),
+        title: faker.lorem.sentence(),
+        userId: faker.internet.userName(),
+        senderEmail: faker.internet.email(),
+        receiverEmail: faker.internet.email(),
+        mailKey: faker.database.mongodbObjectId(),
+      } as EmailSendingHistoryProps)
+  );
+  const [tableData, setTableData] =
+    useState<EmailSendingHistoryProps[]>(tempEmailHistoryData);
+  const columnHelper = createColumnHelper<EmailSendingHistoryProps>();
+  const columnDefs = [
+    columnHelper.accessor("sentDate", {
+      id: "sentDate",
+      header: "Sent Date",
+      cell: (info) => info.getValue().toFormat("yyyy-MM-dd"),
+      size: 120,
+    }),
+    columnHelper.accessor("type", { id: "type", header: "Type", size: 150 }),
+    columnHelper.accessor("title", {
+      id: "title",
+      header: "Email Title",
+      size: 360,
+    }),
+    columnHelper.accessor("userId", {
+      id: "userId",
+      header: "User ID",
+      size: 160,
+    }),
+    columnHelper.accessor("senderEmail", {
+      id: "senderEmail",
+      header: "Sender Email",
+      size: 240,
+    }),
+    columnHelper.accessor("receiverEmail", {
+      id: "receiverEmail",
+      header: "Receiver",
+      size: 240,
+    }),
+    columnHelper.accessor("mailKey", {
+      id: "mailKey",
+      header: "Mail Key",
+      size: 150,
+    }),
+  ];
+
   return (
     <div className="flex flex-col gap-4 flex-1">
       <PageTitle title="Email Sending History" category="Notification Setup" />
@@ -30,7 +91,29 @@ export default function EmailHistoryPage() {
         <MdTextButton>Reset</MdTextButton>
         <MdFilledButton>Search</MdFilledButton>
       </div>
-      <div className="border border-outlineVariant p-4 rounded-lg"></div>
+      <div className="px-6 py-4 rounded-lg border border-outlineVariant flex flex-col flex-1">
+        <div className="relative flex gap-8 flex-1 w-full">
+          <div className="basis-0 flex-auto w-0">
+            <BasicTable
+              ActionComponent={() => {
+                return (
+                  <div className="flex-1">
+                    <MdTextButton>
+                      <MdIcon slot="icon">
+                        <Download fontSize="small" />
+                      </MdIcon>
+                      Download
+                    </MdTextButton>
+                  </div>
+                );
+              }}
+              columns={columnDefs}
+              data={tableData}
+              isSingleSelect
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

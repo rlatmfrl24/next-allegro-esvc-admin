@@ -96,7 +96,7 @@ export const TableBody = ({
                     ...getCommonPinningStyles(cell.column),
                     ...getCellStyles(cell),
                   }}
-                  className="p-2 border-box border-x border-x-transparent border-y border-y-transparent"
+                  className="p-2 border-box border-x border-x-transparent border-y border-y-transparent overflow-hidden"
                   onMouseEnter={(e) => {
                     setHoverInfo({ row, cell });
                   }}
