@@ -1,5 +1,5 @@
 import { DividerComponent } from "@/app/components/divider";
-import { NewBasicTable } from "@/app/components/table/new-table";
+import { BasicTable } from "@/app/components/table/basic-table";
 import { MdTypography } from "@/app/components/typography";
 import { MdIcon, MdTextButton } from "@/util/md3";
 import {
@@ -147,7 +147,7 @@ export const AdminUserTable = () => {
 
   return (
     <>
-      <NewBasicTable
+      <BasicTable
         actionComponent={
           <div className="flex flex-1 items-center gap-2">
             <MdTextButton

@@ -1,5 +1,5 @@
 import { DividerComponent } from "@/app/components/divider";
-import { NewBasicTable } from "@/app/components/table/new-table";
+import { BasicTable } from "@/app/components/table/basic-table";
 import {
   MdDialog,
   MdFilledButton,
@@ -20,7 +20,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
 import { MdTypography } from "@/app/components/typography";
 import Link from "next/link";
-import { set } from "lodash";
+import { CustomerActionDialog } from "./dialog";
 
 function createDummyCustomerUser(): CustomerUserProps {
   return {
@@ -203,7 +203,7 @@ export const CustomerUserTable = () => {
       cell: (info) => {
         return (
           <MdTypography variant="body" size="medium">
-            {info.getValue().toFormat("yyyy-MM-dd HH:mm")}
+            {info.getValue()?.toFormat("yyyy-MM-dd HH:mm") || "Not Login Yet"}
           </MdTypography>
         );
       },
@@ -243,12 +243,35 @@ export const CustomerUserTable = () => {
 
   return (
     <>
+      {isAddDialogOpen && (
+        <CustomerActionDialog
+          isOpen={isAddDialogOpen}
+          onOpenChange={setIsAddDialogOpen}
+          mode="add"
+          onConfirm={(data) => {
+            setTableData((prev) => [...prev, data]);
+          }}
+        />
+      )}
+      {isEditDialogOpen && (
+        <CustomerActionDialog
+          isOpen={isEditDialogOpen}
+          onOpenChange={setIsEditDialogOpen}
+          mode="edit"
+          targetUser={selectedUser || ({} as CustomerUserProps)}
+          onConfirm={(data) => {
+            setTableData((prev) =>
+              prev.map((item) => (item.uuid === data.uuid ? data : item))
+            );
+          }}
+        />
+      )}
       <DeleteConfirmDialog
         isOpen={isDeleteConfirmDialogOpen}
         onOpenChage={setIsDeleteConfirmDialogOpen}
         targetUser={selectedUser || ({} as CustomerUserProps)}
       />
-      <NewBasicTable
+      <BasicTable
         actionComponent={
           <div className="flex flex-1 items-center gap-2">
             <MdTextButton

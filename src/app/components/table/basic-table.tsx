@@ -34,7 +34,7 @@ import { ColumnFilterButton } from "./column-filter";
 import { TablePaginator } from "./paginator";
 import { getCommonPinningStyles } from "./util";
 
-export const NewBasicTable = ({
+export const BasicTable = ({
   data,
   columns,
   pinningColumns = [],

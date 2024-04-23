@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { NewBasicTable } from "@/app/components/table/new-table";
+import { BasicTable } from "@/app/components/table/basic-table";
 import { GridSelectComponent } from "@/app/sections/components/grid-select";
 import { MdIcon, MdTextButton } from "@/util/md3";
 import {
@@ -102,7 +102,7 @@ export const MessageManagementTable = ({
   ];
 
   return (
-    <NewBasicTable
+    <BasicTable
       actionComponent={
         <div className="flex flex-1">
           <MdTextButton
