@@ -52,9 +52,9 @@ export const GridSelectComponent = ({
       size({
         apply({ rects, elements, availableHeight }) {
           Object.assign(elements.floating.style, {
-            width: `${rects.reference.width}px`,
+            minWidth: `${rects.reference.width}px`,
           });
-          flushSync(() => setMaxHeight(availableHeight));
+          flushSync(() => setMaxHeight(availableHeight - 50));
         },
       }),
     ],
@@ -85,7 +85,7 @@ export const GridSelectComponent = ({
   );
 
   useEffect(() => {
-    if (onChange) {
+    if (onChange && selection !== initialSelection) {
       onChange(selection);
     }
 

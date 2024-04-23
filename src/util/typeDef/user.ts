@@ -39,6 +39,7 @@ export interface UserInterface {
 export interface AdminUserProps extends UserInterface {
   userName: string;
   office: string;
+  type: AdminUserType;
   status: AdminUserStatus;
   noficication: {
     booking: boolean;
@@ -64,6 +65,7 @@ export interface AdminUserProps extends UserInterface {
 export interface CustomerUserProps extends UserInterface {
   firstName: string;
   lastName: string;
+  lastLoginDate: DateTime | null;
   status: CustomerUserStatus;
   useCustomerCode: "All" | "Yes" | "No";
   customerCode: string;
@@ -71,7 +73,7 @@ export interface CustomerUserProps extends UserInterface {
   companyType: CompanyType;
   contactOffice: string;
   tpId: string;
-  salesRap: string;
+  salesRap: "Import" | "Export" | "Both";
   rateOption: "Basic" | "All" | "Block" | "All Blocked";
   city: string;
   address: string;
@@ -81,3 +83,13 @@ export interface CustomerUserProps extends UserInterface {
   faxNumber: string;
   comment: string;
 }
+
+export type CustomerCodeProps = {
+  customerCode: string;
+  countryCode: string;
+  customerName: string;
+  type: string;
+  rofc: string;
+  address: string;
+  state: string;
+};

@@ -19,7 +19,7 @@ export const getCommonPinningStyles = (column: Column<any>): CSSProperties => {
       : undefined,
     left: isPinned === "left" ? `${column.getStart("left")}px` : undefined,
     right: isPinned === "right" ? `${column.getAfter("right")}px` : undefined,
-    position: isPinned ? "sticky" : "relative",
+    position: isPinned ? "sticky" : "inherit",
     width: column.columnDef?.size === undefined ? "auto" : column.getSize(),
     minWidth: column.columnDef.minSize,
     zIndex: isPinned ? 20 : undefined,

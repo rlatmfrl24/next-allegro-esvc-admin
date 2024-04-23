@@ -24,6 +24,7 @@ import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { MdTypography } from "./typography";
 import RestoreIcon from "@mui/icons-material/Restore";
 import { getCookie, setCookie } from "cookies-next";
+import { flushSync } from "react-dom";
 
 type MdOutlinedTextFieldProps = React.ComponentProps<
   typeof MdOutlinedTextFieldBase
@@ -38,8 +39,8 @@ export default function NAOutlinedAutoComplete({
   onItemSelection: onSelection,
   onQueryChange,
   isAllowOnlyListItems = true,
+  showAllonFocus = false,
   className,
-  maxListHeight = 600,
   ...props
 }: {
   itemList: string[];
@@ -50,13 +51,14 @@ export default function NAOutlinedAutoComplete({
   onItemSelection?: (value: string) => void;
   onQueryChange?: (value: string) => void;
   isAllowOnlyListItems?: boolean;
-  maxListHeight?: number;
+  showAllonFocus?: boolean;
   className?: string;
 } & MdOutlinedTextFieldProps) {
   const [query, setQuery] = useState<string>("");
   const [defaultValue, setDefaultValue] = useState(initialValue || "");
   const [isListOpen, setIsListOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [maxHeight, setMaxHeight] = useState(0);
 
   const recentItems = recentCookieKey
     ? (JSON.parse(getCookie(recentCookieKey) || "[]") as string[])
@@ -94,9 +96,12 @@ export default function NAOutlinedAutoComplete({
       offset(2),
       shift(),
       size({
-        apply({ rects, elements }) {
+        apply({ rects, elements, availableHeight }) {
           Object.assign(elements.floating.style, {
             width: `${rects.reference.width}px`,
+          });
+          flushSync(() => {
+            setMaxHeight(availableHeight);
           });
         },
       }),
@@ -150,7 +155,7 @@ export default function NAOutlinedAutoComplete({
       return true;
     }
 
-    if (query.length > 2) {
+    if (query.length > 2 || showAllonFocus) {
       const queryResult = itemList.filter((value) => {
         return value.toLowerCase().includes(query.toLowerCase());
       });
@@ -161,7 +166,7 @@ export default function NAOutlinedAutoComplete({
     }
 
     return false;
-  }, [itemList, props.readOnly, query, recentItems.length]);
+  }, [itemList, props.readOnly, query, recentItems.length, showAllonFocus]);
 
   return (
     <div className={`relative ${className}`}>
@@ -205,7 +210,7 @@ export default function NAOutlinedAutoComplete({
         >
           <MdElevation />
           <MdList
-            style={{ maxHeight: `${maxListHeight}px` }}
+            style={{ maxHeight }}
             className="relative overflow-y-auto rounded bg-surfaceContainerLow"
           >
             <OverlayScrollbarsComponent defer>
@@ -247,7 +252,7 @@ export default function NAOutlinedAutoComplete({
                     className="h-px w-full bg-outlineVariant"
                   ></div>
                 )}
-              {query.length > 2 &&
+              {(showAllonFocus || query.length > 2) &&
                 itemList
                   .filter((item) => {
                     return item.toLowerCase().includes(query.toLowerCase());

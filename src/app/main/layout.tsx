@@ -11,7 +11,7 @@ export default function MainLayout({
     <div className="bg-surfaceContainerHigh h-screen flex">
       <SideNavigation />
       <nav className="bg-surfaceContainerLow flex-1 rounded-3xl flex flex-col">
-        <HeaderComponent />
+        <HeaderComponent branch="KRPUS" />
         <main className="bg-surfaceContainerLowest flex-1 rounded-3xl px-8 py-6 flex flex-col overflow-auto">
           {children}
         </main>

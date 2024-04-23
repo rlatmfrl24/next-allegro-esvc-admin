@@ -1,18 +1,11 @@
 import { MdTypography } from "@/app/components/typography";
-import { basicDropdownStyles } from "@/app/constants";
-import {
-  MdElevatedCard,
-  MdIconButton,
-  MdList,
-  MdListItem,
-  MdMenu,
-  MdMenuItem,
-} from "@/util/md3";
+import { getBasicDropdownStyles } from "@/app/constants";
+import { MdElevatedCard, MdList, MdListItem } from "@/util/md3";
 import { MessageType } from "@/util/typeDef/message";
 import {
   FloatingFocusManager,
   autoUpdate,
-  size,
+  flip,
   useClick,
   useDismiss,
   useFloating,
@@ -20,9 +13,8 @@ import {
   useRole,
   useTransitionStyles,
 } from "@floating-ui/react";
-import { ArrowDropDown, MoreVert } from "@mui/icons-material";
-import { useState } from "react";
-import { flushSync } from "react-dom";
+import { ArrowDropDown } from "@mui/icons-material";
+import { CSSProperties, useState } from "react";
 
 export const GridStateSelectComponent = (
   state: MessageType,
@@ -38,24 +30,20 @@ export const GridStateSelectComponent = (
   }
 
   const [isOptionOpen, setIsOptionOpen] = useState(false);
-  const [maxHeight, setMaxHeight] = useState(0);
 
-  const { refs, floatingStyles, context } = useFloating({
+  const { refs, floatingStyles, context, placement } = useFloating({
     open: isOptionOpen,
     onOpenChange: setIsOptionOpen,
-    middleware: [
-      size({
-        apply({ rects, elements, availableHeight }) {
-          flushSync(() => setMaxHeight(availableHeight));
-        },
-      }),
-    ],
+    middleware: [flip()],
     whileElementsMounted: autoUpdate,
   });
 
   const { isMounted, styles: floatingTransitionStyles } = useTransitionStyles(
     context,
-    basicDropdownStyles
+    placement === "top"
+      ? getBasicDropdownStyles("up")
+      : getBasicDropdownStyles("down")
+    // getBasicDropdownStyles("down")
   );
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
@@ -91,8 +79,8 @@ export const GridStateSelectComponent = (
         {isMounted && (
           <FloatingFocusManager context={context}>
             <div style={floatingTransitionStyles}>
-              <MdElevatedCard className="bg-surfaceContainer my-2">
-                <MdList style={{ maxHeight }} className="bg-surfaceContainer">
+              <MdElevatedCard className="bg-surfaceContainer">
+                <MdList className="bg-surfaceContainer rounded-2xl">
                   <MdListItem
                     type="button"
                     onClick={() => {
@@ -168,40 +156,5 @@ export const GridStateSelectComponent = (
         )}
       </div>
     </>
-  );
-};
-
-export const DeleteActionButton = ({ onClick }: { onClick?: () => void }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  return (
-    <div className="relative">
-      <MdIconButton
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsMenuOpen(!isMenuOpen);
-        }}
-        id="menu-anchor"
-      >
-        <MoreVert />
-      </MdIconButton>
-      <MdMenu
-        open={isMenuOpen}
-        anchor="menu-anchor"
-        anchorCorner="end-end"
-        menuCorner="start-end"
-        close={() => setIsMenuOpen(false)}
-      >
-        <MdMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsMenuOpen(false);
-            onClick && onClick();
-          }}
-        >
-          <div slot="headline">Delete</div>
-        </MdMenuItem>
-      </MdMenu>
-    </div>
   );
 };

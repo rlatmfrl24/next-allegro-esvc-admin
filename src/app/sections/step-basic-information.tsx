@@ -79,7 +79,6 @@ export default function BasicInformationStep() {
         <NAOutlinedTextField
           label="Full Name"
           readOnly
-          className="flex-1"
           value={currentCompanyStore.basicInformation.companyName || ""}
         />
         <NAOutlinedTextField

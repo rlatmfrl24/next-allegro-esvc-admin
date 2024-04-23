@@ -10,6 +10,7 @@ import NoticeManagementIcon from "@/../public/icon_menu_notice_management.svg";
 import NotificationSetupIcon from "@/../public/icon_menu_notification_setup.svg";
 import SystemSetupIcon from "@/../public/icon_menu_system_setup.svg";
 import UserManagementIcon from "@/../public/icon_menu_user_management.svg";
+import MessageManagementIcon from "@/../public/icon_menu_message.svg";
 import CompanyLogo from "@/../public/logo_transfar_shipping.svg";
 import { MdIcon, MdRippleEffect } from "@/util/md3";
 import { MenuItemType } from "@/util/typeDef/super";
@@ -49,6 +50,7 @@ const MainItemComponent = ({ item }: { item: MenuItemType }) => {
   const menuIcon = {
     setup: SystemSetupIcon,
     user: UserManagementIcon,
+    message: MessageManagementIcon,
     notice: NoticeManagementIcon,
     notification: NotificationSetupIcon,
   }[item.id];
