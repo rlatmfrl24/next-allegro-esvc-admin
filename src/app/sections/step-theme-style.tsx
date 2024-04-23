@@ -39,18 +39,20 @@ export default function ThemeStyleStep({
   const [selectedTheme, setSelectedTheme] = useState(
     currentCompanyStore.themeStyle.theme
       ? currentCompanyStore.themeStyle.theme
-      : colorThemes[0]
+      : undefined
   );
 
   useEffect(() => {
-    createMDTheme(selectedTheme.primaryColor);
-    setCurrentCompanyStore({
-      ...currentCompanyStore,
-      themeStyle: {
-        ...currentCompanyStore.themeStyle,
-        theme: selectedTheme,
-      },
-    });
+    if (selectedTheme) {
+      createMDTheme(selectedTheme.primaryColor);
+      setCurrentCompanyStore({
+        ...currentCompanyStore,
+        themeStyle: {
+          ...currentCompanyStore.themeStyle,
+          theme: selectedTheme,
+        },
+      });
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTheme, setCurrentCompanyStore]);
@@ -126,7 +128,7 @@ export default function ThemeStyleStep({
               <div
                 key={theme.name}
                 className={`relative rounded-lg flex cursor-pointer ${
-                  selectedTheme.name === theme.name
+                  selectedTheme?.name === theme.name
                     ? "bg-surfaceContainerLowest border-2 border-primary"
                     : "bg-surfaceContainerLow border border-outlineVariant"
                 }`}
@@ -142,7 +144,7 @@ export default function ThemeStyleStep({
             );
           })}
         </div>
-        {selectedTheme.name === "custom" && (
+        {selectedTheme?.name === "custom" && (
           <ColorPicker
             className="mt-4"
             color="#000000"

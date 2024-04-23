@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 
 import { MdTypography } from "@/app/components/typography";
 import { CurrentCompanyState } from "@/store/super.store";
-import { MdCheckbox, MdFilledButton } from "@/util/md3";
+import { MdCheckbox, MdFilledButton, MdOutlinedTextField } from "@/util/md3";
 
 import { BaseItem } from "./components/base-configuration-item";
 
@@ -125,7 +125,23 @@ export default function BusinessConfigurationStep() {
       </div>
       <BaseItem>3</BaseItem>
       <BaseItem>Dormant Period</BaseItem>
-      <BaseItem>{companyStore.configuration.dormantPeriod}</BaseItem>
+      {/* <MdOutlinedTextField
+        value={companyStore.configuration.dormantPeriod.toString()}
+      /> */}
+      <input
+        value={companyStore.configuration.dormantPeriod}
+        type="number"
+        className="appearance-none border-b border-b-outlineVariant text-right w-full p-2 outline-none focus:border-2 focus:border-primary focus:rounded-sm"
+        onInput={(e) => {
+          setCompanyStore({
+            ...companyStore,
+            configuration: {
+              ...companyStore.configuration,
+              dormantPeriod: parseInt(e.currentTarget.value),
+            },
+          });
+        }}
+      />
     </div>
   );
 }
