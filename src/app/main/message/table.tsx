@@ -16,6 +16,7 @@ import { MdTypography } from "@/app/components/typography";
 import { GridStateSelectComponent } from "./components";
 import { TableActionButton } from "../components/table-action-button";
 import { ConfirmDialog } from "../components/confirm-dialog";
+import { faker } from "@faker-js/faker";
 
 export const MessageManagementTable = ({
   onMessageSelect,
@@ -41,6 +42,13 @@ export const MessageManagementTable = ({
         <GridSelectComponent
           initialSelection={info.getValue()}
           options={Object.values(MessageModule)}
+          onChange={(value) => {
+            info.table.options.meta?.updateData(
+              parseInt(info.row.id),
+              "module",
+              value
+            );
+          }}
         />
       ),
       size: 200,
@@ -114,39 +122,42 @@ export const MessageManagementTable = ({
         onConfirm={() => {
           setIsDeleteConfirmDialogOpen(false);
           setTableData((prev) =>
-            prev.filter((message) => message.id !== targetMessage?.id)
+            prev.filter((message) => message.uuid !== targetMessage?.uuid)
           );
         }}
       />
       <BasicTable
-        actionComponent={
-          <div className="flex flex-1">
-            <MdTextButton
-              onClick={() => {
-                setTableData((prev) => [
-                  {
-                    id: "-",
-                    defaultMessage: "",
-                    message: {
-                      en: "",
-                      ja: "",
-                      ko: "",
-                      zh_CN: "",
+        ActionComponent={() => {
+          return (
+            <div className="flex flex-1">
+              <MdTextButton
+                onClick={() => {
+                  setTableData((prev) => [
+                    {
+                      uuid: faker.string.uuid(),
+                      id: "-",
+                      defaultMessage: "",
+                      message: {
+                        en: "",
+                        ja: "",
+                        ko: "",
+                        zh_CN: "",
+                      },
+                      module: MessageModule.BOOKING,
+                      type: MessageType.CONFIRMATION,
                     },
-                    module: MessageModule.BOOKING,
-                    type: MessageType.CONFIRMATION,
-                  },
-                  ...prev,
-                ]);
-              }}
-            >
-              <MdIcon slot="icon">
-                <Add fontSize="small" />
-              </MdIcon>
-              Add Message
-            </MdTextButton>
-          </div>
-        }
+                    ...prev,
+                  ]);
+                }}
+              >
+                <MdIcon slot="icon">
+                  <Add fontSize="small" />
+                </MdIcon>
+                Add Message
+              </MdTextButton>
+            </div>
+          );
+        }}
         columns={columns}
         data={tableData}
         isSingleSelect

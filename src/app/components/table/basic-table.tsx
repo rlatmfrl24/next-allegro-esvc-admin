@@ -144,7 +144,6 @@ export const BasicTable = ({
     autoResetPageIndex,
     meta: {
       updateData: (rowIndex, columnId, value) => {
-        console.log(rowIndex, columnId, value);
         updater?.((old) => {
           skipAutoResetPageIndex();
           return old.map((row, index) => {

@@ -1,19 +1,11 @@
 import { MdTypography } from "@/app/components/typography";
 import { getBasicDropdownStyles } from "@/app/constants";
-import {
-  MdElevatedCard,
-  MdIconButton,
-  MdList,
-  MdListItem,
-  MdMenu,
-  MdMenuItem,
-} from "@/util/md3";
+import { MdElevatedCard, MdList, MdListItem } from "@/util/md3";
 import { MessageType } from "@/util/typeDef/message";
 import {
   FloatingFocusManager,
   autoUpdate,
   flip,
-  size,
   useClick,
   useDismiss,
   useFloating,
@@ -21,9 +13,8 @@ import {
   useRole,
   useTransitionStyles,
 } from "@floating-ui/react";
-import { ArrowDropDown, MoreVert } from "@mui/icons-material";
+import { ArrowDropDown } from "@mui/icons-material";
 import { CSSProperties, useState } from "react";
-import { flushSync } from "react-dom";
 
 export const GridStateSelectComponent = (
   state: MessageType,
@@ -39,7 +30,6 @@ export const GridStateSelectComponent = (
   }
 
   const [isOptionOpen, setIsOptionOpen] = useState(false);
-  const [maxHeight, setMaxHeight] = useState<number | null>(null);
 
   const { refs, floatingStyles, context, placement } = useFloating({
     open: isOptionOpen,
@@ -90,10 +80,7 @@ export const GridStateSelectComponent = (
           <FloatingFocusManager context={context}>
             <div style={floatingTransitionStyles}>
               <MdElevatedCard className="bg-surfaceContainer">
-                <MdList
-                  style={{ maxHeight } as CSSProperties}
-                  className="bg-surfaceContainer rounded-2xl"
-                >
+                <MdList className="bg-surfaceContainer rounded-2xl">
                   <MdListItem
                     type="button"
                     onClick={() => {
