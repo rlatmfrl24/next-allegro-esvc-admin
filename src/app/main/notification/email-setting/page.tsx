@@ -30,6 +30,12 @@ export default function EmailSettingPage() {
     );
   }, []);
 
+  const tempTemplageDataset = useMemo(() => {
+    return Array.from({ length: 10 }, (_, i) =>
+      faker.string.alphanumeric(7).toUpperCase()
+    );
+  }, []);
+
   const columnHelper = createColumnHelper<EmailSettingProps>();
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [target, setTarget] = useState<EmailSettingProps | null>(null);
@@ -60,6 +66,21 @@ export default function EmailSettingPage() {
       id: "template",
       header: "Template",
       size: 160,
+      cell: (info) => {
+        return (
+          <GridSelectComponent
+            initialSelection={info.getValue() || "None"}
+            options={tempTemplageDataset}
+            onChange={(value) => {
+              info.table.options.meta?.updateData(
+                info.row.index,
+                "template",
+                value
+              );
+            }}
+          />
+        );
+      },
     }),
     columnHelper.accessor("title", {
       id: "title",

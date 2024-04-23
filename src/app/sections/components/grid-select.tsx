@@ -52,7 +52,7 @@ export const GridSelectComponent = ({
       size({
         apply({ rects, elements, availableHeight }) {
           Object.assign(elements.floating.style, {
-            width: `${rects.reference.width}px`,
+            minWidth: `${rects.reference.width}px`,
           });
           flushSync(() => setMaxHeight(availableHeight - 50));
         },
