@@ -83,3 +83,13 @@ export interface CustomerUserProps extends UserInterface {
   faxNumber: string;
   comment: string;
 }
+
+export type CustomerCodeProps = {
+  customerCode: string;
+  countryCode: string;
+  customerName: string;
+  type: string;
+  rofc: string;
+  address: string;
+  state: string;
+};

@@ -1,16 +1,24 @@
 import { DividerComponent } from "@/app/components/divider";
 import NAOutlinedListBox from "@/app/components/na-outline-listbox";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
+import { SimpleTable } from "@/app/components/table/simple-table";
 import {
   MdDialog,
   MdFilledButton,
   MdIcon,
   MdOutlinedButton,
   MdOutlinedTextField,
+  MdRadio,
   MdTextButton,
 } from "@/util/md3";
-import { CompanyType, CustomerUserProps } from "@/util/typeDef/user";
+import {
+  CompanyType,
+  CustomerCodeProps,
+  CustomerUserProps,
+} from "@/util/typeDef/user";
+import { faker } from "@faker-js/faker";
 import { Search } from "@mui/icons-material";
+import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 
@@ -295,6 +303,39 @@ export const CustomerCodeSearch = ({
   isOpen: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const tempData = Array.from(
+    { length: 10 },
+    () =>
+      ({
+        customerCode: faker.string.alphanumeric(7).toUpperCase(),
+        countryCode: faker.location.countryCode(),
+        customerName: faker.company.name(),
+        type: faker.helpers.arrayElement([
+          "Non-BCO",
+          "BCO",
+          "NVOCC",
+          "Freight Forwarder",
+        ]),
+        rofc: faker.helpers.arrayElement(["Import", "Export"]),
+        address: faker.location.streetAddress(),
+        state: "",
+      } as CustomerCodeProps)
+  );
+  const columnHelper = createColumnHelper<CustomerCodeProps>();
+
+  const columnDefs = [
+    columnHelper.display({
+      id: "selection",
+      cell: (info) => {
+        return <MdRadio />;
+      },
+    }),
+    columnHelper.accessor("customerCode", {
+      id: "customerCode",
+      header: "Customer Code",
+    }),
+  ];
+
   return (
     <MdDialog
       open={isOpen}
@@ -316,6 +357,7 @@ export const CustomerCodeSearch = ({
           <MdFilledButton>Search</MdFilledButton>
         </div>
         <DividerComponent />
+        <SimpleTable data={tempData} columns={columnDefs} />
       </div>
       <div slot="actions">
         <MdOutlinedButton

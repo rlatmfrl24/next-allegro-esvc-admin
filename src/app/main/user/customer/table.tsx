@@ -112,7 +112,7 @@ export const CustomerUserTable = () => {
     columnHelper.accessor("userId", {
       id: "userId",
       header: "User ID",
-      minSize: 120,
+      minSize: 240,
       cell: (info) => {
         return (
           <div className="flex items-center gap-2 justify-between">
