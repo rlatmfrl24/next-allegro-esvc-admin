@@ -3,6 +3,7 @@ import {
   PaginationState,
   RowData,
   SortingState,
+  Table,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
@@ -46,6 +47,7 @@ import { getCommonPinningStyles } from "./util";
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+    updateRow: (rowIndex: number, value: unknown) => void;
   }
 }
 
@@ -75,7 +77,7 @@ export const BasicTable = ({
   editableColumns = [],
   isSingleSelect = false,
   getSelectionRows,
-  actionComponent,
+  ActionComponent,
   updater,
 }: {
   data: any[];
@@ -87,7 +89,7 @@ export const BasicTable = ({
   editableColumns?: string[];
   isSingleSelect?: boolean;
   getSelectionRows?: (Rows: any[]) => void;
-  actionComponent?: React.ReactNode;
+  ActionComponent?: (table: Table<any>) => React.ReactNode;
   updater?: Dispatch<SetStateAction<any[]>>;
 }) => {
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
@@ -156,6 +158,17 @@ export const BasicTable = ({
           });
         });
       },
+      updateRow: (rowIndex, value) => {
+        updater?.((old) => {
+          skipAutoResetPageIndex();
+          return old.map((row, index) => {
+            if (index === rowIndex) {
+              return value;
+            }
+            return row;
+          });
+        });
+      },
     },
   });
 
@@ -194,7 +207,7 @@ export const BasicTable = ({
   return (
     <div className="relative flex flex-col gap-4">
       <div className="flex items-end">
-        {actionComponent}
+        {ActionComponent && <ActionComponent {...table} />}
         <div className="flex gap-2 items-center h-10 z-10">
           <TablePaginator table={table} />
           <MdTypography variant="label" size="large" className="text-outline">

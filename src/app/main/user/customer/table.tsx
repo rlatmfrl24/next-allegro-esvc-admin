@@ -243,61 +243,65 @@ export const CustomerUserTable = () => {
 
   return (
     <>
-      {isAddDialogOpen && (
-        <CustomerActionDialog
-          isOpen={isAddDialogOpen}
-          onOpenChange={setIsAddDialogOpen}
-          mode="add"
-          onConfirm={(data) => {
-            setTableData((prev) => [...prev, data]);
-          }}
-        />
-      )}
-      {isEditDialogOpen && (
-        <CustomerActionDialog
-          isOpen={isEditDialogOpen}
-          onOpenChange={setIsEditDialogOpen}
-          mode="edit"
-          targetUser={selectedUser || ({} as CustomerUserProps)}
-          onConfirm={(data) => {
-            setTableData((prev) =>
-              prev.map((item) => (item.uuid === data.uuid ? data : item))
-            );
-          }}
-        />
-      )}
       <DeleteConfirmDialog
         isOpen={isDeleteConfirmDialogOpen}
         onOpenChage={setIsDeleteConfirmDialogOpen}
         targetUser={selectedUser || ({} as CustomerUserProps)}
       />
       <BasicTable
-        actionComponent={
-          <div className="flex flex-1 items-center gap-2">
-            <MdTextButton
-              onClick={() => {
-                setIsAddDialogOpen(true);
-              }}
-            >
-              <MdIcon slot="icon">
-                <Add fontSize="small" />
-              </MdIcon>
-              Add Admin
-            </MdTextButton>
-            {selectedUser && (
-              <>
-                <DividerComponent orientation="vertical" className="h-6" />
-                <MdTextButton
-                  onClick={() => {
-                    setIsEditDialogOpen(true);
+        ActionComponent={(table) => {
+          return (
+            <div className="flex flex-1 items-center gap-2">
+              <MdTextButton
+                onClick={() => {
+                  setIsAddDialogOpen(true);
+                }}
+              >
+                <MdIcon slot="icon">
+                  <Add fontSize="small" />
+                </MdIcon>
+                Add Admin
+              </MdTextButton>
+              {selectedUser && (
+                <>
+                  <DividerComponent orientation="vertical" className="h-6" />
+                  <MdTextButton
+                    onClick={() => {
+                      setIsEditDialogOpen(true);
+                    }}
+                  >
+                    Edit
+                  </MdTextButton>
+                </>
+              )}
+              {isAddDialogOpen && (
+                <CustomerActionDialog
+                  isOpen={isAddDialogOpen}
+                  onOpenChange={setIsAddDialogOpen}
+                  mode="add"
+                  onConfirm={(data) => {
+                    setTableData((prev) => [data, ...prev]);
                   }}
-                >
-                  Edit
-                </MdTextButton>
-              </>
-            )}
-          </div>
-        }
+                />
+              )}
+              {isEditDialogOpen && (
+                <CustomerActionDialog
+                  isOpen={isEditDialogOpen}
+                  onOpenChange={setIsEditDialogOpen}
+                  mode="edit"
+                  targetUser={selectedUser || ({} as CustomerUserProps)}
+                  onConfirm={(data) => {
+                    const rowIndex = tableData.findIndex(
+                      (item) => item.uuid === data.uuid
+                    );
+                    rowIndex !== -1 &&
+                      table.options.meta?.updateRow(rowIndex, data);
+                  }}
+                />
+              )}
+            </div>
+          );
+        }}
         columns={columDefs}
         data={tableData}
         isSingleSelect
@@ -306,6 +310,7 @@ export const CustomerUserTable = () => {
         getSelectionRows={(rows) => {
           setSelectedUser(rows[0]);
         }}
+        updater={setTableData}
       />
     </>
   );

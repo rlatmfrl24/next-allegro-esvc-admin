@@ -86,15 +86,17 @@ export const MessageManagementTable = ({
       id: "action",
       cell: (info) => {
         return (
-          <TableActionButton
-            options={["Delete"]}
-            onMenuSelect={(option) => {
-              if (option === "Delete") {
-                setTargetMessage(info.row.original);
-                setIsDeleteConfirmDialogOpen(true);
-              }
-            }}
-          />
+          <>
+            <TableActionButton
+              options={["Delete"]}
+              onMenuSelect={(option) => {
+                if (option === "Delete") {
+                  setTargetMessage(info.row.original);
+                  setIsDeleteConfirmDialogOpen(true);
+                }
+              }}
+            />
+          </>
         );
       },
       header: "",

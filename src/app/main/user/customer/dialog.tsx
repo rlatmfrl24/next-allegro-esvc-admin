@@ -108,35 +108,37 @@ export const CustomerActionDialog = ({
             setData({ ...data, customerCode: code.customerCode });
           }}
         />
-        <div className="flex gap-4 bg-surface p-4 mb-4 rounded-xl border border-outlineVariant">
-          <MdTypography
-            variant="label"
-            size="medium"
-            className={`px-2 py-1 rounded-lg w-fit ${bgColor}`}
-          >
-            {data.status}
-          </MdTypography>
-          <div className="flex gap-2">
-            <MdTypography variant="body" size="large">
-              By
+        {mode === "edit" && (
+          <div className="flex gap-4 bg-surface p-4 mb-4 rounded-xl border border-outlineVariant">
+            <MdTypography
+              variant="label"
+              size="medium"
+              className={`px-2 py-1 rounded-lg w-fit ${bgColor}`}
+            >
+              {data.status}
             </MdTypography>
-            <MdTypography variant="body" size="large" prominent>
-              {data.companyName}
-            </MdTypography>
-            <MdTypography variant="body" size="large">
-              Office
-            </MdTypography>
-            <MdTypography variant="body" size="large" prominent>
-              {data.contactOffice}
-            </MdTypography>
-            <MdTypography variant="body" size="large">
-              at
-            </MdTypography>
-            <MdTypography variant="body" size="large" prominent>
-              {data.updatedAt.toFormat("yyyy-MM-dd HH:mm")}
-            </MdTypography>
+            <div className="flex gap-2">
+              <MdTypography variant="body" size="large">
+                By
+              </MdTypography>
+              <MdTypography variant="body" size="large" prominent>
+                {data.companyName}
+              </MdTypography>
+              <MdTypography variant="body" size="large">
+                Office
+              </MdTypography>
+              <MdTypography variant="body" size="large" prominent>
+                {data.contactOffice}
+              </MdTypography>
+              <MdTypography variant="body" size="large">
+                at
+              </MdTypography>
+              <MdTypography variant="body" size="large" prominent>
+                {data.updatedAt?.toFormat("yyyy-MM-dd HH:mm")}
+              </MdTypography>
+            </div>
           </div>
-        </div>
+        )}
         <div className="flex gap-2 w-full">
           <NAOutlinedTextField
             required
