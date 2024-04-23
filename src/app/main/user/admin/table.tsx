@@ -15,7 +15,7 @@ import { useMemo, useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
 import { AdminUserDialog } from "./dialog";
 
-function createDummyAdminUser(): AdminUserProps {
+function createDummyAdminUser(userType?: AdminUserType): AdminUserProps {
   return {
     uuid: faker.string.uuid(),
     userId: faker.internet.userName(),
@@ -23,7 +23,7 @@ function createDummyAdminUser(): AdminUserProps {
     updatedAt: DateTime.fromJSDate(faker.date.recent()),
     userName: faker.person.fullName(),
     office: faker.string.alphanumeric(5).toUpperCase(),
-    type: faker.helpers.enumValue(AdminUserType),
+    type: userType || faker.helpers.enumValue(AdminUserType),
     status: faker.helpers.enumValue(AdminUserStatus),
     noficication: {
       booking: faker.datatype.boolean(),

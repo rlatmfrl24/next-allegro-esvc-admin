@@ -12,12 +12,79 @@ import Logo from "../components/logo";
 import { NAOutlinedTextField } from "../components/na-textfield";
 import { MdTypography } from "../components/typography";
 import NAOutlinedListBox from "../components/na-outline-listbox";
+import {
+  AdminUserProps,
+  AdminUserStatus,
+  AdminUserType,
+} from "@/util/typeDef/user";
+import { useRecoilState } from "recoil";
+import { currentUser } from "@/store/user.store";
+import { faker } from "@faker-js/faker";
+import { DateTime } from "luxon";
+
+function createDummyAdminUser(userType?: AdminUserType): AdminUserProps {
+  return {
+    uuid: faker.string.uuid(),
+    userId: faker.internet.userName(),
+    email: faker.internet.email(),
+    updatedAt: DateTime.fromJSDate(faker.date.recent()),
+    userName: faker.person.fullName(),
+    office: faker.string.alphanumeric(5).toUpperCase(),
+    type: userType || faker.helpers.enumValue(AdminUserType),
+    status: faker.helpers.enumValue(AdminUserStatus),
+    noficication: {
+      booking: faker.datatype.boolean(),
+      si: faker.datatype.boolean(),
+      officeNotification: faker.helpers.arrayElements([
+        "Seoul",
+        "Busan",
+        "Incheon",
+        "Vietnam",
+        "Singapore",
+      ]),
+    },
+    authorization: {
+      userManagement: {
+        customerUser: faker.datatype.boolean(),
+      },
+      noticeManagement: {
+        notice: faker.datatype.boolean(),
+        regionalContactPerson: faker.datatype.boolean(),
+      },
+      notificationSetup: {
+        emailSetting: faker.datatype.boolean(),
+        emailSendingSummary: faker.datatype.boolean(),
+        officeGroupEmailSetting: faker.datatype.boolean(),
+      },
+    },
+  };
+}
 
 export default function LoginPage() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
-
+  const [userType, setUserType] = useState(AdminUserType.SystemAdmin);
+  const [currentUserStore, setCurrentUserStore] = useRecoilState(currentUser);
   const router = useRouter();
+
+  function doLogin() {
+    switch (userType) {
+      case AdminUserType.SystemAdmin:
+        setCurrentUserStore(createDummyAdminUser(AdminUserType.SystemAdmin));
+        router.push("/super");
+        break;
+      case AdminUserType.CompanyAdmin:
+        setCurrentUserStore(createDummyAdminUser(AdminUserType.CompanyAdmin));
+        router.push("/main");
+        break;
+      case AdminUserType.GeneralStaff:
+        setCurrentUserStore(createDummyAdminUser(AdminUserType.GeneralStaff));
+        break;
+      default:
+        setCurrentUserStore(createDummyAdminUser(AdminUserType.SystemAdmin));
+        break;
+    }
+  }
 
   return (
     <div className="bg-surfaceContainerHigh h-screen flex flex-col">
@@ -42,8 +109,9 @@ export default function LoginPage() {
           </MdTypography>
           <NAOutlinedListBox
             className="w-full mt-12"
-            initialValue="System Admin"
-            options={["System Admin", "Company Admin", "General Staff"]}
+            initialValue={userType}
+            options={Object.values(AdminUserType)}
+            onSelection={(value) => setUserType(value as AdminUserType)}
           />
           <NAOutlinedTextField
             label="ID"
@@ -71,7 +139,8 @@ export default function LoginPage() {
             className="w-full"
             disabled={!id || !pw}
             onClick={() => {
-              router.push("/super");
+              doLogin();
+              // router.push("/super");
             }}
           >
             Log in
