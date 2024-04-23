@@ -7,9 +7,16 @@ import { NAOutlinedTextField } from "@/app/components/na-textfield";
 import { useMemo, useState } from "react";
 import { faker } from "@faker-js/faker";
 import { CompanyType, CustomerUserStatus } from "@/util/typeDef/user";
-import { MdFilledButton, MdTextButton } from "@/util/md3";
+import {
+  MdFilledButton,
+  MdIcon,
+  MdOutlinedTextField,
+  MdTextButton,
+} from "@/util/md3";
 import { CustomerUserTable } from "./table";
 import { DateTime } from "luxon";
+import { Search } from "@mui/icons-material";
+import { CustomerCodeSearch } from "./dialog";
 
 export default function CustomerUserPage() {
   const tempCodeSet = useMemo(() => {
@@ -26,6 +33,8 @@ export default function CustomerUserPage() {
       .sort();
   }, []);
 
+  const [isCustomerCodeSearchOpen, setIsCustomerCodeSearchOpen] =
+    useState(false);
   const [searchCondition, setSearchCondition] = useState({
     dateType: "Lastest Login Date",
     date: DateTime.now(),
@@ -45,6 +54,16 @@ export default function CustomerUserPage() {
     <div className="flex flex-col gap-4 flex-1">
       <PageTitle title="Customer User" category="User Management" />
       <div className="flex gap-4">
+        <CustomerCodeSearch
+          isOpen={isCustomerCodeSearchOpen}
+          onOpenChange={setIsCustomerCodeSearchOpen}
+          onConfirm={(value) => {
+            setSearchCondition({
+              ...searchCondition,
+              customerCode: value.customerCode,
+            });
+          }}
+        />
         <div className="flex gap-2">
           <NAOutlinedListBox
             className="w-44"
@@ -130,13 +149,19 @@ export default function CustomerUserPage() {
               });
             }}
           />
-          <NAOutlinedTextField
-            placeholder="Customer Code"
+          <MdOutlinedTextField
+            readOnly
+            label="Customer Code"
+            hasTrailingIcon
             value={searchCondition.customerCode}
-            handleValueChange={(value) => {
-              setSearchCondition({ ...searchCondition, customerCode: value });
+            onClick={() => {
+              setIsCustomerCodeSearchOpen(true);
             }}
-          />
+          >
+            <MdIcon slot="trailing-icon">
+              <Search />
+            </MdIcon>
+          </MdOutlinedTextField>
         </div>
         <NAOutlinedTextField
           label="Company Name"

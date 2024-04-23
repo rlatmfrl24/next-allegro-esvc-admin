@@ -2,6 +2,7 @@ import { DividerComponent } from "@/app/components/divider";
 import NAOutlinedListBox from "@/app/components/na-outline-listbox";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
 import { SimpleTable } from "@/app/components/table/simple-table";
+import { MdTypography } from "@/app/components/typography";
 import {
   MdDialog,
   MdFilledButton,
@@ -15,6 +16,7 @@ import {
   CompanyType,
   CustomerCodeProps,
   CustomerUserProps,
+  CustomerUserStatus,
 } from "@/util/typeDef/user";
 import { faker } from "@faker-js/faker";
 import { Search } from "@mui/icons-material";
@@ -46,6 +48,15 @@ export const CustomerActionDialog = ({
         rateOption: "Basic",
       } as CustomerUserProps)
   );
+  const bgColor = {
+    [CustomerUserStatus.newRegist]: "bg-surfaceContainerHigh",
+    [CustomerUserStatus.update]: "bg-surfaceContainerHigh",
+    [CustomerUserStatus.confirm]: "bg-[#B4F1BD]",
+    [CustomerUserStatus.rejectForRegist]: "bg-errorContainer text-error",
+    [CustomerUserStatus.rejectForUpdate]: "bg-errorContainer text-error",
+    [CustomerUserStatus.block]: "bg-errorContainer text-error",
+    [CustomerUserStatus.withdraw]: "bg-errorContainer text-error",
+  }[data.status];
 
   const isValidationChecked = useMemo(() => {
     if (
@@ -93,7 +104,39 @@ export const CustomerActionDialog = ({
         <CustomerCodeSearch
           isOpen={isCustomerCodeSearchOpen}
           onOpenChange={setIsCustomerCodeSearchOpen}
+          onConfirm={(code) => {
+            setData({ ...data, customerCode: code.customerCode });
+          }}
         />
+        <div className="flex gap-4 bg-surface p-4 mb-4 rounded-xl border border-outlineVariant">
+          <MdTypography
+            variant="label"
+            size="medium"
+            className={`px-2 py-1 rounded-lg w-fit ${bgColor}`}
+          >
+            {data.status}
+          </MdTypography>
+          <div className="flex gap-2">
+            <MdTypography variant="body" size="large">
+              By
+            </MdTypography>
+            <MdTypography variant="body" size="large" prominent>
+              {data.companyName}
+            </MdTypography>
+            <MdTypography variant="body" size="large">
+              Office
+            </MdTypography>
+            <MdTypography variant="body" size="large" prominent>
+              {data.contactOffice}
+            </MdTypography>
+            <MdTypography variant="body" size="large">
+              at
+            </MdTypography>
+            <MdTypography variant="body" size="large" prominent>
+              {data.updatedAt.toFormat("yyyy-MM-dd HH:mm")}
+            </MdTypography>
+          </div>
+        </div>
         <div className="flex gap-2 w-full">
           <NAOutlinedTextField
             required
@@ -289,7 +332,7 @@ export const CustomerActionDialog = ({
             });
           }}
         >
-          OK
+          Save
         </MdFilledButton>
       </div>
     </MdDialog>
@@ -299,40 +342,83 @@ export const CustomerActionDialog = ({
 export const CustomerCodeSearch = ({
   isOpen,
   onOpenChange,
+  onConfirm,
 }: {
   isOpen: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
+  onConfirm?: (data: CustomerCodeProps) => void;
 }) => {
-  const tempData = Array.from(
-    { length: 10 },
-    () =>
-      ({
-        customerCode: faker.string.alphanumeric(7).toUpperCase(),
-        countryCode: faker.location.countryCode(),
-        customerName: faker.company.name(),
-        type: faker.helpers.arrayElement([
-          "Non-BCO",
-          "BCO",
-          "NVOCC",
-          "Freight Forwarder",
-        ]),
-        rofc: faker.helpers.arrayElement(["Import", "Export"]),
-        address: faker.location.streetAddress(),
-        state: "",
-      } as CustomerCodeProps)
-  );
+  const tempData = useMemo(() => {
+    return Array.from(
+      { length: 10 },
+      () =>
+        ({
+          customerCode: faker.string.alphanumeric(7).toUpperCase(),
+          countryCode: faker.location.countryCode(),
+          customerName: faker.company.name(),
+          type: faker.helpers.arrayElement([
+            "Non-BCO",
+            "BCO",
+            "NVOCC",
+            "Freight Forwarder",
+          ]),
+          rofc: faker.helpers.arrayElement(["Import", "Export"]),
+          address: faker.location.streetAddress(),
+          state: "",
+        } as CustomerCodeProps)
+    );
+  }, []);
+
   const columnHelper = createColumnHelper<CustomerCodeProps>();
+  const [selectedCode, setSelectedCode] = useState<CustomerCodeProps>();
 
   const columnDefs = [
     columnHelper.display({
       id: "selection",
       cell: (info) => {
-        return <MdRadio />;
+        return (
+          <div className="flex items-center justify-center">
+            <MdRadio checked={info.row.getIsSelected()} />
+          </div>
+        );
       },
+      size: 48,
+      maxSize: 48,
     }),
     columnHelper.accessor("customerCode", {
       id: "customerCode",
       header: "Customer Code",
+      size: 112,
+    }),
+    columnHelper.accessor("countryCode", {
+      id: "countryCode",
+      header: "Country Code",
+      size: 80,
+    }),
+    columnHelper.accessor("customerName", {
+      id: "customerName",
+      header: "Customer Name",
+      size: 240,
+    }),
+    columnHelper.accessor("type", {
+      id: "type",
+      header: "Type",
+      size: 104,
+    }),
+    columnHelper.accessor("rofc", {
+      id: "rofc",
+      header: "R.OFC",
+      size: 104,
+    }),
+    columnHelper.accessor("address", {
+      id: "address",
+      header: "Address",
+      size: 240,
+    }),
+    columnHelper.accessor("state", {
+      id: "state",
+      header: "State",
+      size: 120,
     }),
   ];
 
@@ -342,7 +428,7 @@ export const CustomerCodeSearch = ({
       closed={() => {
         onOpenChange(false);
       }}
-      className="min-w-[960px]"
+      className="min-w-[1120px]"
     >
       <div slot="headline">Search Customer Code</div>
       <div slot="content" className="flex flex-col gap-4">
@@ -357,7 +443,13 @@ export const CustomerCodeSearch = ({
           <MdFilledButton>Search</MdFilledButton>
         </div>
         <DividerComponent />
-        <SimpleTable data={tempData} columns={columnDefs} />
+        <SimpleTable
+          data={tempData}
+          columns={columnDefs}
+          getSelectionRows={(rows) => {
+            setSelectedCode(rows[0]);
+          }}
+        />
       </div>
       <div slot="actions">
         <MdOutlinedButton
@@ -368,8 +460,10 @@ export const CustomerCodeSearch = ({
           Cancel
         </MdOutlinedButton>
         <MdFilledButton
+          disabled={!selectedCode}
           onClick={() => {
             onOpenChange(false);
+            selectedCode && onConfirm?.(selectedCode);
           }}
         >
           Apply
