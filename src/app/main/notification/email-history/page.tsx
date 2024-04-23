@@ -65,7 +65,6 @@ export default function EmailHistoryPage() {
     columnHelper.accessor("mailKey", {
       id: "mailKey",
       header: "Mail Key",
-      size: 150,
     }),
   ];
 

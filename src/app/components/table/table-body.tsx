@@ -10,6 +10,7 @@ import {
 import { Cell, flexRender, Row, Table } from "@tanstack/react-table";
 
 import { getCommonPinningStyles } from "./util";
+import { MdTypography } from "../typography";
 
 export const TableBody = ({
   table,
@@ -95,8 +96,11 @@ export const TableBody = ({
                     width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                     ...getCommonPinningStyles(cell.column),
                     ...getCellStyles(cell),
+                    color: disableColumns?.includes(cell.column.id)
+                      ? "var(--md-sys-color-outline)"
+                      : "",
                   }}
-                  className="p-2 border-box border-x border-x-transparent border-y border-y-transparent overflow-hidden"
+                  className="p-2 border-box border-x border-x-transparent border-y border-y-transparent overflow-x-hidden"
                   onMouseEnter={(e) => {
                     setHoverInfo({ row, cell });
                   }}
