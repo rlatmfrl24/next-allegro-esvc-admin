@@ -19,7 +19,10 @@ export default function NoticeManagement() {
     return Array.from({ length: 900 }, (_, index) => ({
       uuid: faker.string.uuid(),
       title: faker.lorem.sentence(),
-      attachment: faker.system.fileName(),
+      contents: faker.lorem.paragraph(),
+      attachment: Array.from({ length: faker.number.int(3) }, () =>
+        faker.system.fileName()
+      ),
       postedBy: faker.internet.userName(),
       updatedAt: DateTime.fromJSDate(faker.date.recent()),
     }));
@@ -44,6 +47,9 @@ export default function NoticeManagement() {
       id: "attachment",
       header: "Attachment",
       size: 540,
+      cell: (info) => {
+        return info.getValue().join(", ");
+      },
     }),
     columnHelper.accessor("postedBy", {
       id: "postedBy",
@@ -140,7 +146,7 @@ export default function NoticeManagement() {
           ignoreSelectionColumns={["action"]}
           getSelectionRows={(rows) => {
             setSelectedNotice(rows[0] || null);
-            setIsEditDialogOpen(true);
+            rows[0] && setIsEditDialogOpen(true);
           }}
         />
       </div>
