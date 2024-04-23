@@ -42,6 +42,7 @@ export interface EmailSendingReportProps {
 }
 
 export interface OfficeEmailSettingProps {
+  uuid: string;
   officeCode: string;
   officeName: string;
   bookingNotificationReceiver: string;
