@@ -85,7 +85,7 @@ export const GridSelectComponent = ({
   );
 
   useEffect(() => {
-    if (onChange) {
+    if (onChange && selection !== initialSelection) {
       onChange(selection);
     }
 
