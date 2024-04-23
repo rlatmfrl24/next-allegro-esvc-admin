@@ -125,9 +125,6 @@ export default function BusinessConfigurationStep() {
       </div>
       <BaseItem>3</BaseItem>
       <BaseItem>Dormant Period</BaseItem>
-      {/* <MdOutlinedTextField
-        value={companyStore.configuration.dormantPeriod.toString()}
-      /> */}
       <input
         value={companyStore.configuration.dormantPeriod}
         type="number"

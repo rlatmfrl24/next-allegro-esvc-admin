@@ -43,13 +43,7 @@ export default function LoginPage() {
           <NAOutlinedListBox
             className="w-full mt-12"
             initialValue="System Admin"
-            options={[
-              "System Admin",
-              "Cyberlogitec-Busan",
-              "Cyberlogitec-Seoul",
-              "Cyberlogitec-Singapore",
-              "Cyberlogitec-Vietnam",
-            ]}
+            options={["System Admin", "Company Admin", "General Staff"]}
           />
           <NAOutlinedTextField
             label="ID"
