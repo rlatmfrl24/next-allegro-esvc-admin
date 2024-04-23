@@ -7,7 +7,7 @@ export const PageTitle = ({
   updatedDate,
   className,
 }: {
-  category: string;
+  category?: string;
   title: string;
   updatedDate?: DateTime;
   className?: string;
@@ -19,14 +19,16 @@ export const PageTitle = ({
       }`}
     >
       <div>
-        <MdTypography
-          variant="body"
-          size="medium"
-          prominent
-          className="text-primary"
-        >
-          {category}
-        </MdTypography>
+        {category && (
+          <MdTypography
+            variant="body"
+            size="medium"
+            prominent
+            className="text-primary"
+          >
+            {category}
+          </MdTypography>
+        )}
         <MdTypography variant="title" size="large" className="text-onSurface">
           {title}
         </MdTypography>

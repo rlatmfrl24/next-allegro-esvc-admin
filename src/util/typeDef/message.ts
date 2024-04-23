@@ -16,6 +16,7 @@ export enum MessageType {
 
 export interface MessageProps {
   module: MessageModule;
+  uuid: string;
   id: string;
   defaultMessage: string;
   message: {

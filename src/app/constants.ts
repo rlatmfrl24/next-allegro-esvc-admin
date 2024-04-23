@@ -121,15 +121,15 @@ export const mainMenuItems: MenuItemType[] = [
         isAvailable: true,
         subMenu: [],
       },
-      {
-        id: "message",
-        name: "Message Management",
-        originName: "Message Management",
-        link: "message",
-        isAvailable: true,
-        subMenu: [],
-      },
     ],
+  },
+  {
+    id: "message",
+    name: "Message Management",
+    originName: "Message Management",
+    link: "message",
+    isAvailable: true,
+    subMenu: [],
   },
   {
     id: "user",
@@ -615,24 +615,32 @@ export const basicPopoverStyles = {
   close: { opacity: 0, transform: "translateY(-8px)" },
 };
 
-export const basicDropdownStyles = {
-  duration: {
-    open: 200,
-    close: 100,
-  },
-  initial: {
-    opacity: 0,
-    transformOrigin: "top",
-    transform: "scaleY(0.55) translateY(-10px)",
-  },
-  open: {
-    opacity: 1,
-    transformOrigin: "top",
-    transform: "scaleY(1) translateY(0)",
-  },
-  close: {
-    opacity: 0,
-    transformOrigin: "top",
-    transform: "scaleY(0.55) translateY(-10px)",
-  },
+export const getBasicDropdownStyles = (direction: "down" | "up") => {
+  return {
+    duration: {
+      open: 200,
+      close: 100,
+    },
+    initial: {
+      opacity: 0,
+      transformOrigin: direction === "down" ? "top" : "bottom",
+      transform:
+        direction === "down"
+          ? "scaleY(0.55) translateY(-10px)"
+          : "scaleY(0.55) translateY(10px)",
+    },
+    open: {
+      opacity: 1,
+      transformOrigin: direction === "down" ? "top" : "bottom",
+      transform: "scaleY(1) translateY(0)",
+    },
+    close: {
+      opacity: 0,
+      transformOrigin: direction === "down" ? "top" : "bottom",
+      transform:
+        direction === "down"
+          ? "scaleY(0.55) translateY(-10px)"
+          : "scaleY(0.55) translateY(10px)",
+    },
+  };
 };
