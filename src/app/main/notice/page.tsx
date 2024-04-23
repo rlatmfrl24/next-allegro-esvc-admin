@@ -11,16 +11,10 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { TableActionButton } from "../components/table-action-button";
 import { Add } from "@mui/icons-material";
 import { ConfirmDialog } from "../components/confirm-dialog";
+import { AddNoticeDialog } from "./dialog";
+import { NoticeProps } from "@/util/typeDef/notice";
 
 export default function NoticeManagement() {
-  type NoticeProps = {
-    uuid: string;
-    title: string;
-    attachment: string;
-    postedBy: string;
-    updatedAt: DateTime;
-  };
-
   const tempNoticeList = useMemo<NoticeProps[]>(() => {
     return Array.from({ length: 900 }, (_, index) => ({
       uuid: faker.string.uuid(),
@@ -36,6 +30,8 @@ export default function NoticeManagement() {
     null
   );
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const columnHelper = createColumnHelper<NoticeProps>();
   const columnDefs = [
@@ -69,7 +65,6 @@ export default function NoticeManagement() {
           <TableActionButton
             options={["Delete"]}
             onMenuSelect={(option) => {
-              console.log(option);
               if (option === "Delete") {
                 setSelectedNotice(info.row.original);
                 setIsDeleteConfirmOpen(true);
@@ -99,6 +94,18 @@ export default function NoticeManagement() {
           setIsDeleteConfirmOpen(false);
         }}
       />
+      <AddNoticeDialog
+        isOpen={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+        mode="add"
+        target={{} as NoticeProps}
+      />
+      <AddNoticeDialog
+        isOpen={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        mode="edit"
+        target={selectedNotice}
+      />
       <div className="flex gap-4 w-full">
         <NAOutlinedTextField className="flex-1" label="Title" />
         <NAOutlinedTextField className="flex-1" label="Contents" />
@@ -110,19 +117,31 @@ export default function NoticeManagement() {
       </div>
       <div className="border border-outlineVariant rounded-lg p-4">
         <BasicTable
-          actionComponent={
-            <div className="flex-1">
-              <MdTextButton hasIcon>
-                <MdIcon slot="icon">
-                  <Add fontSize="small" />
-                </MdIcon>
-                Add Notice
-              </MdTextButton>
-            </div>
-          }
+          ActionComponent={() => {
+            return (
+              <div className="flex-1">
+                <MdTextButton
+                  hasIcon
+                  onClick={() => {
+                    setIsAddDialogOpen(true);
+                  }}
+                >
+                  <MdIcon slot="icon">
+                    <Add fontSize="small" />
+                  </MdIcon>
+                  Add Notice
+                </MdTextButton>
+              </div>
+            );
+          }}
           columns={columnDefs}
           data={tableData}
           isSingleSelect
+          ignoreSelectionColumns={["action"]}
+          getSelectionRows={(rows) => {
+            setSelectedNotice(rows[0] || null);
+            setIsEditDialogOpen(true);
+          }}
         />
       </div>
     </div>
