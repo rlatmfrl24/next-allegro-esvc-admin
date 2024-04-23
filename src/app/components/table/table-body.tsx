@@ -124,7 +124,7 @@ export const TableBody = ({
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ) : (
-                <td className="h-full relative">
+                <td className="h-full relative" key={cell.id}>
                   <div className="absolute flex top-0 w-full h-full left-0 p-px">
                     <input
                       autoFocus

@@ -13,13 +13,12 @@ export enum EmailType {
 }
 
 export interface EmailSettingProps {
+  uuid: string;
   type: EmailType;
   template: string;
   title: string;
-  sender: {
-    name: string;
-    email: string;
-  };
+  senderName: string;
+  senderEmail: string;
 }
 
 export interface EmailSendingHistoryProps {
