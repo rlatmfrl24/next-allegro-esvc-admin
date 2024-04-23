@@ -12,6 +12,7 @@ import { MessageType } from "@/util/typeDef/message";
 import {
   FloatingFocusManager,
   autoUpdate,
+  flip,
   size,
   useClick,
   useDismiss,
@@ -21,7 +22,7 @@ import {
   useTransitionStyles,
 } from "@floating-ui/react";
 import { ArrowDropDown, MoreVert } from "@mui/icons-material";
-import { useState } from "react";
+import { CSSProperties, useState } from "react";
 import { flushSync } from "react-dom";
 
 export const GridStateSelectComponent = (
@@ -38,24 +39,21 @@ export const GridStateSelectComponent = (
   }
 
   const [isOptionOpen, setIsOptionOpen] = useState(false);
-  const [maxHeight, setMaxHeight] = useState(0);
+  const [maxHeight, setMaxHeight] = useState<number | null>(null);
 
-  const { refs, floatingStyles, context } = useFloating({
+  const { refs, floatingStyles, context, placement } = useFloating({
     open: isOptionOpen,
     onOpenChange: setIsOptionOpen,
-    middleware: [
-      size({
-        apply({ rects, elements, availableHeight }) {
-          flushSync(() => setMaxHeight(availableHeight));
-        },
-      }),
-    ],
+    middleware: [flip()],
     whileElementsMounted: autoUpdate,
   });
 
   const { isMounted, styles: floatingTransitionStyles } = useTransitionStyles(
     context,
-    getBasicDropdownStyles("down")
+    placement === "top"
+      ? getBasicDropdownStyles("up")
+      : getBasicDropdownStyles("down")
+    // getBasicDropdownStyles("down")
   );
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
@@ -91,8 +89,11 @@ export const GridStateSelectComponent = (
         {isMounted && (
           <FloatingFocusManager context={context}>
             <div style={floatingTransitionStyles}>
-              <MdElevatedCard className="bg-surfaceContainer my-2">
-                <MdList style={{ maxHeight }} className="bg-surfaceContainer">
+              <MdElevatedCard className="bg-surfaceContainer">
+                <MdList
+                  style={{ maxHeight } as CSSProperties}
+                  className="bg-surfaceContainer rounded-2xl"
+                >
                   <MdListItem
                     type="button"
                     onClick={() => {
@@ -168,40 +169,5 @@ export const GridStateSelectComponent = (
         )}
       </div>
     </>
-  );
-};
-
-export const DeleteActionButton = ({ onClick }: { onClick?: () => void }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  return (
-    <div className="relative">
-      <MdIconButton
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsMenuOpen(!isMenuOpen);
-        }}
-        id="menu-anchor"
-      >
-        <MoreVert />
-      </MdIconButton>
-      <MdMenu
-        open={isMenuOpen}
-        anchor="menu-anchor"
-        anchorCorner="end-end"
-        menuCorner="start-end"
-        close={() => setIsMenuOpen(false)}
-      >
-        <MdMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsMenuOpen(false);
-            onClick && onClick();
-          }}
-        >
-          <div slot="headline">Delete</div>
-        </MdMenuItem>
-      </MdMenu>
-    </div>
   );
 };

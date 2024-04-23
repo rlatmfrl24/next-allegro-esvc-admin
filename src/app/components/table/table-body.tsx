@@ -3,7 +3,6 @@ import {
   Dispatch,
   memo,
   SetStateAction,
-  useEffect,
   useRef,
   useState,
 } from "react";
@@ -11,7 +10,6 @@ import {
 import { Cell, flexRender, Row, Table } from "@tanstack/react-table";
 
 import { getCommonPinningStyles } from "./util";
-import { MdOutlinedTextField } from "@/util/md3";
 
 export const TableBody = ({
   table,
@@ -20,7 +18,6 @@ export const TableBody = ({
   ignoreSelectionColumns,
   disableColumns,
   editableColumns,
-  onCellEdit,
 }: {
   table: Table<any>;
   selectedCell?: Cell<any, unknown> | null;
@@ -28,7 +25,6 @@ export const TableBody = ({
   ignoreSelectionColumns?: string[];
   disableColumns?: string[];
   editableColumns?: string[];
-  onCellEdit?: (rowId: string, columnId: string, value: string) => void;
 }) => {
   const inputRef = useRef<any>(null);
   const [hoverInfo, setHoverInfo] = useState<{
@@ -138,11 +134,12 @@ export const TableBody = ({
                         (cell.getContext().getValue() as string) || ""
                       }
                       onBlur={() => {
-                        onCellEdit?.(
-                          row.id,
+                        table.options.meta?.updateData(
+                          parseInt(row.id),
                           cell.column.id,
                           inputRef.current.value
                         );
+
                         setCurrentEditCell(null);
                       }}
                     />

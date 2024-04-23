@@ -1,6 +1,7 @@
 import {
   Cell,
   PaginationState,
+  RowData,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -8,7 +9,15 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styles from "@/styles/table.module.css";
 import { MemoizedTableBody, TableBody } from "./table-body";
 import { MdTypography } from "../typography";
@@ -33,6 +42,28 @@ import { HeaderComponent } from "./header";
 import { ColumnFilterButton } from "./column-filter";
 import { TablePaginator } from "./paginator";
 import { getCommonPinningStyles } from "./util";
+
+declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends RowData> {
+    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+  }
+}
+
+function useSkipper() {
+  const shouldSkipRef = useRef(true);
+  const shouldSkip = shouldSkipRef.current;
+
+  // Wrap a function with this to skip a pagination reset temporarily
+  const skip = useCallback(() => {
+    shouldSkipRef.current = false;
+  }, []);
+
+  useEffect(() => {
+    shouldSkipRef.current = true;
+  });
+
+  return [shouldSkip, skip] as const;
+}
 
 export const BasicTable = ({
   data,
@@ -59,6 +90,7 @@ export const BasicTable = ({
   actionComponent?: React.ReactNode;
   updater?: Dispatch<SetStateAction<any[]>>;
 }) => {
+  const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -107,30 +139,25 @@ export const BasicTable = ({
     onPaginationChange: setPagination,
     enableMultiRowSelection: !isSingleSelect,
     // enableMultiSort: true,
+    autoResetPageIndex,
     meta: {
-      updateData: (rowIndex: string, columnIndex: string, value: string) => {},
+      updateData: (rowIndex, columnId, value) => {
+        console.log(rowIndex, columnId, value);
+        updater?.((old) => {
+          skipAutoResetPageIndex();
+          return old.map((row, index) => {
+            if (index === rowIndex) {
+              return {
+                ...old[rowIndex]!,
+                [columnId]: value,
+              };
+            }
+            return row;
+          });
+        });
+      },
     },
   });
-
-  function handleCellUpdate(
-    rowIndex: string,
-    columnIndex: string,
-    value: string
-  ) {
-    updater &&
-      updater((prev) => {
-        // const updatedIndex = prev.findIndex((row) => row.id === rowIndex);
-        const updatedIndex = parseInt(rowIndex);
-        return [
-          ...prev.slice(0, updatedIndex),
-          {
-            ...prev[updatedIndex],
-            [columnIndex]: value,
-          },
-          ...prev.slice(updatedIndex + 1),
-        ];
-      });
-  }
 
   useEffect(() => {
     getSelectionRows &&
@@ -166,7 +193,7 @@ export const BasicTable = ({
 
   return (
     <div className="relative flex flex-col gap-4">
-      <div className="flex items-end ">
+      <div className="flex items-end">
         {actionComponent}
         <div className="flex gap-2 items-center h-10 z-10">
           <TablePaginator table={table} />
@@ -176,7 +203,7 @@ export const BasicTable = ({
           <ColumnFilterButton table={table} expectColumnIds={controlColumns} />
         </div>
       </div>
-      <OverlayScrollbarsComponent defer>
+      <OverlayScrollbarsComponent defer className="overflow-hidden">
         <DndContext
           collisionDetection={closestCenter}
           modifiers={[restrictToHorizontalAxis]}
@@ -234,9 +261,6 @@ export const BasicTable = ({
                 ignoreSelectionColumns={ignoreSelectionColumns}
                 disableColumns={disableColumns}
                 editableColumns={editableColumns}
-                onCellEdit={(rowId, columnId, value) => {
-                  handleCellUpdate(rowId, columnId, value);
-                }}
               />
             ) : (
               <TableBody
@@ -246,9 +270,6 @@ export const BasicTable = ({
                 ignoreSelectionColumns={ignoreSelectionColumns}
                 disableColumns={disableColumns}
                 editableColumns={editableColumns}
-                onCellEdit={(rowId, columnId, value) => {
-                  handleCellUpdate(rowId, columnId, value);
-                }}
               />
             )}
           </table>

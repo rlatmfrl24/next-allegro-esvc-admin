@@ -35,7 +35,7 @@ export default function MessageManagementSetup() {
       </div>
       <div className="px-6 py-4 rounded-lg border border-outlineVariant flex flex-col flex-1">
         <div className="relative flex gap-8 flex-1 w-full">
-          <div className="basis-2/3 flex-auto w-0 ">
+          <div className="basis-2/3 flex-auto w-0">
             <MessageManagementTable
               onMessageSelect={(message) => {
                 setSelectedMessage(message);

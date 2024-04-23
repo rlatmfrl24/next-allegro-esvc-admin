@@ -13,7 +13,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 
 import { createDummyMessageDataset } from "./util";
 import { MdTypography } from "@/app/components/typography";
-import { DeleteActionButton, GridStateSelectComponent } from "./components";
+import { GridStateSelectComponent } from "./components";
 import { TableActionButton } from "../components/table-action-button";
 import { ConfirmDialog } from "../components/confirm-dialog";
 
@@ -73,15 +73,11 @@ export const MessageManagementTable = ({
         return GridStateSelectComponent(
           info.getValue(),
           (type: MessageType) => {
-            const rowIndex = parseInt(info.row.id);
-            setTableData((prev) => [
-              ...prev.slice(0, rowIndex),
-              {
-                ...prev[rowIndex],
-                type,
-              },
-              ...prev.slice(rowIndex + 1),
-            ]);
+            info.table.options.meta?.updateData(
+              parseInt(info.row.id),
+              "type",
+              type
+            );
           }
         );
       },
@@ -94,11 +90,6 @@ export const MessageManagementTable = ({
             options={["Delete"]}
             onMenuSelect={(option) => {
               if (option === "Delete") {
-                // const rowIndex = parseInt(info.row.id);
-                // setTableData((prev) => [
-                //   ...prev.slice(0, rowIndex),
-                //   ...prev.slice(rowIndex + 1),
-                // ]);
                 setTargetMessage(info.row.original);
                 setIsDeleteConfirmDialogOpen(true);
               }
