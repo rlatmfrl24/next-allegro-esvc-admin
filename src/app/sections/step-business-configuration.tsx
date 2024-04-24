@@ -1,18 +1,24 @@
 "use client";
 
-import { useRef } from "react";
-import { useRecoilState } from "recoil";
+import { useEffect, useRef } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { MdTypography } from "@/app/components/typography";
 import { CurrentCompanyState } from "@/store/super.store";
 import { MdCheckbox, MdFilledButton, MdOutlinedTextField } from "@/util/md3";
 
 import { BaseItem } from "./components/base-configuration-item";
+import { modifiedDetectState } from "@/store/base.store";
 
 export default function BusinessConfigurationStep() {
   const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const signupTermsFileRef = useRef<HTMLInputElement>(null);
   const onlineQuotesTermsFileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   return (
     <div className="grid grid-cols-[80px_1fr_1fr]">
@@ -26,6 +32,7 @@ export default function BusinessConfigurationStep() {
           className="ml-2 mr-3"
           checked={companyStore.configuration.useSignUpTerms}
           onClick={() => {
+            modifiedDetect(true);
             setCompanyStore({
               ...companyStore,
               configuration: {
@@ -52,6 +59,7 @@ export default function BusinessConfigurationStep() {
           ref={signupTermsFileRef}
           hidden
           onChange={(e) => {
+            modifiedDetect(true);
             setCompanyStore({
               ...companyStore,
               configuration: {
@@ -77,6 +85,7 @@ export default function BusinessConfigurationStep() {
           className="ml-2 mr-3"
           checked={companyStore.configuration.useOnlineQuotesTerms}
           onClick={() => {
+            modifiedDetect(true);
             setCompanyStore({
               ...companyStore,
               configuration: {
@@ -105,6 +114,7 @@ export default function BusinessConfigurationStep() {
           ref={onlineQuotesTermsFileRef}
           hidden
           onChange={(e) => {
+            modifiedDetect(true);
             setCompanyStore({
               ...companyStore,
               configuration: {
@@ -130,6 +140,7 @@ export default function BusinessConfigurationStep() {
         type="number"
         className="appearance-none border-b border-b-outlineVariant text-right w-full p-2 outline-none focus:border-2 focus:border-primary focus:rounded-sm"
         onInput={(e) => {
+          modifiedDetect(true);
           setCompanyStore({
             ...companyStore,
             configuration: {

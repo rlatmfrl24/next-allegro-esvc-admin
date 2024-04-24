@@ -12,15 +12,21 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useState } from "react";
-import { useRecoilState } from "recoil";
+import { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";
 import { FirstMenuItem } from "./components/first-menu-item";
+import { modifiedDetectState } from "@/store/base.store";
 
 export default function MenuManagementStep() {
   const [activeId, setActiveId] = useState(null);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   return (
     <div className="flex-1 flex flex-col gap-4">
@@ -61,6 +67,7 @@ export default function MenuManagementStep() {
     }
 
     if (active.id !== over.id) {
+      modifiedDetect(true);
       setCompanyStore((prev) => {
         const newMenu = [...prev.menuManagement];
         const oldIndex = newMenu.findIndex((i) => i.id === active.id);

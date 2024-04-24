@@ -4,6 +4,7 @@ import { DividerComponent } from "@/app/components/divider";
 import RemovableChip from "@/app/components/removable-chip";
 import { MdTypography } from "@/app/components/typography";
 import LandingPreview from "@/app/preview/landing/landing";
+import { modifiedDetectState } from "@/store/base.store";
 import { CurrentCompanyState } from "@/store/super.store";
 
 import {
@@ -14,13 +15,18 @@ import {
 } from "@/util/md3";
 import { faker } from "@faker-js/faker";
 import { Upload } from "@mui/icons-material";
-import React, { useRef } from "react";
-import { useRecoilState } from "recoil";
+import React, { useEffect, useRef } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 export default function MainPageStyleStep() {
   const fileRef = useRef<HTMLInputElement>(null);
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const [currentCompanyStore, setCurrentCompanyStore] =
     useRecoilState(CurrentCompanyState);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   return (
     <div className="flex flex-1 gap-6">
@@ -47,6 +53,7 @@ export default function MainPageStyleStep() {
           accept="image/*"
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
             const files = e.target.files;
+            modifiedDetect(true);
             setCurrentCompanyStore((prev) => {
               return {
                 ...prev,
@@ -64,6 +71,7 @@ export default function MainPageStyleStep() {
               key={faker.string.uuid()}
               label={file.name}
               onRemove={() => {
+                modifiedDetect(true);
                 setCurrentCompanyStore((prev) => {
                   return {
                     ...prev,
@@ -90,6 +98,7 @@ export default function MainPageStyleStep() {
           rows={2}
           value={currentCompanyStore.themeStyle.mainText || ""}
           onInput={(e) => {
+            modifiedDetect(true);
             setCurrentCompanyStore((prev) => {
               return {
                 ...prev,
@@ -108,6 +117,7 @@ export default function MainPageStyleStep() {
           rows={4}
           value={currentCompanyStore.themeStyle.subText || ""}
           onInput={(e) => {
+            modifiedDetect(true);
             setCurrentCompanyStore((prev) => {
               return {
                 ...prev,
