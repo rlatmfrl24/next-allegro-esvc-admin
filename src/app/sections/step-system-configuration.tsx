@@ -71,8 +71,6 @@ export default function SystemConfigurationStep() {
           primarySelection={companyStore.configuration.maxPageSize.toString()}
           options={MaxPageSizeOptions}
           onChange={(result) => {
-            console.log("3", result);
-
             modifiedDetect(true);
             setCompanyStore((prev) => ({
               ...prev,
@@ -109,7 +107,6 @@ export default function SystemConfigurationStep() {
           primarySelection={companyStore.configuration.mainLanguage}
           options={LanguageOptions}
           onChange={(result) => {
-            console.log("5", result);
             modifiedDetect(true);
             setCompanyStore((prev) => ({
               ...prev,

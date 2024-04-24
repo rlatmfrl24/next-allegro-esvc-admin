@@ -47,13 +47,11 @@ function createDummyAdminUser(userType?: AdminUserType): AdminUserProps {
       userManagement: {
         customerUser: faker.datatype.boolean(),
       },
-      noticeManagement: {
-        notice: faker.datatype.boolean(),
-        regionalContactPerson: faker.datatype.boolean(),
-      },
+      noticeManagement: faker.datatype.boolean(),
       notificationSetup: {
         emailSetting: faker.datatype.boolean(),
-        emailSendingSummary: faker.datatype.boolean(),
+        emailSendingHistory: faker.datatype.boolean(),
+        emailSendingReport: faker.datatype.boolean(),
         officeGroupEmailSetting: faker.datatype.boolean(),
       },
     },

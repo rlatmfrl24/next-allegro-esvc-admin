@@ -50,13 +50,11 @@ export interface AdminUserProps extends UserInterface {
     userManagement: {
       customerUser: boolean;
     };
-    noticeManagement: {
-      notice: boolean;
-      regionalContactPerson: boolean;
-    };
+    noticeManagement: boolean;
     notificationSetup: {
       emailSetting: boolean;
-      emailSendingSummary: boolean;
+      emailSendingHistory: boolean;
+      emailSendingReport: boolean;
       officeGroupEmailSetting: boolean;
     };
   };

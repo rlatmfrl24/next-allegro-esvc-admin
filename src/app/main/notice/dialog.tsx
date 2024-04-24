@@ -104,11 +104,7 @@ export const AddNoticeDialog = (props: {
               }
             }}
           />
-          <MdChipSet
-            onChange={() => {
-              console.log("changed");
-            }}
-          >
+          <MdChipSet>
             {attachment.map((item) => (
               <RemovableChip
                 key={item}

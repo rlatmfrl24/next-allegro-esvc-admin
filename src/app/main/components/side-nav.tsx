@@ -24,6 +24,7 @@ import { AdminUserProps, AdminUserType } from "@/util/typeDef/user";
 
 function FilterMenuItem(user: AdminUserProps) {
   //filter menu items and sub menus based on user authorization
+
   let filteredMenu = mainMenuItems.map((item) => {
     if (item.id === "user") {
       return {
@@ -44,8 +45,11 @@ function FilterMenuItem(user: AdminUserProps) {
           if (subItem.id === "email-setting") {
             return user.authorization.notificationSetup.emailSetting;
           }
-          if (subItem.id === "email-report") {
-            return user.authorization.notificationSetup.emailSendingSummary;
+          if (subItem.id === "email-sending-history") {
+            return user.authorization.notificationSetup.emailSendingHistory;
+          }
+          if (subItem.id === "email-sending-report") {
+            return user.authorization.notificationSetup.emailSendingReport;
           }
           if (subItem.id === "office") {
             return user.authorization.notificationSetup.officeGroupEmailSetting;
@@ -59,7 +63,7 @@ function FilterMenuItem(user: AdminUserProps) {
   });
   filteredMenu = filteredMenu.filter((item) => {
     if (item.id === "notice") {
-      return user.authorization.noticeManagement.notice;
+      return user.authorization.noticeManagement;
     }
     return true;
   });
