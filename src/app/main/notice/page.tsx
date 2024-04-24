@@ -155,6 +155,7 @@ export default function NoticeManagement() {
           data={tableData}
           isSingleSelect
           ignoreSelectionColumns={["action"]}
+          controlColumns={["action"]}
           getSelectionRows={(rows) => {
             setSelectedNotice(rows[0] || null);
             rows[0] && setIsEditDialogOpen(true);

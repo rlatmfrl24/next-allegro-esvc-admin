@@ -188,7 +188,15 @@ export default function EmailSettingPage() {
           data={tableData}
           columns={columnDefs}
           ignoreSelectionColumns={["template", "action "]}
+          controlColumns={["action"]}
           editableColumns={["title", "senderName", "senderEmail"]}
+          requiredColumns={[
+            "type",
+            "template",
+            "title",
+            "senderName",
+            "senderEmail",
+          ]}
           isSingleSelect
           updater={setTableData}
         />

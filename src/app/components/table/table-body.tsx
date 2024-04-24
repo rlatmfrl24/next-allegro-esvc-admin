@@ -134,6 +134,7 @@ export const TableBody = ({
                       autoFocus
                       ref={inputRef}
                       className="flex-1 px-4 outline-primary"
+                      placeholder="Enter value"
                       defaultValue={
                         (cell.getContext().getValue() as string) || ""
                       }

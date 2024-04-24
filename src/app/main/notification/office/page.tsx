@@ -178,7 +178,14 @@ export default function OfficeEmailSettingPage() {
               columns={columnDefs}
               isSingleSelect
               disableColumns={["officeName"]}
+              ignoreSelectionColumns={["action"]}
+              controlColumns={["action"]}
               editableColumns={[
+                "bookingNotificationReceiver",
+                "siNotificationReceiver",
+              ]}
+              requiredColumns={[
+                "officeCode",
                 "bookingNotificationReceiver",
                 "siNotificationReceiver",
               ]}

@@ -176,6 +176,7 @@ export const MessageManagementTable = ({
         ignoreSelectionColumns={["module", "type", "action"]}
         disableColumns={["id"]}
         editableColumns={["defaultMessage"]}
+        requiredColumns={["defaultMessage"]}
         getSelectionRows={(rows) => {
           onMessageSelect && onMessageSelect(rows[0]?.message);
         }}

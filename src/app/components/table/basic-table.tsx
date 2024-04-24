@@ -74,6 +74,7 @@ export const BasicTable = ({
   controlColumns = [],
   ignoreSelectionColumns = [],
   disableColumns = [],
+  requiredColumns = [],
   editableColumns = [],
   isSingleSelect = false,
   getSelectionRows,
@@ -85,6 +86,7 @@ export const BasicTable = ({
   pinningColumns?: string[];
   controlColumns?: string[];
   ignoreSelectionColumns?: string[];
+  requiredColumns?: string[];
   disableColumns?: string[];
   editableColumns?: string[];
   isSingleSelect?: boolean;
@@ -255,6 +257,7 @@ export const BasicTable = ({
                         <HeaderComponent
                           key={header.id}
                           header={header}
+                          required={requiredColumns.includes(header.id)}
                           disabled={!header.column.getCanSort()}
                           isPinned={header.column.getIsPinned() !== false}
                         />
