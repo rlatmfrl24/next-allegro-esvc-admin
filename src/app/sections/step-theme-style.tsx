@@ -16,9 +16,11 @@ import { useEffect, useRef, useState } from "react";
 import { createMDTheme } from "@/util/theme";
 import ColorPicker from "@/app/components/color-picker";
 import { CurrentCompanyState } from "@/store/super.store";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import RemovableChip from "@/app/components/removable-chip";
 import { colorThemes } from "../constants";
+import { modifiedDetectState } from "@/store/base.store";
+import { m } from "framer-motion";
 
 export default function ThemeStyleStep({
   previewOption = {
@@ -34,6 +36,7 @@ export default function ThemeStyleStep({
   };
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const [currentCompanyStore, setCurrentCompanyStore] =
     useRecoilState(CurrentCompanyState);
   const [selectedTheme, setSelectedTheme] = useState(
@@ -45,6 +48,7 @@ export default function ThemeStyleStep({
   useEffect(() => {
     if (selectedTheme) {
       createMDTheme(selectedTheme.primaryColor);
+      modifiedDetect(true);
       setCurrentCompanyStore({
         ...currentCompanyStore,
         themeStyle: {
@@ -56,6 +60,10 @@ export default function ThemeStyleStep({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTheme, setCurrentCompanyStore]);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   return (
     <div className="flex flex-1 gap-6">
@@ -81,6 +89,7 @@ export default function ThemeStyleStep({
               <RemovableChip
                 label={currentCompanyStore.themeStyle.logo.name}
                 onRemove={() => {
+                  modifiedDetect(true);
                   setCurrentCompanyStore((prev) => {
                     return {
                       ...prev,
@@ -104,6 +113,7 @@ export default function ThemeStyleStep({
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
             const file = e.target.files?.[0];
             if (file) {
+              modifiedDetect(true);
               setCurrentCompanyStore((prev) => {
                 return {
                   ...prev,
