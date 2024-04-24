@@ -112,10 +112,14 @@ const MainItemComponent = ({ item }: { item: MenuItemType }) => {
     notification: NotificationSetupIcon,
   }[item.id];
 
-  const [isExpanded, setIsExpanded] = useState(false);
   const isLeaf = !item.subMenu || item.subMenu.length === 0;
   const router = useRouter();
   const pathname = usePathname();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  useEffect(() => {
+    setIsExpanded(pathname.includes(item.link || ""));
+  }, [item.link, pathname]);
 
   return (
     <>

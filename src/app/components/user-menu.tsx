@@ -14,15 +14,15 @@ import {
   useTransitionStyles,
 } from "@floating-ui/react";
 import { MdTypography } from "./typography";
-import Link from "next/link";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUserState } from "@/store/user.store";
 import { useRouter } from "next/navigation";
 import { AdminUserProps } from "@/util/typeDef/user";
 
 export const UserMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const setCurrentUserStore = useSetRecoilState(currentUserState);
+  const [currentUserStore, setCurrentUserStore] =
+    useRecoilState(currentUserState);
   const router = useRouter();
 
   const { refs, floatingStyles, context } = useFloating({
@@ -75,11 +75,15 @@ export const UserMenu = () => {
             className="w-60 bg-surfaceContainerHigh py-2"
           >
             <div className="w-full flex flex-col justify-center items-center p-6 gap-4">
-              <MdTypography variant="headline" size="small" className="w-fit">
-                Wy_lee
+              <MdTypography
+                variant="headline"
+                size="small"
+                className="w-fit whitespace-nowrap"
+              >
+                {currentUserStore.userName}
               </MdTypography>
               <MdTypography variant="body" size="medium">
-                Jsahn@cyberlogitec.com
+                {currentUserStore.email}
               </MdTypography>
             </div>
             <MdMenuItem>Account Profile</MdMenuItem>
