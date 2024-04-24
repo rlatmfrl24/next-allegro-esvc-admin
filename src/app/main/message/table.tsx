@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { BasicTable } from "@/app/components/table/basic-table";
 import { GridSelectComponent } from "@/app/sections/components/grid-select";
@@ -17,22 +17,33 @@ import { GridStateSelectComponent } from "./components";
 import { TableActionButton } from "../components/table-action-button";
 import { ConfirmDialog } from "../components/confirm-dialog";
 import { faker } from "@faker-js/faker";
+import { useSetRecoilState } from "recoil";
+import { modifiedDetectState } from "@/store/base.store";
 
 export const MessageManagementTable = ({
   onMessageSelect,
 }: {
   onMessageSelect?: (message: MessageProps) => void;
 }) => {
+  const initialData = useMemo(() => createDummyMessageDataset(), []);
   const columnHelper = createColumnHelper<MessageProps>();
-  const [tableData, setTableData] = useState<MessageProps[]>([]);
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+  const [tableData, setTableData] = useState<MessageProps[]>(initialData);
+  const [targetMessage, setTargetMessage] = useState<MessageProps | null>(null);
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
     useState(false);
 
-  const [targetMessage, setTargetMessage] = useState<MessageProps | null>(null);
+  useEffect(() => {
+    if (initialData === tableData) {
+      modifiedDetect(false);
+    } else {
+      modifiedDetect(true);
+    }
+  }, [tableData, modifiedDetect, initialData]);
 
   useEffect(() => {
-    setTableData(createDummyMessageDataset());
-  }, []);
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   const columns = [
     columnHelper.accessor("module", {
@@ -132,6 +143,7 @@ export const MessageManagementTable = ({
             <div className="flex flex-1">
               <MdTextButton
                 onClick={() => {
+                  modifiedDetect(true);
                   setTableData((prev) => [
                     {
                       uuid: faker.string.uuid(),
@@ -164,6 +176,7 @@ export const MessageManagementTable = ({
         ignoreSelectionColumns={["module", "type", "action"]}
         disableColumns={["id"]}
         editableColumns={["defaultMessage"]}
+        requiredColumns={["defaultMessage"]}
         getSelectionRows={(rows) => {
           onMessageSelect && onMessageSelect(rows[0]?.message);
         }}

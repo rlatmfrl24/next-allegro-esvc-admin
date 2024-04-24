@@ -16,11 +16,13 @@ import { faker } from "@faker-js/faker";
 import { Add, Launch } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
 import { MdTypography } from "@/app/components/typography";
 import Link from "next/link";
 import { CustomerActionDialog } from "./dialog";
+import { useSetRecoilState } from "recoil";
+import { modifiedDetectState } from "@/store/base.store";
 
 function createDummyCustomerUser(): CustomerUserProps {
   return {
@@ -56,16 +58,31 @@ function createDummyCustomerUser(): CustomerUserProps {
 }
 
 export const CustomerUserTable = () => {
-  const dummyData = Array.from({ length: 70 }, () => createDummyCustomerUser());
+  const dummyData = useMemo(() => {
+    return Array.from({ length: 70 }, () => createDummyCustomerUser());
+  }, []);
   const [tableData, setTableData] = useState<CustomerUserProps[]>(dummyData);
   const [selectedUser, setSelectedUser] = useState<CustomerUserProps | null>(
     null
   );
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const columnHelper = createColumnHelper<CustomerUserProps>();
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
     useState(false);
+  const columnHelper = createColumnHelper<CustomerUserProps>();
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+
+  useEffect(() => {
+    if (dummyData === tableData) {
+      modifiedDetect(false);
+    } else {
+      modifiedDetect(true);
+    }
+  }, [tableData, modifiedDetect, dummyData]);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   const DeleteConfirmDialog = ({
     isOpen,

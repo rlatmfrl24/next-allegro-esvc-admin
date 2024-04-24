@@ -2,7 +2,7 @@
 
 import { Pagination, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -26,12 +26,15 @@ export default function BackgroundSwiper() {
         // noSwiping
         // noSwipingClass="swiper-slide"
         autoplay={{
-          delay: 5000,
+          delay: 1000,
           disableOnInteraction: false,
         }}
+        observer={true}
+        observeParents={true}
+        observeSlideChildren={true}
         modules={[Pagination, Autoplay]}
         onSlideChange={(e) => setActiveIndex(e.realIndex)}
-        className="flex-1 absolute top-0 left-0 "
+        className="flex-1 absolute top-0 left-0"
       >
         {images.map((image, index) => (
           <SwiperSlide key={index}>

@@ -5,7 +5,7 @@ import { PageTitle } from "../../components/page-title";
 import { EmailSettingProps, EmailType } from "@/util/typeDef/notification";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
 import { MdFilledButton, MdIcon, MdTextButton } from "@/util/md3";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { faker } from "@faker-js/faker";
 import { createColumnHelper } from "@tanstack/react-table";
 import { BasicTable } from "@/app/components/table/basic-table";
@@ -13,6 +13,8 @@ import { TableActionButton } from "../../components/table-action-button";
 import { GridSelectComponent } from "@/app/sections/components/grid-select";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { Add } from "@mui/icons-material";
+import { useSetRecoilState } from "recoil";
+import { modifiedDetectState } from "@/store/base.store";
 
 export default function EmailSettingPage() {
   const tempEmailSettingData = useMemo(() => {
@@ -37,10 +39,24 @@ export default function EmailSettingPage() {
   }, []);
 
   const columnHelper = createColumnHelper<EmailSettingProps>();
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [target, setTarget] = useState<EmailSettingProps | null>(null);
   const [tableData, setTableData] =
     useState<EmailSettingProps[]>(tempEmailSettingData);
+
+  useEffect(() => {
+    if (tableData !== tempEmailSettingData) {
+      modifiedDetect(true);
+    } else {
+      modifiedDetect(false);
+    }
+  }, [modifiedDetect, tableData, tempEmailSettingData]);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
+
   const columnDefs = [
     columnHelper.accessor("type", {
       id: "type",
@@ -172,7 +188,15 @@ export default function EmailSettingPage() {
           data={tableData}
           columns={columnDefs}
           ignoreSelectionColumns={["template", "action "]}
+          controlColumns={["action"]}
           editableColumns={["title", "senderName", "senderEmail"]}
+          requiredColumns={[
+            "type",
+            "template",
+            "title",
+            "senderName",
+            "senderEmail",
+          ]}
           isSingleSelect
           updater={setTableData}
         />

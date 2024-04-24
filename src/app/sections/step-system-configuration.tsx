@@ -9,12 +9,19 @@ import {
   TimeZoneOptions,
 } from "../constants";
 import { BaseItem } from "./components/base-configuration-item";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";
 import { GridMultiSelect } from "./components/grid-multi-select";
+import { modifiedDetectState } from "@/store/base.store";
+import { useEffect } from "react";
 
 export default function SystemConfigurationStep() {
   const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   return (
     <div className="grid grid-cols-[80px_1fr_1fr]">
@@ -28,6 +35,7 @@ export default function SystemConfigurationStep() {
           initialSelection={companyStore.configuration.dateFormat}
           options={DateFormatOptions}
           onChange={(selection) => {
+            modifiedDetect(true);
             setCompanyStore((prev) => ({
               ...prev,
               configuration: {
@@ -45,6 +53,7 @@ export default function SystemConfigurationStep() {
           initialSelection={companyStore.configuration.searchPeriod}
           options={SearchPeriodOptions}
           onChange={(selection) => {
+            modifiedDetect(true);
             setCompanyStore((prev) => ({
               ...prev,
               configuration: {
@@ -62,6 +71,7 @@ export default function SystemConfigurationStep() {
           primarySelection={companyStore.configuration.maxPageSize.toString()}
           options={MaxPageSizeOptions}
           onChange={(result) => {
+            modifiedDetect(true);
             setCompanyStore((prev) => ({
               ...prev,
               configuration: {
@@ -78,6 +88,7 @@ export default function SystemConfigurationStep() {
         <GridSelectComponent
           initialSelection={companyStore.configuration.timeZone}
           onChange={(selection) => {
+            modifiedDetect(true);
             setCompanyStore((prev) => ({
               ...prev,
               configuration: {
@@ -96,6 +107,7 @@ export default function SystemConfigurationStep() {
           primarySelection={companyStore.configuration.mainLanguage}
           options={LanguageOptions}
           onChange={(result) => {
+            modifiedDetect(true);
             setCompanyStore((prev) => ({
               ...prev,
               configuration: {

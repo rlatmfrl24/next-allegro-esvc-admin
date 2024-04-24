@@ -85,9 +85,6 @@ export const GridMultiSelect = ({
   ]);
 
   useEffect(() => {
-    if (!selections.includes(mainSelection)) {
-      setMainSelection("");
-    }
     onChange?.({ main: mainSelection, selections });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainSelection, selections]);

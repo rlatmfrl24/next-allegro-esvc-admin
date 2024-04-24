@@ -11,11 +11,13 @@ import { faker, ro } from "@faker-js/faker";
 import { Add } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
 import { AdminUserDialog } from "./dialog";
+import { useSetRecoilState } from "recoil";
+import { modifiedDetectState } from "@/store/base.store";
 
-function createDummyAdminUser(): AdminUserProps {
+function createDummyAdminUser(userType?: AdminUserType): AdminUserProps {
   return {
     uuid: faker.string.uuid(),
     userId: faker.internet.userName(),
@@ -23,7 +25,7 @@ function createDummyAdminUser(): AdminUserProps {
     updatedAt: DateTime.fromJSDate(faker.date.recent()),
     userName: faker.person.fullName(),
     office: faker.string.alphanumeric(5).toUpperCase(),
-    type: faker.helpers.enumValue(AdminUserType),
+    type: userType || faker.helpers.enumValue(AdminUserType),
     status: faker.helpers.enumValue(AdminUserStatus),
     noficication: {
       booking: faker.datatype.boolean(),
@@ -40,13 +42,11 @@ function createDummyAdminUser(): AdminUserProps {
       userManagement: {
         customerUser: faker.datatype.boolean(),
       },
-      noticeManagement: {
-        notice: faker.datatype.boolean(),
-        regionalContactPerson: faker.datatype.boolean(),
-      },
+      noticeManagement: faker.datatype.boolean(),
       notificationSetup: {
         emailSetting: faker.datatype.boolean(),
-        emailSendingSummary: faker.datatype.boolean(),
+        emailSendingHistory: faker.datatype.boolean(),
+        emailSendingReport: faker.datatype.boolean(),
         officeGroupEmailSetting: faker.datatype.boolean(),
       },
     },
@@ -63,6 +63,19 @@ export const AdminUserTable = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const columnHelper = createColumnHelper<AdminUserProps>();
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+
+  useEffect(() => {
+    if (dummyData === tableData) {
+      modifiedDetect(false);
+    } else {
+      modifiedDetect(true);
+    }
+  }, [tableData, modifiedDetect, dummyData]);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   const columnDefs = [
     columnHelper.accessor("userId", {
@@ -215,6 +228,7 @@ export const AdminUserTable = () => {
         getSelectionRows={(rows) => {
           setSelectedUser(rows[0]);
         }}
+        updater={setTableData}
       />
     </>
   );

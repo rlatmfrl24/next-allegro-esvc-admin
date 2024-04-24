@@ -291,109 +291,20 @@ export const AdminUserDialog = ({
                 className="flex items-center gap-2 cursor-pointer w-fit"
               >
                 <MdCheckbox
-                  checked={
-                    currentInfo?.authorization?.noticeManagement?.notice &&
-                    currentInfo?.authorization?.noticeManagement
-                      ?.regionalContactPerson
-                  }
-                  indeterminate={
-                    currentInfo?.authorization?.noticeManagement?.notice !==
-                    currentInfo?.authorization?.noticeManagement
-                      ?.regionalContactPerson
-                  }
+                  checked={currentInfo?.authorization?.noticeManagement}
                   onClick={() => {
-                    // if indeterminate is true, then both are false
-                    if (
-                      currentInfo?.authorization?.noticeManagement?.notice !==
-                      currentInfo?.authorization?.noticeManagement
-                        ?.regionalContactPerson
-                    ) {
-                      setCurrentInfo((prev: AdminUserProps) => ({
-                        ...prev,
-                        authorization: {
-                          ...prev.authorization,
-                          noticeManagement: {
-                            notice: false,
-                            regionalContactPerson: false,
-                          },
-                        },
-                      }));
-                    } else {
-                      // switch previous value to opposite
-                      setCurrentInfo((prev: AdminUserProps) => ({
-                        ...prev,
-                        authorization: {
-                          ...prev.authorization,
-                          noticeManagement: {
-                            notice:
-                              !prev.authorization?.noticeManagement?.notice,
-                            regionalContactPerson:
-                              !prev.authorization?.noticeManagement
-                                ?.regionalContactPerson,
-                          },
-                        },
-                      }));
-                    }
+                    setCurrentInfo((prev: AdminUserProps) => ({
+                      ...prev,
+                      authorization: {
+                        ...prev.authorization,
+                        noticeManagement: !prev.authorization?.noticeManagement,
+                      },
+                    }));
                   }}
                 />
                 Notice Management
               </MdTypography>
-              <MdTypography
-                variant="label"
-                size="large"
-                tag="label"
-                className="flex items-center gap-2 cursor-pointer w-fit"
-              >
-                <Image src={SubsumIndicator} alt="subsum" />
-                <MdCheckbox
-                  checked={
-                    currentInfo?.authorization?.noticeManagement?.notice ||
-                    false
-                  }
-                  onClick={() => {
-                    setCurrentInfo((prev: AdminUserProps) => ({
-                      ...prev,
-                      authorization: {
-                        ...prev.authorization,
-                        noticeManagement: {
-                          ...prev.authorization?.noticeManagement,
-                          notice: !prev.authorization?.noticeManagement?.notice,
-                        },
-                      },
-                    }));
-                  }}
-                />
-                Notice
-              </MdTypography>
-              <MdTypography
-                variant="label"
-                size="large"
-                tag="label"
-                className="flex items-center gap-2 cursor-pointer w-fit"
-              >
-                <Image src={SubsumIndicator} alt="subsum" />
-                <MdCheckbox
-                  checked={
-                    currentInfo?.authorization?.noticeManagement
-                      ?.regionalContactPerson || false
-                  }
-                  onClick={() => {
-                    setCurrentInfo((prev: AdminUserProps) => ({
-                      ...prev,
-                      authorization: {
-                        ...prev.authorization,
-                        noticeManagement: {
-                          ...prev.authorization?.noticeManagement,
-                          regionalContactPerson:
-                            !prev.authorization?.noticeManagement
-                              ?.regionalContactPerson,
-                        },
-                      },
-                    }));
-                  }}
-                />
-                Regional Contact Person
-              </MdTypography>
+
               <MdTypography
                 variant="label"
                 size="large"
@@ -405,7 +316,9 @@ export const AdminUserDialog = ({
                     currentInfo?.authorization?.notificationSetup
                       ?.emailSetting &&
                     currentInfo?.authorization?.notificationSetup
-                      ?.emailSendingSummary &&
+                      ?.emailSendingHistory &&
+                    currentInfo?.authorization?.notificationSetup
+                      ?.emailSendingReport &&
                     currentInfo?.authorization?.notificationSetup
                       ?.officeGroupEmailSetting
                   }
@@ -413,7 +326,11 @@ export const AdminUserDialog = ({
                     currentInfo?.authorization?.notificationSetup
                       ?.emailSetting !==
                       currentInfo?.authorization?.notificationSetup
-                        ?.emailSendingSummary ||
+                        ?.emailSendingHistory ||
+                    currentInfo?.authorization?.notificationSetup
+                      ?.emailSetting !==
+                      currentInfo?.authorization?.notificationSetup
+                        ?.emailSendingReport ||
                     currentInfo?.authorization?.notificationSetup
                       ?.emailSetting !==
                       currentInfo?.authorization?.notificationSetup
@@ -425,7 +342,11 @@ export const AdminUserDialog = ({
                       currentInfo?.authorization?.notificationSetup
                         ?.emailSetting !==
                         currentInfo?.authorization?.notificationSetup
-                          ?.emailSendingSummary ||
+                          ?.emailSendingHistory ||
+                      currentInfo?.authorization?.notificationSetup
+                        ?.emailSetting !==
+                        currentInfo?.authorization?.notificationSetup
+                          ?.emailSendingReport ||
                       currentInfo?.authorization?.notificationSetup
                         ?.emailSetting !==
                         currentInfo?.authorization?.notificationSetup
@@ -437,7 +358,8 @@ export const AdminUserDialog = ({
                           ...prev.authorization,
                           notificationSetup: {
                             emailSetting: false,
-                            emailSendingSummary: false,
+                            emailSendingHistory: false,
+                            emailSendingReport: false,
                             officeGroupEmailSetting: false,
                           },
                         },
@@ -452,9 +374,12 @@ export const AdminUserDialog = ({
                             emailSetting:
                               !prev.authorization?.notificationSetup
                                 ?.emailSetting,
-                            emailSendingSummary:
+                            emailSendingHistory:
                               !prev.authorization?.notificationSetup
-                                ?.emailSendingSummary,
+                                ?.emailSendingHistory,
+                            emailSendingReport:
+                              !prev.authorization?.notificationSetup
+                                ?.emailSendingReport,
                             officeGroupEmailSetting:
                               !prev.authorization?.notificationSetup
                                 ?.officeGroupEmailSetting,
@@ -505,7 +430,7 @@ export const AdminUserDialog = ({
                 <MdCheckbox
                   checked={
                     currentInfo?.authorization?.notificationSetup
-                      ?.emailSendingSummary || false
+                      ?.emailSendingHistory || false
                   }
                   onClick={() => {
                     setCurrentInfo((prev: AdminUserProps) => ({
@@ -514,15 +439,44 @@ export const AdminUserDialog = ({
                         ...prev.authorization,
                         notificationSetup: {
                           ...prev.authorization?.notificationSetup,
-                          emailSendingSummary:
+                          emailSendingHistory:
                             !prev.authorization?.notificationSetup
-                              ?.emailSendingSummary,
+                              ?.emailSendingHistory,
                         },
                       },
                     }));
                   }}
                 />
-                Email Sending Summary
+                Email Sending History
+              </MdTypography>
+              <MdTypography
+                variant="label"
+                size="large"
+                tag="label"
+                className="flex items-center gap-2 cursor-pointer w-fit"
+              >
+                <Image src={SubsumIndicator} alt="subsum" />
+                <MdCheckbox
+                  checked={
+                    currentInfo?.authorization?.notificationSetup
+                      ?.emailSendingReport || false
+                  }
+                  onClick={() => {
+                    setCurrentInfo((prev: AdminUserProps) => ({
+                      ...prev,
+                      authorization: {
+                        ...prev.authorization,
+                        notificationSetup: {
+                          ...prev.authorization?.notificationSetup,
+                          emailSendingReport:
+                            !prev.authorization?.notificationSetup
+                              ?.emailSendingReport,
+                        },
+                      },
+                    }));
+                  }}
+                />
+                Email Sending Report
               </MdTypography>
               <MdTypography
                 variant="label"
