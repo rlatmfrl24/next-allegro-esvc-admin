@@ -3,7 +3,7 @@
 import { faker } from "@faker-js/faker";
 import { PageTitle } from "../../components/page-title";
 import { OfficeEmailSettingProps } from "@/util/typeDef/notification";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TableActionButton } from "../../components/table-action-button";
 import { BasicTable } from "@/app/components/table/basic-table";
@@ -11,6 +11,8 @@ import { OfficeCodeSearchDialog } from "./dialog";
 import { MdTypography } from "@/app/components/typography";
 import { MdIcon, MdTextButton } from "@/util/md3";
 import { Add, Search } from "@mui/icons-material";
+import { modifiedDetectState } from "@/store/base.store";
+import { useSetRecoilState } from "recoil";
 
 const OffcieCodeCell = (info: any) => {
   const [isOfficeCodeSearchDialogOpen, setIsOfficeCodeSearchDialogOpen] =
@@ -81,6 +83,19 @@ export default function OfficeEmailSettingPage() {
   const [tableData, setTableData] = useState<OfficeEmailSettingProps[]>(
     tempOfficeEmailSettingData
   );
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+
+  useEffect(() => {
+    if (tableData !== tempOfficeEmailSettingData) {
+      modifiedDetect(true);
+    } else {
+      modifiedDetect(false);
+    }
+  }, [modifiedDetect, tableData, tempOfficeEmailSettingData]);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   const columnHelper = createColumnHelper<OfficeEmailSettingProps>();
   const columnDefs = [

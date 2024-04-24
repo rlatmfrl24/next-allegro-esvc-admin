@@ -10,11 +10,13 @@ import {
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
 import { MdFilledButton, MdIcon, MdTextButton } from "@/util/md3";
 import { faker } from "@faker-js/faker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { BasicTable } from "@/app/components/table/basic-table";
 import { Download } from "@mui/icons-material";
+import { useSetRecoilState } from "recoil";
+import { modifiedDetectState } from "@/store/base.store";
 
 export default function EmailHistoryPage() {
   const tempEmailHistoryData = Array.from(
@@ -34,6 +36,20 @@ export default function EmailHistoryPage() {
   const [tableData, setTableData] =
     useState<EmailSendingHistoryProps[]>(tempEmailHistoryData);
   const columnHelper = createColumnHelper<EmailSendingHistoryProps>();
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+
+  useEffect(() => {
+    if (tableData !== tempEmailHistoryData) {
+      modifiedDetect(true);
+    } else {
+      modifiedDetect(false);
+    }
+  }, [modifiedDetect, tableData, tempEmailHistoryData]);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
+
   const columnDefs = [
     columnHelper.accessor("sentDate", {
       id: "sentDate",
