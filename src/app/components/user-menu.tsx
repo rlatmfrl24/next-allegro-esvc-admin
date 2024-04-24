@@ -15,9 +15,15 @@ import {
 } from "@floating-ui/react";
 import { MdTypography } from "./typography";
 import Link from "next/link";
+import { useSetRecoilState } from "recoil";
+import { currentUserState } from "@/store/user.store";
+import { useRouter } from "next/navigation";
+import { AdminUserProps } from "@/util/typeDef/user";
 
 export const UserMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const setCurrentUserStore = useSetRecoilState(currentUserState);
+  const router = useRouter();
 
   const { refs, floatingStyles, context } = useFloating({
     open: isMenuOpen,
@@ -77,9 +83,14 @@ export const UserMenu = () => {
               </MdTypography>
             </div>
             <MdMenuItem>Account Profile</MdMenuItem>
-            <Link href={"/login"}>
-              <MdMenuItem>Sign Out</MdMenuItem>
-            </Link>
+            <MdMenuItem
+              onClick={() => {
+                setCurrentUserStore({} as AdminUserProps);
+                router.push("/login");
+              }}
+            >
+              Sign Out
+            </MdMenuItem>
           </MdElevatedCard>
         </div>
       )}

@@ -18,7 +18,7 @@ import {
   AdminUserType,
 } from "@/util/typeDef/user";
 import { useRecoilState } from "recoil";
-import { currentUser } from "@/store/user.store";
+import { currentUserState } from "@/store/user.store";
 import { faker } from "@faker-js/faker";
 import { DateTime } from "luxon";
 
@@ -64,7 +64,8 @@ export default function LoginPage() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [userType, setUserType] = useState(AdminUserType.SystemAdmin);
-  const [currentUserStore, setCurrentUserStore] = useRecoilState(currentUser);
+  const [currentUserStore, setCurrentUserStore] =
+    useRecoilState(currentUserState);
   const router = useRouter();
 
   function doLogin() {
@@ -79,6 +80,7 @@ export default function LoginPage() {
         break;
       case AdminUserType.GeneralStaff:
         setCurrentUserStore(createDummyAdminUser(AdminUserType.GeneralStaff));
+        router.push("/main");
         break;
       default:
         setCurrentUserStore(createDummyAdminUser(AdminUserType.SystemAdmin));

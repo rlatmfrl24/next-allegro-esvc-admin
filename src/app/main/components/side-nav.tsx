@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import NoticeManagementIcon from "@/../public/icon_menu_notice_management.svg";
 import NotificationSetupIcon from "@/../public/icon_menu_notification_setup.svg";
@@ -18,26 +18,83 @@ import { ArrowDropDown, SettingsOutlined } from "@mui/icons-material";
 
 import { MdTypography } from "../../components/typography";
 import { mainMenuItems } from "../../constants";
+import { useRecoilValue } from "recoil";
+import { currentUserState } from "@/store/user.store";
+import { AdminUserProps, AdminUserType } from "@/util/typeDef/user";
+
+function FilterMenuItem(user: AdminUserProps) {
+  //filter menu items and sub menus based on user authorization
+  let filteredMenu = mainMenuItems.map((item) => {
+    if (item.id === "user") {
+      return {
+        ...item,
+        subMenu: item.subMenu?.filter((subItem) => {
+          if (subItem.id === "customer") {
+            return user.authorization.userManagement.customerUser;
+          }
+          return true;
+        }),
+      };
+    }
+
+    if (item.id === "notification") {
+      return {
+        ...item,
+        subMenu: item.subMenu?.filter((subItem) => {
+          if (subItem.id === "email-setting") {
+            return user.authorization.notificationSetup.emailSetting;
+          }
+          if (subItem.id === "email-report") {
+            return user.authorization.notificationSetup.emailSendingSummary;
+          }
+          if (subItem.id === "office") {
+            return user.authorization.notificationSetup.officeGroupEmailSetting;
+          }
+          return true;
+        }),
+      };
+    }
+
+    return item;
+  });
+  filteredMenu = filteredMenu.filter((item) => {
+    if (item.id === "notice") {
+      return user.authorization.noticeManagement.notice;
+    }
+    return true;
+  });
+
+  return filteredMenu;
+}
 
 export default function SideNavigation() {
   const router = useRouter();
+  const currentUser = useRecoilValue(currentUserState);
+  const [menuItems, setMenuItems] = useState<MenuItemType[]>(mainMenuItems);
+
+  useEffect(() => {
+    currentUser.type === AdminUserType.GeneralStaff &&
+      setMenuItems(FilterMenuItem(currentUser));
+  }, [currentUser]);
 
   return (
     <aside className="w-[360px] flex-shrink-0 p-3 flex flex-col gap-3 ">
       <Image src={CompanyLogo} alt="Company Logo" />
-      <button
-        className="relative rounded-2xl bg-tertiaryContainer min-h-14 flex gap-3 justify-center items-center"
-        onClick={() => router.push("/super")}
-      >
-        <MdRippleEffect />
-        <SettingsOutlined />
-        <MdTypography variant="label" size="large">
-          Company Management
-        </MdTypography>
-      </button>
+      {currentUser.type === AdminUserType.SystemAdmin && (
+        <button
+          className="relative rounded-2xl bg-tertiaryContainer min-h-14 flex gap-3 justify-center items-center"
+          onClick={() => router.push("/super")}
+        >
+          <MdRippleEffect />
+          <SettingsOutlined />
+          <MdTypography variant="label" size="large">
+            Company Management
+          </MdTypography>
+        </button>
+      )}
       <div className="flex-auto h-0 overflow-y-auto flex flex-col">
         <OverlayScrollbarsComponent className="flex-1">
-          {mainMenuItems.map((item) => (
+          {menuItems.map((item) => (
             <MainItemComponent key={item.id} item={item} />
           ))}
         </OverlayScrollbarsComponent>
