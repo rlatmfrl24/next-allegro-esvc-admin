@@ -1,7 +1,7 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m, motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import BookingIcon from "@/../public/icon_menu_booking.svg";
 import DashboardIcon from "@/../public/icon_menu_dashboard.svg";
@@ -38,6 +38,7 @@ import {
 
 import { customerWebLink } from "../../constants";
 import { SecondMenuItem } from "./second-menu-item";
+import { modifiedDetectState } from "@/store/base.store";
 
 export const FirstMenuItem = (props: { item: MenuItemType }) => {
   const {
@@ -71,6 +72,7 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
     useRecoilValue(MenuManagementState).currentEditingMenuId;
   const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
   const [menuStore, setMenuStore] = useRecoilState(MenuManagementState);
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
 
   const isEditing = useMemo(() => {
     return currentEditingMenuId === props.item.id;
@@ -95,6 +97,7 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
     }
 
     if (active.id !== over.id) {
+      modifiedDetect(true);
       setCompanyStore((prev) => {
         const newSubItems = [
           ...prev.menuManagement.find((i) => i.id === props.item.id)!.subMenu!,
@@ -132,6 +135,7 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
   }, [menuStore.deactivatedMenuIds, props.item.id, subItems]);
 
   function handleToggle(e: any) {
+    modifiedDetect(true);
     if (e.currentTarget.selected) {
       setMenuStore((prev) => {
         if (subItems.length === 0) {
@@ -232,6 +236,7 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
 
               if (isEditing) {
                 //update new menu name
+                modifiedDetect(true);
                 setCompanyStore((prev) => {
                   const newMenu = [...prev.menuManagement];
                   const index = newMenu.findIndex(

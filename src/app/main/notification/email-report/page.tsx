@@ -10,10 +10,12 @@ import {
 import { MdFilledButton, MdIcon, MdTextButton } from "@/util/md3";
 import { faker } from "@faker-js/faker";
 import { DateTime } from "luxon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { BasicTable } from "@/app/components/table/basic-table";
 import { Download } from "@mui/icons-material";
+import { useSetRecoilState } from "recoil";
+import { modifiedDetectState } from "@/store/base.store";
 
 export default function EmailReportPage() {
   const tempEmailSendingReportData = Array.from(
@@ -33,6 +35,20 @@ export default function EmailReportPage() {
     tempEmailSendingReportData
   );
   const columnHelper = createColumnHelper<EmailSendingReportProps>();
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+
+  useEffect(() => {
+    if (tableData !== tempEmailSendingReportData) {
+      modifiedDetect(true);
+    } else {
+      modifiedDetect(false);
+    }
+  }, [modifiedDetect, tableData, tempEmailSendingReportData]);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
+
   const columnDefs = [
     columnHelper.accessor("sentDate", {
       id: "sentDate",

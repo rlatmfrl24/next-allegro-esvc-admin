@@ -2,11 +2,12 @@
 
 import { MdTypography } from "../../components/typography";
 import CompanyLogo from "@/../public/logo_transfar_shipping.svg";
+import { UserMenu } from "@/app/components/user-menu";
 import Image from "next/image";
 
 export const HeaderComponent = ({ branch }: { branch: string }) => {
   return (
-    <header className="min-h-16 flex items-center">
+    <header className="min-h-16 flex items-center justify-between">
       <div className="px-6 relative h-full flex items-center rounded-3xl select-none">
         <Image src={CompanyLogo} alt="Company Logo" className="mr-2" />
         <MdTypography
@@ -17,6 +18,7 @@ export const HeaderComponent = ({ branch }: { branch: string }) => {
           {branch}
         </MdTypography>
       </div>
+      <UserMenu />
     </header>
   );
 };

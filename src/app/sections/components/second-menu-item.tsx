@@ -14,6 +14,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { MenuItemType } from "@/util/typeDef/super";
 import { customerWebLink } from "../../constants";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
+import { modifiedDetectState } from "@/store/base.store";
 
 export const SecondMenuItem = (props: {
   item: MenuItemType;
@@ -34,6 +35,7 @@ export const SecondMenuItem = (props: {
   };
   const [menuStore, setMenuStore] = useRecoilState(MenuManagementState);
   const setCompanyStore = useSetRecoilState(CurrentCompanyState);
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const [newMenuName, setNewMenuName] = useState(props.item.name);
   const [isActivated, setIsActivated] = useState(
     !menuStore.deactivatedMenuIds.includes(
@@ -56,6 +58,7 @@ export const SecondMenuItem = (props: {
   }, [menuStore.deactivatedMenuIds, props.item.id, props.parent.id]);
 
   function handleToggle() {
+    modifiedDetect(true);
     setMenuStore((prev) => {
       if (
         prev.deactivatedMenuIds.includes(props.parent.id + "/" + props.item.id)
@@ -135,6 +138,7 @@ export const SecondMenuItem = (props: {
 
               if (isEditing) {
                 // update new name to current sub menu
+                modifiedDetect(true);
                 setCompanyStore((prev) => {
                   const newMenuManagement = prev.menuManagement.map((menu) => {
                     if (menu.id === props.parent.id) {

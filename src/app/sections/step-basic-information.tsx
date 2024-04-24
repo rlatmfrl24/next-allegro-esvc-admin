@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
-import { useRecoilState } from "recoil";
+import { useEffect, useMemo } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { DividerComponent } from "@/app/components/divider";
 import NAMultiAutoComplete from "@/app/components/na-multi-autocomplete";
@@ -10,11 +10,13 @@ import { CurrentCompanyState } from "@/store/super.store";
 import { CompanyType } from "@/util/typeDef/super";
 import { faker } from "@faker-js/faker";
 import { DateRangePicker } from "../components/datepicker/date-range-picker";
+import { modifiedDetectState } from "@/store/base.store";
+import { DateTime } from "luxon";
 
 export default function BasicInformationStep() {
   const [currentCompanyStore, setCurrentCompanyStore] =
     useRecoilState(CurrentCompanyState);
-
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const tempCompanyList = useMemo(() => {
     return Array.from(
       { length: 100 },
@@ -38,6 +40,10 @@ export default function BasicInformationStep() {
     );
   }, []);
 
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
+
   return (
     <>
       <div className="flex gap-2">
@@ -57,6 +63,7 @@ export default function BasicInformationStep() {
               (company) => company.companyName === item.label
             );
             if (!selected) {
+              modifiedDetect(false);
               setCurrentCompanyStore({
                 ...currentCompanyStore,
                 basicInformation: {
@@ -66,6 +73,7 @@ export default function BasicInformationStep() {
                 },
               });
             } else {
+              modifiedDetect(true);
               setCurrentCompanyStore({
                 ...currentCompanyStore,
                 basicInformation: {
@@ -92,6 +100,11 @@ export default function BasicInformationStep() {
           className="flex-1"
           value={currentCompanyStore.basicInformation.urlContextPath || ""}
           handleValueChange={(value) => {
+            // check value is changed
+            if (value === currentCompanyStore.basicInformation.urlContextPath) {
+              return;
+            }
+            modifiedDetect(true);
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {
@@ -111,6 +124,16 @@ export default function BasicInformationStep() {
             end: currentCompanyStore.basicInformation.effectiveDate?.[1],
           }}
           onDateChange={(dateRange) => {
+            if (
+              dateRange.start ===
+                currentCompanyStore.basicInformation.effectiveDate?.[0] &&
+              dateRange.end ===
+                currentCompanyStore.basicInformation.effectiveDate?.[1]
+            ) {
+              return;
+            }
+
+            modifiedDetect(true);
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {
@@ -127,6 +150,11 @@ export default function BasicInformationStep() {
           className="mr-2 w-80"
           value={currentCompanyStore.basicInformation.representative || ""}
           handleValueChange={(value) => {
+            if (value === currentCompanyStore.basicInformation.representative) {
+              return;
+            }
+
+            modifiedDetect(true);
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {
@@ -141,6 +169,11 @@ export default function BasicInformationStep() {
           className="w-80"
           value={currentCompanyStore.basicInformation.location || ""}
           handleValueChange={(value) => {
+            if (value === currentCompanyStore.basicInformation.location) {
+              return;
+            }
+
+            modifiedDetect(true);
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {
@@ -155,6 +188,11 @@ export default function BasicInformationStep() {
           className="w-96"
           value={currentCompanyStore.basicInformation.locationDetail || ""}
           handleValueChange={(value) => {
+            if (value === currentCompanyStore.basicInformation.locationDetail) {
+              return;
+            }
+
+            modifiedDetect(true);
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {
@@ -171,6 +209,11 @@ export default function BasicInformationStep() {
           className="w-80"
           value={currentCompanyStore.basicInformation.faxNumber || ""}
           handleValueChange={(value) => {
+            if (value === currentCompanyStore.basicInformation.faxNumber) {
+              return;
+            }
+
+            modifiedDetect(true);
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {
@@ -185,6 +228,11 @@ export default function BasicInformationStep() {
           className="w-80"
           value={currentCompanyStore.basicInformation.telNumber || ""}
           handleValueChange={(value) => {
+            if (value === currentCompanyStore.basicInformation.telNumber) {
+              return;
+            }
+
+            modifiedDetect(true);
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {
@@ -201,6 +249,11 @@ export default function BasicInformationStep() {
           className="w-[655px]"
           value={currentCompanyStore.basicInformation.address || ""}
           handleValueChange={(value) => {
+            if (value === currentCompanyStore.basicInformation.address) {
+              return;
+            }
+
+            modifiedDetect(true);
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {
@@ -215,6 +268,11 @@ export default function BasicInformationStep() {
           className="w-96"
           value={currentCompanyStore.basicInformation.zipCode || ""}
           handleValueChange={(value) => {
+            if (value === currentCompanyStore.basicInformation.zipCode) {
+              return;
+            }
+
+            modifiedDetect(true);
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {
@@ -231,6 +289,11 @@ export default function BasicInformationStep() {
           className="w-80"
           value={currentCompanyStore.basicInformation.email || ""}
           handleValueChange={(value) => {
+            if (value === currentCompanyStore.basicInformation.email) {
+              return;
+            }
+
+            modifiedDetect(true);
             setCurrentCompanyStore({
               ...currentCompanyStore,
               basicInformation: {

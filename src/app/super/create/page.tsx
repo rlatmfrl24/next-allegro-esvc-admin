@@ -28,6 +28,10 @@ import { DividerComponent } from "@/app/components/divider";
 import { useSetRecoilState } from "recoil";
 import { CurrentCompanyState, MenuManagementState } from "@/store/super.store";
 import { defaultMenuItems } from "../../constants";
+import { ConfirmDialog } from "@/app/main/components/confirm-dialog";
+import { set } from "lodash";
+import { useRouter } from "next/navigation";
+import Portal from "@/app/components/portal";
 
 export default function CreateCompany() {
   const tabBackgroundStyle = {
@@ -37,17 +41,50 @@ export default function CreateCompany() {
   const [currentStep, setCurrentStep] = useState(0);
   const setCompanyStore = useSetRecoilState(CurrentCompanyState);
   const setMenuStore = useSetRecoilState(MenuManagementState);
+  const [isCreateCancelDialogOpen, setIsCreateCancelDialogOpen] =
+    useState(false);
+  const [isResetDefaultMenuDialogOpen, setIsResetDefaultMenuDialogOpen] =
+    useState(false);
+  const router = useRouter();
 
   return (
     <div className="px-12 py-6 flex flex-col flex-1">
+      <Portal selector="#main-container">
+        <ConfirmDialog
+          isOpen={isCreateCancelDialogOpen}
+          onOpenChange={setIsCreateCancelDialogOpen}
+          title={`Would you like to cancel the input? The input value may not be saved properly.`}
+          message="Create Company"
+          onConfirm={() => {
+            router.push("/super");
+          }}
+        />
+        <ConfirmDialog
+          isOpen={isResetDefaultMenuDialogOpen}
+          onOpenChange={setIsResetDefaultMenuDialogOpen}
+          title={`Do you want to reset all menu settings?`}
+          message="Menu Management"
+          onConfirm={() => {
+            setCompanyStore((prev) => ({
+              ...prev,
+              menuManagement: defaultMenuItems,
+            }));
+            setMenuStore({
+              deactivatedMenuIds: [],
+              currentEditingMenuId: "",
+            });
+          }}
+        />
+      </Portal>
+
       <div className="flex items-center justify-between">
         <MdTypography variant="title" size="large" className="text-primary">
           Create Company
         </MdTypography>
         <div className="flex items-center gap-2">
-          <Link href={`/super`}>
-            <MdOutlinedButton>Cancel</MdOutlinedButton>
-          </Link>
+          <MdOutlinedButton onClick={() => setIsCreateCancelDialogOpen(true)}>
+            Cancel
+          </MdOutlinedButton>
           <Link href={`/super`}>
             <MdFilledButton>Create</MdFilledButton>
           </Link>
@@ -100,14 +137,7 @@ export default function CreateCompany() {
                 {currentStep === 3 && (
                   <MdTextButton
                     onClick={() => {
-                      setCompanyStore((prev) => ({
-                        ...prev,
-                        menuManagement: defaultMenuItems,
-                      }));
-                      setMenuStore({
-                        deactivatedMenuIds: [],
-                        currentEditingMenuId: "",
-                      });
+                      setIsResetDefaultMenuDialogOpen(true);
                     }}
                   >
                     <MdIcon slot="icon">

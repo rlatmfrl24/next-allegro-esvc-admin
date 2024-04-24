@@ -16,9 +16,11 @@ import { useEffect, useRef, useState } from "react";
 import { createMDTheme } from "@/util/theme";
 import ColorPicker from "@/app/components/color-picker";
 import { CurrentCompanyState } from "@/store/super.store";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import RemovableChip from "@/app/components/removable-chip";
 import { colorThemes } from "../constants";
+import { modifiedDetectState } from "@/store/base.store";
+import { m } from "framer-motion";
 
 export default function ThemeStyleStep({
   previewOption = {
@@ -34,26 +36,34 @@ export default function ThemeStyleStep({
   };
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const [currentCompanyStore, setCurrentCompanyStore] =
     useRecoilState(CurrentCompanyState);
   const [selectedTheme, setSelectedTheme] = useState(
     currentCompanyStore.themeStyle.theme
       ? currentCompanyStore.themeStyle.theme
-      : colorThemes[0]
+      : undefined
   );
 
   useEffect(() => {
-    createMDTheme(selectedTheme.primaryColor);
-    setCurrentCompanyStore({
-      ...currentCompanyStore,
-      themeStyle: {
-        ...currentCompanyStore.themeStyle,
-        theme: selectedTheme,
-      },
-    });
+    if (selectedTheme) {
+      createMDTheme(selectedTheme.primaryColor);
+      modifiedDetect(true);
+      setCurrentCompanyStore({
+        ...currentCompanyStore,
+        themeStyle: {
+          ...currentCompanyStore.themeStyle,
+          theme: selectedTheme,
+        },
+      });
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTheme, setCurrentCompanyStore]);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   return (
     <div className="flex flex-1 gap-6">
@@ -79,6 +89,7 @@ export default function ThemeStyleStep({
               <RemovableChip
                 label={currentCompanyStore.themeStyle.logo.name}
                 onRemove={() => {
+                  modifiedDetect(true);
                   setCurrentCompanyStore((prev) => {
                     return {
                       ...prev,
@@ -102,6 +113,7 @@ export default function ThemeStyleStep({
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
             const file = e.target.files?.[0];
             if (file) {
+              modifiedDetect(true);
               setCurrentCompanyStore((prev) => {
                 return {
                   ...prev,
@@ -126,7 +138,7 @@ export default function ThemeStyleStep({
               <div
                 key={theme.name}
                 className={`relative rounded-lg flex cursor-pointer ${
-                  selectedTheme.name === theme.name
+                  selectedTheme?.name === theme.name
                     ? "bg-surfaceContainerLowest border-2 border-primary"
                     : "bg-surfaceContainerLow border border-outlineVariant"
                 }`}
@@ -142,7 +154,7 @@ export default function ThemeStyleStep({
             );
           })}
         </div>
-        {selectedTheme.name === "custom" && (
+        {selectedTheme?.name === "custom" && (
           <ColorPicker
             className="mt-4"
             color="#000000"
