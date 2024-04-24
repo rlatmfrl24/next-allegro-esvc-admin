@@ -11,9 +11,11 @@ import { faker, ro } from "@faker-js/faker";
 import { Add } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
 import { AdminUserDialog } from "./dialog";
+import { useSetRecoilState } from "recoil";
+import { modifiedDetectState } from "@/store/base.store";
 
 function createDummyAdminUser(userType?: AdminUserType): AdminUserProps {
   return {
@@ -63,6 +65,19 @@ export const AdminUserTable = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const columnHelper = createColumnHelper<AdminUserProps>();
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+
+  useEffect(() => {
+    if (dummyData === tableData) {
+      modifiedDetect(false);
+    } else {
+      modifiedDetect(true);
+    }
+  }, [tableData, modifiedDetect, dummyData]);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   const columnDefs = [
     columnHelper.accessor("userId", {
@@ -215,6 +230,7 @@ export const AdminUserTable = () => {
         getSelectionRows={(rows) => {
           setSelectedUser(rows[0]);
         }}
+        updater={setTableData}
       />
     </>
   );

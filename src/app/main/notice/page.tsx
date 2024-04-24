@@ -4,7 +4,7 @@ import { NAOutlinedTextField } from "@/app/components/na-textfield";
 import { PageTitle } from "../components/page-title";
 import { MdFilledButton, MdIcon, MdTextButton } from "@/util/md3";
 import { DateTime } from "luxon";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { faker } from "@faker-js/faker";
 import { BasicTable } from "@/app/components/table/basic-table";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -13,6 +13,8 @@ import { Add } from "@mui/icons-material";
 import { ConfirmDialog } from "../components/confirm-dialog";
 import { AddNoticeDialog } from "./dialog";
 import { NoticeProps } from "@/util/typeDef/notice";
+import { useSetRecoilState } from "recoil";
+import { modifiedDetectState } from "@/store/base.store";
 
 export default function NoticeManagement() {
   const tempNoticeList = useMemo<NoticeProps[]>(() => {
@@ -35,6 +37,15 @@ export default function NoticeManagement() {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+
+  useEffect(() => {
+    modifiedDetect(true);
+  }, [tableData, modifiedDetect]);
+
+  useEffect(() => {
+    modifiedDetect(false);
+  }, [modifiedDetect]);
 
   const columnHelper = createColumnHelper<NoticeProps>();
   const columnDefs = [
