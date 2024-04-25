@@ -163,9 +163,9 @@ export const GridSelectComponent = ({
                         }
                       }}
                     >
-                      <MdIcon slot="start">
+                      {/* <MdIcon slot="start">
                         {selection === option && <Check />}
-                      </MdIcon>
+                      </MdIcon> */}
                       {option}
                     </MdListItem>
                   ))}
