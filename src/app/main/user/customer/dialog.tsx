@@ -1,7 +1,7 @@
 import { DividerComponent } from "@/app/components/divider";
 import NAOutlinedListBox from "@/app/components/na-outline-listbox";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
-import { SimpleTable } from "@/app/components/table/simple-table";
+import { useSimpleTable } from "@/app/components/table/simple-table";
 import { MdTypography } from "@/app/components/typography";
 import {
   MdDialog,
@@ -22,7 +22,7 @@ import { faker } from "@faker-js/faker";
 import { Search } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, use, useMemo, useState } from "react";
 
 export const CustomerActionDialog = ({
   isOpen,
@@ -424,11 +424,20 @@ export const CustomerCodeSearch = ({
     }),
   ];
 
+  const { renderTable, clearSelection } = useSimpleTable({
+    data: tempData,
+    columns: columnDefs,
+    getSelectionRows: (rows) => {
+      setSelectedCode(rows[0]);
+    },
+  });
+
   return (
     <MdDialog
       open={isOpen}
       closed={() => {
         onOpenChange(false);
+        clearSelection();
       }}
       className="min-w-[1120px]"
     >
@@ -445,13 +454,8 @@ export const CustomerCodeSearch = ({
           <MdFilledButton>Search</MdFilledButton>
         </div>
         <DividerComponent />
-        <SimpleTable
-          data={tempData}
-          columns={columnDefs}
-          getSelectionRows={(rows) => {
-            setSelectedCode(rows[0]);
-          }}
-        />
+
+        {renderTable()}
       </div>
       <div slot="actions">
         <MdOutlinedButton

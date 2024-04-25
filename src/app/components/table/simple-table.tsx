@@ -4,11 +4,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "@/styles/table.module.css";
 import { MdTypography } from "../typography";
 
-export const SimpleTable = ({
+export const useSimpleTable = ({
   data,
   columns,
   getSelectionRows,
@@ -37,7 +37,11 @@ export const SimpleTable = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRows]);
 
-  return (
+  const clearSelection = useCallback(() => {
+    setSelectedRows({});
+  }, []);
+
+  const renderTable = () => (
     <OverlayScrollbarsComponent defer>
       <table className={styles.table}>
         <thead>
@@ -93,4 +97,9 @@ export const SimpleTable = ({
       </table>
     </OverlayScrollbarsComponent>
   );
+
+  return {
+    renderTable,
+    clearSelection,
+  };
 };

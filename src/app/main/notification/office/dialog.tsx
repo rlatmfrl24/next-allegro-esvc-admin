@@ -1,7 +1,7 @@
 import { DividerComponent } from "@/app/components/divider";
 import NAOutlinedListBox from "@/app/components/na-outline-listbox";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
-import { SimpleTable } from "@/app/components/table/simple-table";
+import { useSimpleTable } from "@/app/components/table/simple-table";
 import {
   MdDialog,
   MdFilledButton,
@@ -83,11 +83,20 @@ export const OfficeCodeSearchDialog = (props: {
     }),
   ];
 
+  const { renderTable, clearSelection } = useSimpleTable({
+    data: tableData,
+    columns: columnDefs,
+    getSelectionRows: (rows) => {
+      setSelectedRow(rows[0]);
+    },
+  });
+
   return (
     <MdDialog
       open={props.isOpen}
       closed={() => {
         props.onOpenChange(false);
+        clearSelection();
       }}
       className="min-w-[960px]"
     >
@@ -109,13 +118,7 @@ export const OfficeCodeSearchDialog = (props: {
           <MdFilledButton>Search</MdFilledButton>
         </div>
         <DividerComponent />
-        <SimpleTable
-          data={tableData}
-          columns={columnDefs}
-          getSelectionRows={(rows) => {
-            setSelectedRow(rows[0]);
-          }}
-        />
+        <>{renderTable()}</>
       </div>
       <div slot="actions">
         <MdOutlinedButton
@@ -126,6 +129,7 @@ export const OfficeCodeSearchDialog = (props: {
           Cancel
         </MdOutlinedButton>
         <MdFilledButton
+          disabled={!selectedRow}
           onClick={() => {
             props.onOpenChange(false);
             props.onApply(selectedRow!);
