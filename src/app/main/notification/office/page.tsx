@@ -3,7 +3,7 @@
 import { faker } from "@faker-js/faker";
 import { PageTitle } from "../../components/page-title";
 import { OfficeEmailSettingProps } from "@/util/typeDef/notification";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TableActionButton } from "../../components/table-action-button";
 import { BasicTable } from "@/app/components/table/basic-table";
@@ -13,75 +13,31 @@ import { MdIcon, MdTextButton } from "@/util/md3";
 import { Add, Search } from "@mui/icons-material";
 import { modifiedDetectState } from "@/store/base.store";
 import { useSetRecoilState } from "recoil";
-
-const OffcieCodeCell = (info: any) => {
-  const [isOfficeCodeSearchDialogOpen, setIsOfficeCodeSearchDialogOpen] =
-    useState(false);
-
-  return (
-    <>
-      <OfficeCodeSearchDialog
-        isOpen={isOfficeCodeSearchDialogOpen}
-        onOpenChange={setIsOfficeCodeSearchDialogOpen}
-        onApply={(selectedRow) => {
-          info.table.options.meta?.updateData(
-            info.row.index,
-            "officeCode",
-            selectedRow.officeCode
-          );
-          info.table.options.meta?.updateData(
-            info.row.index,
-            "officeName",
-            selectedRow.officeName
-          );
-        }}
-      />
-      {info.getValue() !== "" ? (
-        <MdTypography
-          variant="body"
-          size="medium"
-          className="underline cursor-pointer"
-          onClick={() => setIsOfficeCodeSearchDialogOpen(true)}
-        >
-          {info.getValue()}
-        </MdTypography>
-      ) : (
-        <div
-          className="flex items-center cursor-pointer h-full"
-          onClick={() => {
-            setIsOfficeCodeSearchDialogOpen(true);
-          }}
-        >
-          <MdTypography
-            variant="body"
-            size="medium"
-            className="flex-1 text-outlineVariant"
-          >
-            Office Code
-          </MdTypography>
-          <MdIcon>
-            <Search fontSize="small" />
-          </MdIcon>
-        </div>
-      )}
-    </>
-  );
-};
+import { ConfirmDialog } from "../../components/confirm-dialog";
 
 export default function OfficeEmailSettingPage() {
-  const tempOfficeEmailSettingData = Array.from(
-    { length: 900 },
-    (_, i) =>
-      ({
-        uuid: faker.string.uuid(),
-        officeCode: faker.string.alphanumeric(5).toUpperCase(),
-        officeName: faker.company.name(),
-        bookingNotificationReceiver: faker.internet.email(),
-        siNotificationReceiver: faker.internet.email(),
-      } as OfficeEmailSettingProps)
-  );
+  const tempOfficeEmailSettingData = useMemo(() => {
+    return Array.from(
+      { length: 900 },
+      (_, i) =>
+        ({
+          uuid: faker.string.uuid(),
+          officeCode: faker.string.alphanumeric(5).toUpperCase(),
+          officeName: faker.company.name(),
+          bookingNotificationReceiver: faker.internet.email(),
+          siNotificationReceiver: faker.internet.email(),
+        } as OfficeEmailSettingProps)
+    );
+  }, []);
+  const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
+    useState(false);
+  const [isOfficeCodeSearchDialogOpen, setIsOfficeCodeSearchDialogOpen] =
+    useState(false);
   const [tableData, setTableData] = useState<OfficeEmailSettingProps[]>(
     tempOfficeEmailSettingData
+  );
+  const [targetRow, setTargetRow] = useState<OfficeEmailSettingProps | null>(
+    null
   );
   const modifiedDetect = useSetRecoilState(modifiedDetectState);
 
@@ -103,7 +59,42 @@ export default function OfficeEmailSettingPage() {
       id: "officeCode",
       header: "Office Code",
       size: 120,
-      cell: (info) => <OffcieCodeCell {...info} />,
+      cell: (info) => (
+        <>
+          {info.getValue() !== "" ? (
+            <MdTypography
+              variant="body"
+              size="medium"
+              className="underline cursor-pointer"
+              onClick={() => {
+                setTargetRow(info.row.original);
+                setIsOfficeCodeSearchDialogOpen(true);
+              }}
+            >
+              {info.getValue()}
+            </MdTypography>
+          ) : (
+            <div
+              className="flex items-center cursor-pointer h-full"
+              onClick={() => {
+                setTargetRow(info.row.original);
+                setIsOfficeCodeSearchDialogOpen(true);
+              }}
+            >
+              <MdTypography
+                variant="body"
+                size="medium"
+                className="flex-1 text-outlineVariant"
+              >
+                Office Code
+              </MdTypography>
+              <MdIcon>
+                <Search fontSize="small" />
+              </MdIcon>
+            </div>
+          )}
+        </>
+      ),
     }),
     columnHelper.accessor("officeName", {
       id: "officeName",
@@ -127,10 +118,8 @@ export default function OfficeEmailSettingPage() {
           options={["Delete"]}
           onMenuSelect={(option) => {
             if (option === "Delete") {
-              const newData = tableData.filter(
-                (data) => data.uuid !== info.row.original.uuid
-              );
-              setTableData(newData);
+              setTargetRow(info.row.original);
+              setIsDeleteConfirmDialogOpen(true);
             }
           }}
         />
@@ -145,6 +134,37 @@ export default function OfficeEmailSettingPage() {
       <PageTitle
         title="Office Email Setting (Booking & S/I)"
         category="Notification Setup"
+      />
+
+      <ConfirmDialog
+        isOpen={isDeleteConfirmDialogOpen}
+        onOpenChange={setIsDeleteConfirmDialogOpen}
+        title="Delete this office email setting?"
+        onConfirm={() => {
+          const newData = tableData.filter(
+            (data) => data.uuid !== targetRow?.uuid
+          );
+          setTableData(newData);
+          setIsDeleteConfirmDialogOpen(false);
+        }}
+      />
+
+      <OfficeCodeSearchDialog
+        isOpen={isOfficeCodeSearchDialogOpen}
+        onOpenChange={setIsOfficeCodeSearchDialogOpen}
+        onApply={(selectedRow) => {
+          const newData = tableData.map((data) => {
+            if (data.uuid === targetRow?.uuid) {
+              return {
+                ...data,
+                officeCode: selectedRow.officeCode,
+                officeName: selectedRow.officeName,
+              };
+            }
+            return data;
+          });
+          setTableData(newData);
+        }}
       />
 
       <div className="px-6 py-4 rounded-lg border border-outlineVariant flex flex-col flex-1">
