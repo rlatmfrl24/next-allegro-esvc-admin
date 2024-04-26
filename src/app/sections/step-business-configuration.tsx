@@ -139,6 +139,9 @@ export default function BusinessConfigurationStep() {
         value={companyStore.configuration.dormantPeriod}
         type="number"
         className="appearance-none border-b border-b-outlineVariant text-right w-full p-2 outline-none focus:border-2 focus:border-primary focus:rounded-sm"
+        onFocus={(e) => {
+          e.currentTarget.select();
+        }}
         onInput={(e) => {
           modifiedDetect(true);
           setCompanyStore({
