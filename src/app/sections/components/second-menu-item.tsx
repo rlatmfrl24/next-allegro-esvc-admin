@@ -9,7 +9,7 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { Check, DragHandle, EditOutlined } from "@mui/icons-material";
 import { useState, useEffect, useMemo, useRef } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { CSS } from "@dnd-kit/utilities";
 import { MenuItemType } from "@/util/typeDef/super";
 import { customerWebLink } from "../../constants";
@@ -33,6 +33,7 @@ export const SecondMenuItem = (props: {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
   const [menuStore, setMenuStore] = useRecoilState(MenuManagementState);
   const setCompanyStore = useSetRecoilState(CurrentCompanyState);
   const modifiedDetect = useSetRecoilState(modifiedDetectState);
@@ -125,18 +126,25 @@ export const SecondMenuItem = (props: {
 
           <MdIcon
             className={`border border-onSurface rounded-full w-8 h-8 relative cursor-pointer ml-8 mr-10 ${
-              isEditing ? "bg-primary text-white border-none" : ""
+              menuStore.currentEditingMenuId !== ""
+                ? isEditing
+                  ? "bg-primary text-white border-none"
+                  : "text-outlineVariant border-outlineVariant"
+                : ""
             }`}
             onClick={(e) => {
               e.stopPropagation();
-              setMenuStore((prev) => ({
-                ...prev,
-                currentEditingMenuId: isEditing
-                  ? ""
-                  : props.parent.id + "/" + props.item.id,
-              }));
+              menuStore.currentEditingMenuId === "" &&
+                setMenuStore((prev) => ({
+                  ...prev,
+                  currentEditingMenuId: props.parent.id + "/" + props.item.id,
+                }));
 
               if (isEditing) {
+                setMenuStore((prev) => ({
+                  ...prev,
+                  currentEditingMenuId: "",
+                }));
                 // update new name to current sub menu
                 modifiedDetect(true);
                 setCompanyStore((prev) => {

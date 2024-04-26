@@ -225,16 +225,27 @@ export const FirstMenuItem = (props: { item: MenuItemType }) => {
           )}
           <MdIcon
             className={`border border-onSurface rounded-full w-8 h-8 relative cursor-pointer ml-8 ${
-              isEditing ? "bg-primary text-white border-none" : ""
+              currentEditingMenuId !== ""
+                ? isEditing
+                  ? "bg-primary text-white border-none"
+                  : "text-outlineVariant border-outlineVariant"
+                : ""
             }`}
             onClick={(e) => {
               e.stopPropagation();
-              setMenuStore((prev) => ({
-                ...prev,
-                currentEditingMenuId: isEditing ? "" : props.item.id,
-              }));
+
+              currentEditingMenuId === "" &&
+                setMenuStore((prev) => ({
+                  ...prev,
+                  currentEditingMenuId: props.item.id,
+                }));
 
               if (isEditing) {
+                setMenuStore((prev) => ({
+                  ...prev,
+                  currentEditingMenuId: "",
+                }));
+
                 //update new menu name
                 modifiedDetect(true);
                 setCompanyStore((prev) => {
