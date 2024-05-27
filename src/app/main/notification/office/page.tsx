@@ -29,29 +29,43 @@ export default function OfficeEmailSettingPage() {
         } as OfficeEmailSettingProps)
     );
   }, []);
+  const [initialData, setInitialData] = useState<OfficeEmailSettingProps[]>(
+    tempOfficeEmailSettingData
+  );
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
     useState(false);
   const [isOfficeCodeSearchDialogOpen, setIsOfficeCodeSearchDialogOpen] =
     useState(false);
-  const [tableData, setTableData] = useState<OfficeEmailSettingProps[]>(
-    tempOfficeEmailSettingData
-  );
+  const [tableData, setTableData] =
+    useState<OfficeEmailSettingProps[]>(initialData);
   const [targetRow, setTargetRow] = useState<OfficeEmailSettingProps | null>(
     null
   );
   const modifiedDetect = useSetRecoilState(modifiedDetectState);
 
   useEffect(() => {
-    if (tableData !== tempOfficeEmailSettingData) {
-      modifiedDetect(true);
-    } else {
-      modifiedDetect(false);
+    if (initialData !== tableData) {
+      if (tableData.length < initialData.length) {
+        modifiedDetect(false);
+      } else {
+        for (let i = 0; i < tableData.length; i++) {
+          if (
+            tableData[i].officeCode !== initialData[i].officeCode ||
+            tableData[i].officeName !== initialData[i].officeName ||
+            tableData[i].bookingNotificationReceiver !==
+              initialData[i].bookingNotificationReceiver ||
+            tableData[i].siNotificationReceiver !==
+              initialData[i].siNotificationReceiver
+          ) {
+            modifiedDetect(true);
+            break;
+          }
+        }
+      }
     }
-  }, [modifiedDetect, tableData, tempOfficeEmailSettingData]);
 
-  useEffect(() => {
-    modifiedDetect(false);
-  }, [modifiedDetect]);
+    setInitialData(tableData);
+  }, [initialData, modifiedDetect, tableData]);
 
   const columnHelper = createColumnHelper<OfficeEmailSettingProps>();
   const columnDefs = [

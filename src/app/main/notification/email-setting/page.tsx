@@ -38,24 +38,36 @@ export default function EmailSettingPage() {
     );
   }, []);
 
+  const [initialData, setInitialData] =
+    useState<EmailSettingProps[]>(tempEmailSettingData);
   const columnHelper = createColumnHelper<EmailSettingProps>();
   const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [target, setTarget] = useState<EmailSettingProps | null>(null);
-  const [tableData, setTableData] =
-    useState<EmailSettingProps[]>(tempEmailSettingData);
+  const [tableData, setTableData] = useState<EmailSettingProps[]>(initialData);
 
   useEffect(() => {
-    if (tableData !== tempEmailSettingData) {
-      modifiedDetect(true);
-    } else {
-      modifiedDetect(false);
+    if (initialData !== tableData) {
+      if (tableData.length !== initialData.length) {
+        modifiedDetect(false);
+      } else {
+        for (let i = 0; i < tableData.length; i++) {
+          if (
+            tableData[i].type !== initialData[i].type ||
+            tableData[i].template !== initialData[i].template ||
+            tableData[i].title !== initialData[i].title ||
+            tableData[i].senderName !== initialData[i].senderName ||
+            tableData[i].senderEmail !== initialData[i].senderEmail
+          ) {
+            modifiedDetect(true);
+            break;
+          }
+        }
+      }
     }
-  }, [modifiedDetect, tableData, tempEmailSettingData]);
 
-  useEffect(() => {
-    modifiedDetect(false);
-  }, [modifiedDetect]);
+    setInitialData(tableData);
+  }, [initialData, modifiedDetect, tableData]);
 
   const columnDefs = [
     columnHelper.accessor("type", {
