@@ -54,6 +54,7 @@ function createDummyCustomerUser(): CustomerUserProps {
     ]),
     comment: faker.lorem.sentence(),
     customerCode: faker.string.alphanumeric(7).toUpperCase(),
+    password: faker.internet.password(),
   } as CustomerUserProps;
 }
 

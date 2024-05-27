@@ -70,7 +70,8 @@ export const CustomerActionDialog = ({
       !data.rateOption ||
       !data.city ||
       !data.address ||
-      !data.country
+      !data.country ||
+      !data.password
     ) {
       return false;
     }
@@ -87,6 +88,7 @@ export const CustomerActionDialog = ({
     data.lastName,
     data.rateOption,
     data.userId,
+    data.password,
   ]);
 
   return (
@@ -139,7 +141,7 @@ export const CustomerActionDialog = ({
             </div>
           </div>
         )}
-        <div className="flex gap-2 w-full">
+        <div className="grid grid-cols-2 gap-4 w-full">
           <NAOutlinedTextField
             required
             className="flex-1"
@@ -157,6 +159,23 @@ export const CustomerActionDialog = ({
             handleValueChange={(value) => {
               setData({ ...data, email: value });
             }}
+          />
+          <NAOutlinedTextField
+            required
+            className="flex-1"
+            label="Password"
+            type="password"
+            value={data.password || ""}
+            handleValueChange={(value) => {
+              setData({ ...data, password: value });
+            }}
+          />
+          <NAOutlinedTextField
+            required
+            type="password"
+            className="flex-1"
+            label="Confirm Password"
+            value={""}
           />
         </div>
         <DividerComponent className="my-4 border-dotted" />
