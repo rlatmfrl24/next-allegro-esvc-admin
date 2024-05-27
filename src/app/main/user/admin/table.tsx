@@ -58,9 +58,6 @@ export const AdminUserTable = () => {
   const dummyData = useMemo(() => {
     return Array.from({ length: 70 }, () => createDummyAdminUser());
   }, []);
-  const [initialData, setInitialData] = useState<AdminUserProps[]>(dummyData);
-  const [modifiedDetect, setModifiedDetect] =
-    useRecoilState(modifiedDetectState);
   const [tableData, setTableData] = useState<AdminUserProps[]>(dummyData);
   const [selectedUser, setSelectedUser] = useState<AdminUserProps | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -69,31 +66,6 @@ export const AdminUserTable = () => {
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
     useState(false);
   const [targetUser, setTargetUser] = useState<AdminUserProps | null>(null);
-
-  useEffect(() => {
-    if (initialData !== tableData) {
-      if (initialData.length > tableData.length) {
-        setModifiedDetect(false);
-      } else {
-        for (let i = 0; i < tableData.length; i++) {
-          if (
-            tableData[i].userId !== initialData[i].userId ||
-            tableData[i].userName !== initialData[i].userName ||
-            tableData[i].email !== initialData[i].email ||
-            tableData[i].office !== initialData[i].office ||
-            tableData[i].type !== initialData[i].type ||
-            tableData[i].status !== initialData[i].status ||
-            tableData[i].updatedAt !== initialData[i].updatedAt
-          ) {
-            setModifiedDetect(true);
-            break;
-          }
-        }
-      }
-    }
-
-    setInitialData(tableData);
-  }, [initialData, setModifiedDetect, tableData]);
 
   const columnDefs = [
     columnHelper.accessor("userId", {

@@ -5,7 +5,7 @@ import { BasicTable } from "@/app/components/table/basic-table";
 import { MdTypography } from "@/app/components/typography";
 import { GridSelectComponent } from "@/app/sections/components/grid-select";
 import { modifiedDetectState } from "@/store/base.store";
-import { MdIcon, MdTextButton } from "@/util/md3";
+import { MdDialog, MdIcon, MdTextButton } from "@/util/md3";
 import {
   MessageModule,
   MessageProps,
@@ -19,6 +19,8 @@ import { ConfirmDialog } from "../components/confirm-dialog";
 import { TableActionButton } from "../components/table-action-button";
 import { GridStateSelectComponent } from "./components";
 import { createDummyMessageDataset } from "./util";
+import Portal from "@/app/components/portal";
+import { BottomFloatingBar } from "../components/bottom-floating-bar";
 
 export const MessageManagementTable = ({
   onMessageSelect,
@@ -35,10 +37,11 @@ export const MessageManagementTable = ({
   const [targetMessage, setTargetMessage] = useState<MessageProps | null>(null);
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
     useState(false);
+  const [isSaveConfirmDialogOpen, setIsSaveConfirmDialogOpen] = useState(false);
 
   useEffect(() => {
     if (initialData !== tableData) {
-      if (tableData.length !== initialData.length) {
+      if (tableData.length < initialData.length) {
         setModifiedDetect(false);
       } else {
         for (let i = 0; i < tableData.length; i++) {
@@ -47,6 +50,7 @@ export const MessageManagementTable = ({
             tableData[i].module !== initialData[i].module ||
             tableData[i].type !== initialData[i].type
           ) {
+            console.log(tableData[i], initialData[i]);
             setModifiedDetect(true);
             break;
           }
@@ -105,7 +109,6 @@ export const MessageManagementTable = ({
         return GridStateSelectComponent(
           info.getValue(),
           (type: MessageType) => {
-            setModifiedDetect(true);
             info.table.options.meta?.updateData(
               parseInt(info.row.id),
               "type",
@@ -140,6 +143,36 @@ export const MessageManagementTable = ({
 
   return (
     <>
+      <MdDialog
+        open={isSaveConfirmDialogOpen}
+        closed={() => setIsSaveConfirmDialogOpen(false)}
+      >
+        <div slot="headline">
+          Mandatory field is empty. Please fill in the field.
+        </div>
+        <div slot="actions">
+          <MdTextButton
+            onClick={() => {
+              setIsSaveConfirmDialogOpen(false);
+            }}
+          >
+            OK
+          </MdTextButton>
+        </div>
+      </MdDialog>
+      <Portal selector="#nav-container">
+        <BottomFloatingBar
+          onSave={() => {
+            tableData.every((message) => {
+              if (message.defaultMessage === "") {
+                setIsSaveConfirmDialogOpen(true);
+              } else {
+                modifiedDetect && setModifiedDetect(false);
+              }
+            });
+          }}
+        />
+      </Portal>
       <ConfirmDialog
         isOpen={isDeleteConfirmDialogOpen}
         onOpenChange={setIsDeleteConfirmDialogOpen}
@@ -157,8 +190,6 @@ export const MessageManagementTable = ({
             <div className="flex flex-1">
               <MdTextButton
                 onClick={() => {
-                  // modifiedDetect(true);
-                  setModifiedDetect(true);
                   setTableData((prev) => [
                     {
                       uuid: faker.string.uuid(),

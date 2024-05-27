@@ -9,11 +9,13 @@ import { TableActionButton } from "../../components/table-action-button";
 import { BasicTable } from "@/app/components/table/basic-table";
 import { OfficeCodeSearchDialog } from "./dialog";
 import { MdTypography } from "@/app/components/typography";
-import { MdIcon, MdTextButton } from "@/util/md3";
+import { MdDialog, MdIcon, MdTextButton } from "@/util/md3";
 import { Add, Search } from "@mui/icons-material";
 import { modifiedDetectState } from "@/store/base.store";
 import { useSetRecoilState } from "recoil";
 import { ConfirmDialog } from "../../components/confirm-dialog";
+import Portal from "@/app/components/portal";
+import { BottomFloatingBar } from "../../components/bottom-floating-bar";
 
 export default function OfficeEmailSettingPage() {
   const tempOfficeEmailSettingData = useMemo(() => {
@@ -41,6 +43,7 @@ export default function OfficeEmailSettingPage() {
   const [targetRow, setTargetRow] = useState<OfficeEmailSettingProps | null>(
     null
   );
+  const [isMandatoryFieldEmpty, setIsMandatoryFieldEmpty] = useState(false);
   const modifiedDetect = useSetRecoilState(modifiedDetectState);
 
   useEffect(() => {
@@ -145,6 +148,43 @@ export default function OfficeEmailSettingPage() {
 
   return (
     <div className="flex flex-col gap-4 flex-1">
+      <MdDialog
+        open={isMandatoryFieldEmpty}
+        closed={() => {
+          setIsMandatoryFieldEmpty(false);
+        }}
+      >
+        <div slot="headline">
+          Mandatory Field is Empty, Please fill in the mandatory field.
+        </div>
+        <div slot="actions">
+          <MdTextButton
+            onClick={() => {
+              setIsMandatoryFieldEmpty(false);
+            }}
+          >
+            OK
+          </MdTextButton>
+        </div>
+      </MdDialog>
+
+      <Portal selector="#nav-container">
+        <BottomFloatingBar
+          onSave={() => {
+            tableData.every((data) => {
+              if (
+                data.bookingNotificationReceiver === "" ||
+                data.siNotificationReceiver === ""
+              ) {
+                setIsMandatoryFieldEmpty(true);
+              } else {
+                modifiedDetect(false);
+              }
+            });
+          }}
+        />
+      </Portal>
+
       <PageTitle
         title="Office Email Setting (Booking & S/I)"
         category="Notification Setup"

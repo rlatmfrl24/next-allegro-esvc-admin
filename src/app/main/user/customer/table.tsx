@@ -74,36 +74,6 @@ export const CustomerUserTable = () => {
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
     useState(false);
   const columnHelper = createColumnHelper<CustomerUserProps>();
-  const modifiedDetect = useSetRecoilState(modifiedDetectState);
-
-  useEffect(() => {
-    if (initialData !== tableData) {
-      if (tableData.length < initialData.length) {
-        modifiedDetect(false);
-      } else {
-        for (let i = 0; i < tableData.length; i++) {
-          if (
-            tableData[i].userId !== initialData[i].userId ||
-            tableData[i].status !== initialData[i].status ||
-            tableData[i].email !== initialData[i].email ||
-            tableData[i].companyName !== initialData[i].companyName ||
-            tableData[i].companyType !== initialData[i].companyType ||
-            tableData[i].customerCode !== initialData[i].customerCode ||
-            tableData[i].salesRap !== initialData[i].salesRap ||
-            tableData[i].contactOffice !== initialData[i].contactOffice ||
-            tableData[i].country !== initialData[i].country ||
-            tableData[i].lastLoginDate !== initialData[i].lastLoginDate ||
-            tableData[i].updatedAt !== initialData[i].updatedAt
-          ) {
-            modifiedDetect(true);
-            break;
-          }
-        }
-      }
-    }
-
-    setInitialData(tableData);
-  }, [initialData, modifiedDetect, tableData]);
 
   const DeleteConfirmDialog = ({
     isOpen,
