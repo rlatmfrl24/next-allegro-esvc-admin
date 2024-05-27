@@ -17,6 +17,7 @@ import { CustomerUserTable } from "./table";
 import { DateTime } from "luxon";
 import { Search } from "@mui/icons-material";
 import { CustomerCodeSearch } from "./dialog";
+import { DateRangePicker } from "@/app/components/datepicker/date-range-picker";
 
 export default function CustomerUserPage() {
   const tempCodeSet = useMemo(() => {
@@ -37,7 +38,10 @@ export default function CustomerUserPage() {
     useState(false);
   const [searchCondition, setSearchCondition] = useState({
     dateType: "Lastest Login Date",
-    date: DateTime.now(),
+    date: {
+      start: DateTime.now().minus({ days: 7 }),
+      end: DateTime.now(),
+    },
     userId: "",
     status: "All",
     email: "",
@@ -74,12 +78,25 @@ export default function CustomerUserPage() {
               setSearchCondition({ ...searchCondition, dateType: value })
             }
           />
-          <DatePicker
+          {/* <DatePicker
             className="w-44"
             initialDate={searchCondition.date}
             onDateChange={(date) =>
               setSearchCondition({ ...searchCondition, date })
             }
+          /> */}
+          <DateRangePicker
+            className="w-72"
+            initial={searchCondition.date}
+            onDateChange={(range) => {
+              setSearchCondition({
+                ...searchCondition,
+                date: {
+                  start: range.start,
+                  end: range.end,
+                } as any,
+              });
+            }}
           />
         </div>
         <NAOutlinedTextField
@@ -186,7 +203,10 @@ export default function CustomerUserPage() {
           onClick={() => {
             setSearchCondition({
               dateType: "Lastest Login Date",
-              date: DateTime.now(),
+              date: {
+                start: DateTime.now().minus({ days: 7 }),
+                end: DateTime.now(),
+              },
               userId: "",
               status: "All",
               email: "",

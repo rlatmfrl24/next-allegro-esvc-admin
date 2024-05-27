@@ -54,6 +54,7 @@ function createDummyCustomerUser(): CustomerUserProps {
     ]),
     comment: faker.lorem.sentence(),
     customerCode: faker.string.alphanumeric(7).toUpperCase(),
+    password: faker.internet.password(),
   } as CustomerUserProps;
 }
 
@@ -61,6 +62,9 @@ export const CustomerUserTable = () => {
   const dummyData = useMemo(() => {
     return Array.from({ length: 70 }, () => createDummyCustomerUser());
   }, []);
+
+  const [initialData, setInitialData] =
+    useState<CustomerUserProps[]>(dummyData);
   const [tableData, setTableData] = useState<CustomerUserProps[]>(dummyData);
   const [selectedUser, setSelectedUser] = useState<CustomerUserProps | null>(
     null
@@ -70,19 +74,6 @@ export const CustomerUserTable = () => {
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
     useState(false);
   const columnHelper = createColumnHelper<CustomerUserProps>();
-  const modifiedDetect = useSetRecoilState(modifiedDetectState);
-
-  useEffect(() => {
-    if (dummyData === tableData) {
-      modifiedDetect(false);
-    } else {
-      modifiedDetect(true);
-    }
-  }, [tableData, modifiedDetect, dummyData]);
-
-  useEffect(() => {
-    modifiedDetect(false);
-  }, [modifiedDetect]);
 
   const DeleteConfirmDialog = ({
     isOpen,
@@ -308,6 +299,8 @@ export const CustomerUserTable = () => {
                   mode="edit"
                   targetUser={selectedUser || ({} as CustomerUserProps)}
                   onConfirm={(data) => {
+                    console.log(data);
+
                     const rowIndex = tableData.findIndex(
                       (item) => item.uuid === data.uuid
                     );

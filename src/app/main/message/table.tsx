@@ -1,49 +1,65 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 
 import { BasicTable } from "@/app/components/table/basic-table";
+import { MdTypography } from "@/app/components/typography";
 import { GridSelectComponent } from "@/app/sections/components/grid-select";
-import { MdIcon, MdTextButton } from "@/util/md3";
+import { modifiedDetectState } from "@/store/base.store";
+import { MdDialog, MdIcon, MdTextButton } from "@/util/md3";
 import {
   MessageModule,
   MessageProps,
   MessageType,
 } from "@/util/typeDef/message";
+import { faker } from "@faker-js/faker";
 import { Add } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 
-import { createDummyMessageDataset } from "./util";
-import { MdTypography } from "@/app/components/typography";
-import { GridStateSelectComponent } from "./components";
-import { TableActionButton } from "../components/table-action-button";
 import { ConfirmDialog } from "../components/confirm-dialog";
-import { faker } from "@faker-js/faker";
-import { useSetRecoilState } from "recoil";
-import { modifiedDetectState } from "@/store/base.store";
+import { TableActionButton } from "../components/table-action-button";
+import { GridStateSelectComponent } from "./components";
+import { createDummyMessageDataset } from "./util";
+import Portal from "@/app/components/portal";
+import { BottomFloatingBar } from "../components/bottom-floating-bar";
 
 export const MessageManagementTable = ({
   onMessageSelect,
 }: {
   onMessageSelect?: (message: MessageProps) => void;
 }) => {
-  const initialData = useMemo(() => createDummyMessageDataset(), []);
+  const [initialData, setInitialData] = useState<MessageProps[]>(
+    createDummyMessageDataset()
+  );
   const columnHelper = createColumnHelper<MessageProps>();
-  const modifiedDetect = useSetRecoilState(modifiedDetectState);
+  const [modifiedDetect, setModifiedDetect] =
+    useRecoilState(modifiedDetectState);
   const [tableData, setTableData] = useState<MessageProps[]>(initialData);
   const [targetMessage, setTargetMessage] = useState<MessageProps | null>(null);
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
     useState(false);
+  const [isSaveConfirmDialogOpen, setIsSaveConfirmDialogOpen] = useState(false);
 
   useEffect(() => {
-    if (initialData === tableData) {
-      modifiedDetect(false);
-    } else {
-      modifiedDetect(true);
+    if (initialData !== tableData) {
+      if (tableData.length < initialData.length) {
+        setModifiedDetect(false);
+      } else {
+        for (let i = 0; i < tableData.length; i++) {
+          if (
+            tableData[i].defaultMessage !== initialData[i].defaultMessage ||
+            tableData[i].module !== initialData[i].module ||
+            tableData[i].type !== initialData[i].type
+          ) {
+            console.log(tableData[i], initialData[i]);
+            setModifiedDetect(true);
+            break;
+          }
+        }
+      }
     }
-  }, [tableData, modifiedDetect, initialData]);
 
-  useEffect(() => {
-    modifiedDetect(false);
-  }, [modifiedDetect]);
+    setInitialData(tableData);
+  }, [initialData, modifiedDetect, setModifiedDetect, tableData]);
 
   const columns = [
     columnHelper.accessor("module", {
@@ -59,6 +75,7 @@ export const MessageManagementTable = ({
               "module",
               value
             );
+            setModifiedDetect(true);
           }}
         />
       ),
@@ -126,6 +143,36 @@ export const MessageManagementTable = ({
 
   return (
     <>
+      <MdDialog
+        open={isSaveConfirmDialogOpen}
+        closed={() => setIsSaveConfirmDialogOpen(false)}
+      >
+        <div slot="headline">
+          Mandatory field is empty. Please fill in the field.
+        </div>
+        <div slot="actions">
+          <MdTextButton
+            onClick={() => {
+              setIsSaveConfirmDialogOpen(false);
+            }}
+          >
+            OK
+          </MdTextButton>
+        </div>
+      </MdDialog>
+      <Portal selector="#nav-container">
+        <BottomFloatingBar
+          onSave={() => {
+            tableData.every((message) => {
+              if (message.defaultMessage === "") {
+                setIsSaveConfirmDialogOpen(true);
+              } else {
+                modifiedDetect && setModifiedDetect(false);
+              }
+            });
+          }}
+        />
+      </Portal>
       <ConfirmDialog
         isOpen={isDeleteConfirmDialogOpen}
         onOpenChange={setIsDeleteConfirmDialogOpen}
@@ -143,7 +190,6 @@ export const MessageManagementTable = ({
             <div className="flex flex-1">
               <MdTextButton
                 onClick={() => {
-                  modifiedDetect(true);
                   setTableData((prev) => [
                     {
                       uuid: faker.string.uuid(),

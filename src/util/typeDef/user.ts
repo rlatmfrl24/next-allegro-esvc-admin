@@ -63,6 +63,7 @@ export interface AdminUserProps extends UserInterface {
 export interface CustomerUserProps extends UserInterface {
   firstName: string;
   lastName: string;
+  password: string;
   lastLoginDate: DateTime | null;
   status: CustomerUserStatus;
   useCustomerCode: "All" | "Yes" | "No";
