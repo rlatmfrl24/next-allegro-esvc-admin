@@ -30,6 +30,7 @@ export default function NoticeManagement() {
     }));
   }, []);
 
+  const [initialData, setInitialData] = useState<NoticeProps[]>(tempNoticeList);
   const [tableData, setTableData] = useState<NoticeProps[]>(tempNoticeList);
   const [selectedNotice, setSelectedNotice] = useState<NoticeProps | null>(
     null
@@ -38,14 +39,30 @@ export default function NoticeManagement() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const modifiedDetect = useSetRecoilState(modifiedDetectState);
+  const [targetNotice, setTargetNotice] = useState<NoticeProps | null>(null);
 
   useEffect(() => {
-    modifiedDetect(true);
-  }, [tableData, modifiedDetect]);
+    if (initialData !== tableData) {
+      if (tableData.length < initialData.length) {
+        modifiedDetect(false);
+      } else {
+        for (let i = 0; i < tableData.length; i++) {
+          if (
+            tableData[i].title !== initialData[i].title ||
+            tableData[i].contents !== initialData[i].contents ||
+            tableData[i].attachment !== initialData[i].attachment ||
+            tableData[i].postedBy !== initialData[i].postedBy ||
+            tableData[i].updatedAt !== initialData[i].updatedAt
+          ) {
+            modifiedDetect(true);
+            break;
+          }
+        }
+      }
+    }
 
-  useEffect(() => {
-    modifiedDetect(false);
-  }, [modifiedDetect]);
+    setInitialData(tableData);
+  }, [initialData, modifiedDetect, tableData]);
 
   const columnHelper = createColumnHelper<NoticeProps>();
   const columnDefs = [
@@ -83,7 +100,8 @@ export default function NoticeManagement() {
             options={["Delete"]}
             onMenuSelect={(option) => {
               if (option === "Delete") {
-                setSelectedNotice(info.row.original);
+                // setSelectedNotice(info.row.original);
+                setTargetNotice(info.row.original);
                 setIsDeleteConfirmOpen(true);
               }
             }}
@@ -103,12 +121,10 @@ export default function NoticeManagement() {
         title="Do you want to delete this notice?"
         message={selectedNotice?.title}
         onConfirm={() => {
-          if (selectedNotice) {
-            setTableData((prev) =>
-              prev.filter((item) => item.uuid !== selectedNotice.uuid)
-            );
-          }
           setIsDeleteConfirmOpen(false);
+          setTableData((prev) =>
+            prev.filter((notice) => notice.uuid !== targetNotice?.uuid)
+          );
         }}
       />
       <AddNoticeDialog
