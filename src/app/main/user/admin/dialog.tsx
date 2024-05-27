@@ -115,12 +115,8 @@ export const AdminUserDialog = ({
             }}
             errorText="This field is required."
           />
-          {mode === "add" && (
-            <>
-              <NAOutlinedTextField label="Password" />
-              <NAOutlinedTextField label="Confirm Password" />
-            </>
-          )}
+          <NAOutlinedTextField label="Password" />
+          <NAOutlinedTextField label="Confirm Password" />
         </div>
         <DividerComponent className="border-dotted my-4" />
         <div className="flex gap-4 z-10">

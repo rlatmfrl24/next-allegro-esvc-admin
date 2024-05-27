@@ -4,7 +4,9 @@ import { NAOutlinedTextField } from "@/app/components/na-textfield";
 import { useSimpleTable } from "@/app/components/table/simple-table";
 import { MdTypography } from "@/app/components/typography";
 import {
+  MdCircularProgress,
   MdDialog,
+  MdElevationButton,
   MdFilledButton,
   MdIcon,
   MdOutlinedButton,
@@ -19,10 +21,11 @@ import {
   CustomerUserStatus,
 } from "@/util/typeDef/user";
 import { faker } from "@faker-js/faker";
-import { Search } from "@mui/icons-material";
+import { Check, Search } from "@mui/icons-material";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DateTime } from "luxon";
 import { Dispatch, SetStateAction, use, useMemo, useState } from "react";
+import { ConfirmDialog } from "../../components/confirm-dialog";
 
 export const CustomerActionDialog = ({
   isOpen,
@@ -37,6 +40,11 @@ export const CustomerActionDialog = ({
   targetUser?: CustomerUserProps;
   onConfirm?: (data: CustomerUserProps) => void;
 }) => {
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [ConfirmDialogStatus, setConfirmDialogStatus] = useState("");
+  const [userStatusChange, setUserStatusChange] = useState<
+    "question" | "waiting" | "done"
+  >("question");
   const [isCustomerCodeSearchOpen, setIsCustomerCodeSearchOpen] =
     useState(false);
   const [data, setData] = useState<CustomerUserProps>(
@@ -67,6 +75,39 @@ export const CustomerActionDialog = ({
     [CustomerUserStatus.block]: ["Unblock"],
     [CustomerUserStatus.withdraw]: ["Cancel Withdraw"],
   }[data.status];
+
+  function getNewStatusFromAction(
+    oldStatus: CustomerUserStatus,
+    action: string
+  ) {
+    switch (oldStatus) {
+      case CustomerUserStatus.newRegist:
+        if (action === "Reject") return CustomerUserStatus.rejectForRegist;
+        if (action === "Confirm") return CustomerUserStatus.confirm;
+        break;
+      case CustomerUserStatus.update:
+        if (action === "Reject") return CustomerUserStatus.rejectForUpdate;
+        if (action === "Confirm") return CustomerUserStatus.confirm;
+        break;
+      case CustomerUserStatus.confirm:
+        if (action === "Block") return CustomerUserStatus.block;
+        break;
+      case CustomerUserStatus.rejectForRegist:
+        if (action === "Confirm") return CustomerUserStatus.confirm;
+        break;
+      case CustomerUserStatus.rejectForUpdate:
+        if (action === "Confirm") return CustomerUserStatus.update;
+        break;
+      case CustomerUserStatus.block:
+        if (action === "Unblock") return CustomerUserStatus.confirm;
+        break;
+      case CustomerUserStatus.withdraw:
+        if (action === "Cancel Withdraw") return CustomerUserStatus.confirm;
+        break;
+      default:
+        return oldStatus;
+    }
+  }
 
   const isValidationChecked = useMemo(() => {
     if (
@@ -113,6 +154,80 @@ export const CustomerActionDialog = ({
         {mode === "add" ? "Add Customer User" : "Customer User"}
       </div>
       <div slot="content">
+        <MdDialog
+          open={isConfirmDialogOpen}
+          closed={() => {
+            setIsConfirmDialogOpen(false);
+          }}
+        >
+          <div slot="headline">
+            {userStatusChange === "question" &&
+              `Are you sure you want to ${ConfirmDialogStatus}?`}
+          </div>
+          <div slot="content">
+            {userStatusChange === "question" && (
+              <MdTypography variant="body" size="medium">
+                {data.userId}
+              </MdTypography>
+            )}
+            {userStatusChange === "waiting" && (
+              <div className="flex justify-center">
+                <MdCircularProgress indeterminate />
+              </div>
+            )}
+            {userStatusChange === "done" && (
+              <div className="flex justify-center flex-col items-center">
+                <Check />
+                <MdTypography variant="title" size="large">
+                  {ConfirmDialogStatus} Processing is complete.
+                </MdTypography>
+              </div>
+            )}
+          </div>
+          <div slot="actions">
+            {userStatusChange === "question" && (
+              <>
+                <MdOutlinedButton
+                  onClick={() => {
+                    setIsConfirmDialogOpen(false);
+                  }}
+                >
+                  Cancel
+                </MdOutlinedButton>
+                <MdFilledButton
+                  onClick={() => {
+                    setUserStatusChange("waiting");
+                    setTimeout(() => {
+                      setUserStatusChange("done");
+                    }, 2000);
+                  }}
+                >
+                  OK
+                </MdFilledButton>
+              </>
+            )}
+            {userStatusChange === "done" && (
+              <MdOutlinedButton
+                onClick={() => {
+                  setIsConfirmDialogOpen(false);
+                  setUserStatusChange("question");
+                  onConfirm?.({
+                    ...data,
+                    status: getNewStatusFromAction(
+                      data.status,
+                      ConfirmDialogStatus
+                    ) as CustomerUserStatus,
+                  });
+
+                  onOpenChange(false);
+                }}
+              >
+                Close
+              </MdOutlinedButton>
+            )}
+          </div>
+        </MdDialog>
+
         <CustomerCodeSearch
           isOpen={isCustomerCodeSearchOpen}
           onOpenChange={setIsCustomerCodeSearchOpen}
@@ -170,23 +285,27 @@ export const CustomerActionDialog = ({
               setData({ ...data, email: value });
             }}
           />
-          <NAOutlinedTextField
-            required
-            className="flex-1"
-            label="Password"
-            type="password"
-            value={data.password || ""}
-            handleValueChange={(value) => {
-              setData({ ...data, password: value });
-            }}
-          />
-          <NAOutlinedTextField
-            required
-            type="password"
-            className="flex-1"
-            label="Confirm Password"
-            value={""}
-          />
+          {mode === "add" && (
+            <>
+              <NAOutlinedTextField
+                required
+                className="flex-1"
+                label="Password"
+                type="password"
+                value={data.password || ""}
+                handleValueChange={(value) => {
+                  setData({ ...data, password: value });
+                }}
+              />
+              <NAOutlinedTextField
+                required
+                type="password"
+                className="flex-1"
+                label="Confirm Password"
+                value={""}
+              />
+            </>
+          )}
         </div>
         <DividerComponent className="my-4 border-dotted" />
         <div className="grid grid-cols-4 gap-4 w-full">
@@ -345,58 +464,43 @@ export const CustomerActionDialog = ({
           }}
         />
       </div>
+
       <div slot="actions">
-        {availableButtons
-          .filter((button) => button !== "Save")
-          .map((button) => {
-            return (
-              <MdOutlinedButton
-                key={button}
-                disabled={!isValidationChecked}
-                onClick={() => {
-                  if (button === "Confirm") {
-                    onConfirm?.({
-                      ...data,
-                      status:
-                        data.status === CustomerUserStatus.newRegist
-                          ? CustomerUserStatus.confirm
-                          : CustomerUserStatus.update,
-                    });
-                  }
-                  if (button === "Reject") {
-                    onConfirm?.({
-                      ...data,
-                      status:
-                        data.status === CustomerUserStatus.newRegist
-                          ? CustomerUserStatus.rejectForRegist
-                          : CustomerUserStatus.rejectForUpdate,
-                    });
-                  }
-                  if (button === "Block") {
-                    onConfirm?.({
-                      ...data,
-                      status: CustomerUserStatus.block,
-                    });
-                  }
-                  if (button === "Unblock") {
-                    onConfirm?.({
-                      ...data,
-                      status: CustomerUserStatus.confirm,
-                    });
-                  }
-                  if (button === "Cancel Withdraw") {
-                    onConfirm?.({
-                      ...data,
-                      status: CustomerUserStatus.confirm,
-                    });
-                  }
-                  onOpenChange(false);
-                }}
-              >
-                {button}
-              </MdOutlinedButton>
-            );
-          })}
+        {availableButtons !== undefined &&
+          availableButtons
+            .filter((button) => button !== "Save")
+            .map((button) => {
+              return (
+                <MdElevationButton
+                  key={button}
+                  disabled={!isValidationChecked}
+                  onClick={() => {
+                    if (button === "Confirm") {
+                      setConfirmDialogStatus("Confirm");
+                      setIsConfirmDialogOpen(true);
+                    }
+                    if (button === "Reject") {
+                      setConfirmDialogStatus("Reject");
+                      setIsConfirmDialogOpen(true);
+                    }
+                    if (button === "Block") {
+                      setConfirmDialogStatus("Block");
+                      setIsConfirmDialogOpen(true);
+                    }
+                    if (button === "Unblock") {
+                      setConfirmDialogStatus("Unblock");
+                      setIsConfirmDialogOpen(true);
+                    }
+                    if (button === "Cancel Withdraw") {
+                      setConfirmDialogStatus("Cancel Withdraw");
+                      setIsConfirmDialogOpen(true);
+                    }
+                  }}
+                >
+                  {button}
+                </MdElevationButton>
+              );
+            })}
         <div className="flex-1"></div>
         <MdOutlinedButton
           onClick={() => {
@@ -405,7 +509,21 @@ export const CustomerActionDialog = ({
         >
           Cancel
         </MdOutlinedButton>
-        {availableButtons.includes("Save") && (
+        {mode === "add" && (
+          <MdFilledButton
+            disabled={!isValidationChecked}
+            onClick={() => {
+              onOpenChange(false);
+              onConfirm?.({
+                ...data,
+                updatedAt: DateTime.now(),
+              });
+            }}
+          >
+            Save
+          </MdFilledButton>
+        )}
+        {availableButtons?.includes("Save") && (
           <MdFilledButton
             disabled={!isValidationChecked}
             onClick={() => {
