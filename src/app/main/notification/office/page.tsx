@@ -9,11 +9,13 @@ import { TableActionButton } from "../../components/table-action-button";
 import { BasicTable } from "@/app/components/table/basic-table";
 import { OfficeCodeSearchDialog } from "./dialog";
 import { MdTypography } from "@/app/components/typography";
-import { MdIcon, MdTextButton } from "@/util/md3";
+import { MdDialog, MdIcon, MdTextButton } from "@/util/md3";
 import { Add, Search } from "@mui/icons-material";
 import { modifiedDetectState } from "@/store/base.store";
 import { useSetRecoilState } from "recoil";
 import { ConfirmDialog } from "../../components/confirm-dialog";
+import Portal from "@/app/components/portal";
+import { BottomFloatingBar } from "../../components/bottom-floating-bar";
 
 export default function OfficeEmailSettingPage() {
   const tempOfficeEmailSettingData = useMemo(() => {
@@ -29,29 +31,44 @@ export default function OfficeEmailSettingPage() {
         } as OfficeEmailSettingProps)
     );
   }, []);
+  const [initialData, setInitialData] = useState<OfficeEmailSettingProps[]>(
+    tempOfficeEmailSettingData
+  );
   const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
     useState(false);
   const [isOfficeCodeSearchDialogOpen, setIsOfficeCodeSearchDialogOpen] =
     useState(false);
-  const [tableData, setTableData] = useState<OfficeEmailSettingProps[]>(
-    tempOfficeEmailSettingData
-  );
+  const [tableData, setTableData] =
+    useState<OfficeEmailSettingProps[]>(initialData);
   const [targetRow, setTargetRow] = useState<OfficeEmailSettingProps | null>(
     null
   );
+  const [isMandatoryFieldEmpty, setIsMandatoryFieldEmpty] = useState(false);
   const modifiedDetect = useSetRecoilState(modifiedDetectState);
 
   useEffect(() => {
-    if (tableData !== tempOfficeEmailSettingData) {
-      modifiedDetect(true);
-    } else {
-      modifiedDetect(false);
+    if (initialData !== tableData) {
+      if (tableData.length < initialData.length) {
+        modifiedDetect(false);
+      } else {
+        for (let i = 0; i < tableData.length; i++) {
+          if (
+            tableData[i].officeCode !== initialData[i].officeCode ||
+            tableData[i].officeName !== initialData[i].officeName ||
+            tableData[i].bookingNotificationReceiver !==
+              initialData[i].bookingNotificationReceiver ||
+            tableData[i].siNotificationReceiver !==
+              initialData[i].siNotificationReceiver
+          ) {
+            modifiedDetect(true);
+            break;
+          }
+        }
+      }
     }
-  }, [modifiedDetect, tableData, tempOfficeEmailSettingData]);
 
-  useEffect(() => {
-    modifiedDetect(false);
-  }, [modifiedDetect]);
+    setInitialData(tableData);
+  }, [initialData, modifiedDetect, tableData]);
 
   const columnHelper = createColumnHelper<OfficeEmailSettingProps>();
   const columnDefs = [
@@ -131,6 +148,43 @@ export default function OfficeEmailSettingPage() {
 
   return (
     <div className="flex flex-col gap-4 flex-1">
+      <MdDialog
+        open={isMandatoryFieldEmpty}
+        closed={() => {
+          setIsMandatoryFieldEmpty(false);
+        }}
+      >
+        <div slot="headline">
+          Mandatory Field is Empty, Please fill in the mandatory field.
+        </div>
+        <div slot="actions">
+          <MdTextButton
+            onClick={() => {
+              setIsMandatoryFieldEmpty(false);
+            }}
+          >
+            OK
+          </MdTextButton>
+        </div>
+      </MdDialog>
+
+      <Portal selector="#nav-container">
+        <BottomFloatingBar
+          onSave={() => {
+            tableData.every((data) => {
+              if (
+                data.bookingNotificationReceiver === "" ||
+                data.siNotificationReceiver === ""
+              ) {
+                setIsMandatoryFieldEmpty(true);
+              } else {
+                modifiedDetect(false);
+              }
+            });
+          }}
+        />
+      </Portal>
+
       <PageTitle
         title="Office Email Setting (Booking & S/I)"
         category="Notification Setup"

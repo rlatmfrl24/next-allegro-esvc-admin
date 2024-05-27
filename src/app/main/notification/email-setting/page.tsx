@@ -4,7 +4,7 @@ import NAOutlinedListBox from "@/app/components/na-outline-listbox";
 import { PageTitle } from "../../components/page-title";
 import { EmailSettingProps, EmailType } from "@/util/typeDef/notification";
 import { NAOutlinedTextField } from "@/app/components/na-textfield";
-import { MdFilledButton, MdIcon, MdTextButton } from "@/util/md3";
+import { MdDialog, MdFilledButton, MdIcon, MdTextButton } from "@/util/md3";
 import { useEffect, useMemo, useState } from "react";
 import { faker } from "@faker-js/faker";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -15,6 +15,8 @@ import { ConfirmDialog } from "../../components/confirm-dialog";
 import { Add } from "@mui/icons-material";
 import { useSetRecoilState } from "recoil";
 import { modifiedDetectState } from "@/store/base.store";
+import Portal from "@/app/components/portal";
+import { BottomFloatingBar } from "../../components/bottom-floating-bar";
 
 export default function EmailSettingPage() {
   const tempEmailSettingData = useMemo(() => {
@@ -38,24 +40,37 @@ export default function EmailSettingPage() {
     );
   }, []);
 
+  const [initialData, setInitialData] =
+    useState<EmailSettingProps[]>(tempEmailSettingData);
   const columnHelper = createColumnHelper<EmailSettingProps>();
   const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [target, setTarget] = useState<EmailSettingProps | null>(null);
-  const [tableData, setTableData] =
-    useState<EmailSettingProps[]>(tempEmailSettingData);
+  const [tableData, setTableData] = useState<EmailSettingProps[]>(initialData);
+  const [isMandatoryFieldEmpty, setIsMandatoryFieldEmpty] = useState(false);
 
   useEffect(() => {
-    if (tableData !== tempEmailSettingData) {
-      modifiedDetect(true);
-    } else {
-      modifiedDetect(false);
+    if (initialData !== tableData) {
+      if (tableData.length < initialData.length) {
+        modifiedDetect(false);
+      } else {
+        for (let i = 0; i < tableData.length; i++) {
+          if (
+            tableData[i].type !== initialData[i].type ||
+            tableData[i].template !== initialData[i].template ||
+            tableData[i].title !== initialData[i].title ||
+            tableData[i].senderName !== initialData[i].senderName ||
+            tableData[i].senderEmail !== initialData[i].senderEmail
+          ) {
+            modifiedDetect(true);
+            break;
+          }
+        }
+      }
     }
-  }, [modifiedDetect, tableData, tempEmailSettingData]);
 
-  useEffect(() => {
-    modifiedDetect(false);
-  }, [modifiedDetect]);
+    setInitialData(tableData);
+  }, [initialData, modifiedDetect, tableData]);
 
   const columnDefs = [
     columnHelper.accessor("type", {
@@ -149,6 +164,42 @@ export default function EmailSettingPage() {
         <MdFilledButton>Search</MdFilledButton>
       </div>
       <div className="border border-outlineVariant rounded-lg p-4">
+        <MdDialog
+          open={isMandatoryFieldEmpty}
+          closed={() => setIsMandatoryFieldEmpty(false)}
+        >
+          <div slot="headline">
+            Mandatory field is empty. Please fill in the field.
+          </div>
+          <div slot="actions">
+            <MdTextButton
+              onClick={() => {
+                setIsMandatoryFieldEmpty(false);
+              }}
+            >
+              OK
+            </MdTextButton>
+          </div>
+        </MdDialog>
+        <Portal selector="#nav-container">
+          <BottomFloatingBar
+            onSave={() => {
+              tableData.every((data) => {
+                if (
+                  data.type === undefined ||
+                  data.template === "" ||
+                  data.title === "" ||
+                  data.senderName === "" ||
+                  data.senderEmail === ""
+                ) {
+                  setIsMandatoryFieldEmpty(true);
+                } else {
+                  modifiedDetect(false);
+                }
+              });
+            }}
+          />
+        </Portal>
         <ConfirmDialog
           isOpen={isConfirmDialogOpen}
           onOpenChange={setIsConfirmDialogOpen}

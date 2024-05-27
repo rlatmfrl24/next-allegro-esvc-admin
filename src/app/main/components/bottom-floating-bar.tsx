@@ -7,7 +7,7 @@ import { CSSProperties } from "react";
 import { useRecoilState } from "recoil";
 import { motion } from "framer-motion";
 
-export const BottomFloatingBar = () => {
+export const BottomFloatingBar = (props: { onSave: () => void }) => {
   const [modifiedDetect, setModifiedDetect] =
     useRecoilState(modifiedDetectState);
 
@@ -33,7 +33,7 @@ export const BottomFloatingBar = () => {
               <MdElevation />
               <MdFilledButton
                 onClick={() => {
-                  setModifiedDetect(false);
+                  props.onSave();
                 }}
               >
                 Save

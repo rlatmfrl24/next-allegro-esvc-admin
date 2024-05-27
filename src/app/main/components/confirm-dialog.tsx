@@ -1,5 +1,5 @@
 import { MdDialog, MdFilledButton, MdTextButton } from "@/util/md3";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export const ConfirmDialog = (props: {
   isOpen: boolean;

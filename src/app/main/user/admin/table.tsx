@@ -14,8 +14,9 @@ import { DateTime } from "luxon";
 import { useEffect, useMemo, useState } from "react";
 import { TableActionButton } from "../../components/table-action-button";
 import { AdminUserDialog } from "./dialog";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { modifiedDetectState } from "@/store/base.store";
+import { ConfirmDialog } from "../../components/confirm-dialog";
 
 function createDummyAdminUser(userType?: AdminUserType): AdminUserProps {
   return {
@@ -57,25 +58,14 @@ export const AdminUserTable = () => {
   const dummyData = useMemo(() => {
     return Array.from({ length: 70 }, () => createDummyAdminUser());
   }, []);
-
   const [tableData, setTableData] = useState<AdminUserProps[]>(dummyData);
   const [selectedUser, setSelectedUser] = useState<AdminUserProps | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const columnHelper = createColumnHelper<AdminUserProps>();
-  const modifiedDetect = useSetRecoilState(modifiedDetectState);
-
-  useEffect(() => {
-    if (dummyData === tableData) {
-      modifiedDetect(false);
-    } else {
-      modifiedDetect(true);
-    }
-  }, [tableData, modifiedDetect, dummyData]);
-
-  useEffect(() => {
-    modifiedDetect(false);
-  }, [modifiedDetect]);
+  const [isDeleteConfirmDialogOpen, setIsDeleteConfirmDialogOpen] =
+    useState(false);
+  const [targetUser, setTargetUser] = useState<AdminUserProps | null>(null);
 
   const columnDefs = [
     columnHelper.accessor("userId", {
@@ -144,9 +134,8 @@ export const AdminUserTable = () => {
             options={["Delete"]}
             onMenuSelect={(option) => {
               if (option === "Delete") {
-                setTableData((prev) =>
-                  prev.filter((item) => item.uuid !== info.row.original.uuid)
-                );
+                setTargetUser(info.row.original);
+                setIsDeleteConfirmDialogOpen(true);
               }
             }}
           />
@@ -160,6 +149,20 @@ export const AdminUserTable = () => {
 
   return (
     <>
+      <ConfirmDialog
+        isOpen={isDeleteConfirmDialogOpen}
+        onOpenChange={setIsDeleteConfirmDialogOpen}
+        title="Do you want to delete the admin User?"
+        message={targetUser?.userName}
+        onConfirm={() => {
+          if (targetUser) {
+            setTableData((prev) =>
+              prev.filter((item) => item.uuid !== targetUser.uuid)
+            );
+            setTargetUser(null);
+          }
+        }}
+      />
       <BasicTable
         ActionComponent={(table) => {
           return (
