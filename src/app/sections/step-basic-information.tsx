@@ -96,6 +96,7 @@ export default function BasicInformationStep() {
           value={currentCompanyStore.basicInformation.companyCode || ""}
         />
         <NAOutlinedTextField
+          required
           label="URL Context Path"
           className="flex-1"
           value={currentCompanyStore.basicInformation.urlContextPath || ""}
