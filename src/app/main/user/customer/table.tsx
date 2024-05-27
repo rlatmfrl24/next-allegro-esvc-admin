@@ -329,6 +329,8 @@ export const CustomerUserTable = () => {
                   mode="edit"
                   targetUser={selectedUser || ({} as CustomerUserProps)}
                   onConfirm={(data) => {
+                    console.log(data);
+
                     const rowIndex = tableData.findIndex(
                       (item) => item.uuid === data.uuid
                     );

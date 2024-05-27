@@ -58,6 +58,16 @@ export const CustomerActionDialog = ({
     [CustomerUserStatus.withdraw]: "bg-errorContainer text-error",
   }[data.status];
 
+  const availableButtons = {
+    [CustomerUserStatus.newRegist]: ["Reject", "Confirm", "Save"],
+    [CustomerUserStatus.update]: ["Reject", "Confirm", "Save"],
+    [CustomerUserStatus.confirm]: ["Block", "Save"],
+    [CustomerUserStatus.rejectForRegist]: ["Confirm", "Save"],
+    [CustomerUserStatus.rejectForUpdate]: ["Confirm", "Save"],
+    [CustomerUserStatus.block]: ["Unblock"],
+    [CustomerUserStatus.withdraw]: ["Cancel Withdraw"],
+  }[data.status];
+
   const isValidationChecked = useMemo(() => {
     if (
       !data.userId ||
@@ -336,6 +346,58 @@ export const CustomerActionDialog = ({
         />
       </div>
       <div slot="actions">
+        {availableButtons
+          .filter((button) => button !== "Save")
+          .map((button) => {
+            return (
+              <MdOutlinedButton
+                key={button}
+                disabled={!isValidationChecked}
+                onClick={() => {
+                  if (button === "Confirm") {
+                    onConfirm?.({
+                      ...data,
+                      status:
+                        data.status === CustomerUserStatus.newRegist
+                          ? CustomerUserStatus.confirm
+                          : CustomerUserStatus.update,
+                    });
+                  }
+                  if (button === "Reject") {
+                    onConfirm?.({
+                      ...data,
+                      status:
+                        data.status === CustomerUserStatus.newRegist
+                          ? CustomerUserStatus.rejectForRegist
+                          : CustomerUserStatus.rejectForUpdate,
+                    });
+                  }
+                  if (button === "Block") {
+                    onConfirm?.({
+                      ...data,
+                      status: CustomerUserStatus.block,
+                    });
+                  }
+                  if (button === "Unblock") {
+                    onConfirm?.({
+                      ...data,
+                      status: CustomerUserStatus.confirm,
+                    });
+                  }
+                  if (button === "Cancel Withdraw") {
+                    onConfirm?.({
+                      ...data,
+                      status: CustomerUserStatus.confirm,
+                    });
+                  }
+                  onOpenChange(false);
+                }}
+              >
+                {button}
+              </MdOutlinedButton>
+            );
+          })}
+        <div className="flex-1"></div>
         <MdOutlinedButton
           onClick={() => {
             onOpenChange(false);
@@ -343,18 +405,20 @@ export const CustomerActionDialog = ({
         >
           Cancel
         </MdOutlinedButton>
-        <MdFilledButton
-          disabled={!isValidationChecked}
-          onClick={() => {
-            onOpenChange(false);
-            onConfirm?.({
-              ...data,
-              updatedAt: DateTime.now(),
-            });
-          }}
-        >
-          Save
-        </MdFilledButton>
+        {availableButtons.includes("Save") && (
+          <MdFilledButton
+            disabled={!isValidationChecked}
+            onClick={() => {
+              onOpenChange(false);
+              onConfirm?.({
+                ...data,
+                updatedAt: DateTime.now(),
+              });
+            }}
+          >
+            Save
+          </MdFilledButton>
+        )}
       </div>
     </MdDialog>
   );
