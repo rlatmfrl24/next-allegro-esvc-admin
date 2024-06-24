@@ -1,103 +1,33 @@
 "use client";
-
-import { MdElevatedCard, MdIcon, MdIconButton, MdMenuItem } from "@/util/md3";
-import UserProfileIcon from "@/../public/icon_user_default_profile.svg";
-import Image from "next/image";
-import { CSSProperties, useState } from "react";
-import {
-  autoUpdate,
-  shift,
-  useClick,
-  useDismiss,
-  useFloating,
-  useInteractions,
-  useTransitionStyles,
-} from "@floating-ui/react";
-import { MdTypography } from "./typography";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { currentUserState } from "@/store/user.store";
 import { useRouter } from "next/navigation";
+import { useRecoilState } from "recoil";
+
+import { currentUserState } from "@/store/user.store";
+import { MdOutlinedButton } from "@/util/md3";
 import { AdminUserProps } from "@/util/typeDef/user";
 
+import { MdTypography } from "./typography";
+
 export const UserMenu = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentUserStore, setCurrentUserStore] =
     useRecoilState(currentUserState);
   const router = useRouter();
 
-  const { refs, floatingStyles, context } = useFloating({
-    open: isMenuOpen,
-    onOpenChange: setIsMenuOpen,
-    middleware: [shift()],
-    placement: "bottom-end",
-    whileElementsMounted: autoUpdate,
-  });
-
-  const { isMounted, styles } = useTransitionStyles(context, {
-    duration: {
-      open: 200,
-      close: 100,
-    },
-    initial: { opacity: 0, transform: "translateY(-8px)" },
-    open: { opacity: 1, transform: "translateY(0)" },
-    close: { opacity: 0, transform: "translateY(-8px)" },
-  });
-
-  const { getFloatingProps, getReferenceProps } = useInteractions([
-    useClick(context),
-    useDismiss(context),
-  ]);
-
   return (
     <>
-      <MdIconButton
-        ref={refs.setReference}
-        {...getReferenceProps()}
-        className="mr-4"
-      >
-        <MdIcon className="text-primary">
-          <Image src={UserProfileIcon} alt="User Profile" />
-        </MdIcon>
-      </MdIconButton>
-      {isMounted && (
-        <div
-          ref={refs.setFloating}
-          style={floatingStyles}
-          {...getFloatingProps()}
-          className="z-20"
+      <div className="flex gap-4 items-center mr-6">
+        <MdTypography variant="body" size="large">
+          {currentUserStore.userName}
+        </MdTypography>
+        <MdOutlinedButton
+          onClick={() => {
+            setCurrentUserStore({} as AdminUserProps);
+            router.push("/login");
+          }}
         >
-          <MdElevatedCard
-            style={
-              {
-                ...styles,
-              } as CSSProperties
-            }
-            className="w-60 bg-surfaceContainerHigh py-2"
-          >
-            <div className="w-full flex flex-col justify-center items-center p-6 gap-4">
-              <MdTypography
-                variant="headline"
-                size="small"
-                className="w-fit whitespace-nowrap"
-              >
-                {currentUserStore.userName}
-              </MdTypography>
-              <MdTypography variant="body" size="medium">
-                {currentUserStore.email}
-              </MdTypography>
-            </div>
-            <MdMenuItem>Account Profile</MdMenuItem>
-            <MdMenuItem
-              onClick={() => {
-                setCurrentUserStore({} as AdminUserProps);
-                router.push("/login");
-              }}
-            >
-              Sign Out
-            </MdMenuItem>
-          </MdElevatedCard>
-        </div>
-      )}
+          Logout
+        </MdOutlinedButton>
+      </div>
     </>
   );
 };
