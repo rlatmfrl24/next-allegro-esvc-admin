@@ -78,6 +78,9 @@ export const AdminUserDialog = ({
         } as AdminUserProps);
         onOpenChage();
       }}
+      cancel={(e) => {
+        e.preventDefault();
+      }}
     >
       <div slot="headline">
         {

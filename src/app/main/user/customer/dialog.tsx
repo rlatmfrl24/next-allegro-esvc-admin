@@ -149,6 +149,9 @@ export const CustomerActionDialog = ({
         onOpenChange(false);
       }}
       className="min-w-[960px]"
+      cancel={(e) => {
+        e.preventDefault();
+      }}
     >
       <div slot="headline">
         {mode === "add" ? "Add Customer User" : "Customer User"}
@@ -641,6 +644,9 @@ export const CustomerCodeSearch = ({
         clearSelection();
       }}
       className="min-w-[1120px]"
+      cancel={(e) => {
+        e.preventDefault();
+      }}
     >
       <div slot="headline">Search Customer Code</div>
       <div slot="content" className="flex flex-col gap-4">
