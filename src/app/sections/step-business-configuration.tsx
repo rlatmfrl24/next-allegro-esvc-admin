@@ -1,20 +1,21 @@
 "use client";
-
-import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { CSSProperties, useEffect, useRef } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { MdTypography } from "@/app/components/typography";
+import { modifiedDetectState } from "@/store/base.store";
 import { CurrentCompanyState } from "@/store/super.store";
-import { MdCheckbox, MdFilledButton, MdOutlinedTextField } from "@/util/md3";
+import { MdCheckbox, MdElevation, MdFilledButton } from "@/util/md3";
 
 import { BaseItem } from "./components/base-configuration-item";
-import { modifiedDetectState } from "@/store/base.store";
 
 export default function BusinessConfigurationStep() {
   const [companyStore, setCompanyStore] = useRecoilState(CurrentCompanyState);
   const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const signupTermsFileRef = useRef<HTMLInputElement>(null);
   const onlineQuotesTermsFileRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     modifiedDetect(false);
@@ -153,6 +154,24 @@ export default function BusinessConfigurationStep() {
           });
         }}
       />
+
+      <div
+        className="fixed bottom-3 left-4 w-[calc(100%-2rem)] p-2 rounded-full flex justify-end bg-surfaceContainer z-10"
+        style={
+          {
+            "--md-elevation-level": 2,
+          } as CSSProperties
+        }
+      >
+        <MdElevation />
+        <MdFilledButton
+          onClick={() => {
+            router.push("/super");
+          }}
+        >
+          Create
+        </MdFilledButton>
+      </div>
     </div>
   );
 }

@@ -268,7 +268,7 @@ export const CustomerUserTable = () => {
                 <MdIcon slot="icon">
                   <Add fontSize="small" />
                 </MdIcon>
-                Add Admin
+                Add Customer
               </MdTextButton>
               {selectedUser && (
                 <>

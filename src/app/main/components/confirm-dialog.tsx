@@ -27,7 +27,7 @@ export const ConfirmDialog = (props: {
             props.onConfirm();
           }}
         >
-          Confirm
+          OK
         </MdFilledButton>
       </div>
     </MdDialog>
