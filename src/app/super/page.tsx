@@ -34,7 +34,6 @@ export default function SuperHome() {
           companyCode="ESVC"
           companyLogo={<Image src={EserviceLogo} alt="E-Service Logo" />}
           isActivated={true}
-          isTemporarySaved
         />
         <CompanyCard
           companyName="Transfar Shipping"
