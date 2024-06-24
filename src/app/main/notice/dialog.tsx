@@ -37,6 +37,9 @@ export const AddNoticeDialog = (props: {
         props.onOpenChange(false);
       }}
       className="min-w-[800px]"
+      cancel={(e) => {
+        e.preventDefault();
+      }}
     >
       <div slot="headline">Add Notice</div>
       <div slot="content" className="flex flex-col gap-4">
