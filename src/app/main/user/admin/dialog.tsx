@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import SubsumIndicator from "@/../public/icon_subsum_indicator.svg";
 import { DividerComponent } from "@/app/components/divider";
