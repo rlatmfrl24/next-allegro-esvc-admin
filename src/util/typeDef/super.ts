@@ -19,6 +19,7 @@ export type CompanyThemeType = {
   logo: File | null;
   theme: {
     name: string;
+    preset: string;
     icon: any;
     primaryColor: string;
   };

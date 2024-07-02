@@ -13,10 +13,10 @@ import {
 import { MdTypography } from "../components/typography";
 import { MoreVert } from "@mui/icons-material";
 import { DividerComponent } from "../components/divider";
-import EserviceLogo from "@/../public/logo_esvc.svg";
-import TransfarShippingLogo from "@/../public/logo_transfar_shipping.svg";
-import CyberlogitecLogo from "@/../public/logo_cyberlogitec.svg";
-import TSLineLogo from "@/../public/logo_tsline.svg";
+import EserviceLogo from "@/../public/logo_esvc.svg?url";
+import TransfarShippingLogo from "@/../public/logo_transfar_shipping.svg?url";
+import CyberlogitecLogo from "@/../public/logo_cyberlogitec.svg?url";
+import TSLineLogo from "@/../public/logo_tsline.svg?url";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

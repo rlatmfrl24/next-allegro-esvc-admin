@@ -2,7 +2,7 @@
 
 import { HTMLAttributes, useEffect, useRef, useState } from "react";
 
-export default function ColorPicker({
+export default function SimpleHuePicker({
   onColorChange,
   className,
   ...props
@@ -61,7 +61,7 @@ export default function ColorPicker({
     // convert position to hue value
     const hue = getColorHueFromPosition(position);
     const hexCode = hueToHex(hue);
-    console.log(hexCode);
+    // console.log(hexCode);
     if (onColorChange) {
       onColorChange(hexCode);
     }

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import SubsumIndicator from "@/../public/icon_subsum_indicator.svg";
+import SubsumIndicator from "@/../public/icon_subsum_indicator.svg?url";
 import { DividerComponent } from "@/app/components/divider";
 import NAOutlinedAutoComplete from "@/app/components/na-autocomplete";
 import NAOutlinedListBox from "@/app/components/na-outline-listbox";

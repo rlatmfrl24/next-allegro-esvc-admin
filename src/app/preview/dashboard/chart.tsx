@@ -1,5 +1,9 @@
 import { MdTypography } from "@/app/components/typography";
+import { CurrentCompanyState } from "@/store/super.store";
+import { useEffect } from "react";
 import { Cell, Pie, PieChart } from "recharts";
+import { useRecoilValue } from "recoil";
+import colors from "tailwindcss/colors";
 
 enum ChartColorEnum {
   BOOKED = "#4D616C",
@@ -51,13 +55,17 @@ export default function QuickChart(props: {
                   key={`cell-${index}`}
                   fill={
                     entry.key === "Booked"
-                      ? ChartColorEnum.BOOKED
+                      ? // ? ChartColorEnum.BOOKED
+                        getHexCodeFromToken("--md-sys-color-primary")
                       : entry.key === "Rejected"
-                      ? ChartColorEnum.REJECTED
+                      ? // ? ChartColorEnum.REJECTED
+                        getHexCodeFromToken("--md-sys-color-error")
                       : entry.key === "Processing"
-                      ? ChartColorEnum.PROCESSING
+                      ? // ? ChartColorEnum.PROCESSING
+                        getHexCodeFromToken("--md-sys-color-outline")
                       : entry.key === "Cancelled"
-                      ? ChartColorEnum.CANCELLED
+                      ? // ? ChartColorEnum.CANCELLED
+                        getHexCodeFromToken("--md-sys-color-primary-container")
                       : ChartColorEnum.BOOKED
                   }
                 />
@@ -107,4 +115,10 @@ export default function QuickChart(props: {
       </div>
     </div>
   );
+}
+
+function getHexCodeFromToken(token: string) {
+  return window
+    .getComputedStyle(document.documentElement.querySelector("body") as Element)
+    .getPropertyValue(token);
 }

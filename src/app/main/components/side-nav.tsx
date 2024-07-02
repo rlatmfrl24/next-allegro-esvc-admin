@@ -6,12 +6,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { useEffect, useState } from "react";
 
-import NoticeManagementIcon from "@/../public/icon_menu_notice_management.svg";
-import NotificationSetupIcon from "@/../public/icon_menu_notification_setup.svg";
-import SystemSetupIcon from "@/../public/icon_menu_system_setup.svg";
-import UserManagementIcon from "@/../public/icon_menu_user_management.svg";
-import MessageManagementIcon from "@/../public/icon_menu_message.svg";
-import CompanyLogo from "@/../public/logo_transfar_shipping.svg";
+import NoticeManagementIcon from "@/../public/icon_menu_notice_management.svg?url";
+import NotificationSetupIcon from "@/../public/icon_menu_notification_setup.svg?url";
+import SystemSetupIcon from "@/../public/icon_menu_system_setup.svg?url";
+import UserManagementIcon from "@/../public/icon_menu_user_management.svg?url";
+import MessageManagementIcon from "@/../public/icon_menu_message.svg?url";
+import CompanyLogo from "@/../public/logo_transfar_shipping.svg?url";
 import { MdIcon, MdRippleEffect } from "@/util/md3";
 import { MenuItemType } from "@/util/typeDef/super";
 import { ArrowDropDown, SettingsOutlined } from "@mui/icons-material";
