@@ -2,7 +2,7 @@
 
 import { HTMLAttributes, useEffect, useRef, useState } from "react";
 
-export default function ColorPicker({
+export default function SimpleHuePicker({
   onColorChange,
   className,
   ...props

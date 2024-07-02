@@ -4,6 +4,7 @@ import { DividerComponent } from "@/app/components/divider";
 import { MdTypography } from "@/app/components/typography";
 import {
   MdChipSet,
+  MdElevatedCard,
   MdElevation,
   MdIcon,
   MdOutlinedButton,
@@ -20,12 +21,26 @@ import {
   applyPresetTheme,
   createMDTheme,
 } from "@/util/theme";
-import ColorPicker from "@/app/components/color-picker";
+// import ColorPicker from "@/app/components/color-picker";
 import { CurrentCompanyState } from "@/store/super.store";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import RemovableChip from "@/app/components/removable-chip";
 import { colorThemes } from "../constants";
 import { modifiedDetectState } from "@/store/base.store";
+import ColorPicker from "react-best-gradient-color-picker";
+import { rgbToHex } from "@mui/material/styles";
+import SimpleHuePicker from "../components/color-picker";
+import {
+  FloatingFocusManager,
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  useClick,
+  useDismiss,
+  useFloating,
+  useInteractions,
+} from "@floating-ui/react";
 
 export default function ThemeStyleStep({
   previewOption = {
@@ -40,6 +55,7 @@ export default function ThemeStyleStep({
     zoom: number;
   };
 }) {
+  const [isPointColorPickerOpen, setIsPointColorPickerOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const modifiedDetect = useSetRecoilState(modifiedDetectState);
   const [currentCompanyStore, setCurrentCompanyStore] =
@@ -49,6 +65,29 @@ export default function ThemeStyleStep({
       ? currentCompanyStore.themeStyle.theme
       : undefined
   );
+  const [selectedPointColor, setSelectedPointColor] = useState(
+    getHexCodeFromToken("--md-sys-point-color")
+  );
+
+  const { refs, floatingStyles, context } = useFloating({
+    open: isPointColorPickerOpen,
+    onOpenChange: setIsPointColorPickerOpen,
+    placement: "bottom-start",
+    middleware: [shift(), offset(12), flip()],
+    whileElementsMounted: autoUpdate,
+  });
+
+  const { getFloatingProps, getReferenceProps } = useInteractions([
+    useClick(context),
+    useDismiss(context),
+  ]);
+
+  useEffect(() => {
+    if (selectedPointColor) {
+      addCustomThemeToken("--md-sys-point-color", selectedPointColor);
+      modifiedDetect(true);
+    }
+  }, [selectedPointColor, modifiedDetect]);
 
   useEffect(() => {
     if (selectedTheme) {
@@ -61,7 +100,7 @@ export default function ThemeStyleStep({
           addCustomThemeToken("--md-sys-point-color", "#FFDBE4");
         }
       }
-
+      setSelectedPointColor(getHexCodeFromToken("--md-sys-point-color"));
       modifiedDetect(true);
       setCurrentCompanyStore({
         ...currentCompanyStore,
@@ -169,8 +208,7 @@ export default function ThemeStyleStep({
           })}
         </div>
         {selectedTheme?.name === "custom" && (
-          <ColorPicker
-            className="mt-4"
+          <SimpleHuePicker
             color={selectedTheme.primaryColor}
             onColorChange={(color) => {
               createMDTheme(color);
@@ -190,7 +228,11 @@ export default function ThemeStyleStep({
         <MdTypography variant="body" size="large" prominent>
           Point Color
         </MdTypography>
-        <div className="flex gap-4 items-center mb-4">
+        <div
+          className="flex gap-4 items-center mb-4"
+          ref={refs.setReference}
+          {...getReferenceProps()}
+        >
           <div
             className="relative rounded-full w-12 h-12 cursor-pointer p-px"
             style={
@@ -198,15 +240,40 @@ export default function ThemeStyleStep({
                 "--md-elevation-level": 1,
               } as CSSProperties
             }
+            onClick={() => setIsPointColorPickerOpen((prev) => !prev)}
           >
             <div className="w-full h-full bg-pointColor rounded-full"></div>
             <MdElevation />
           </div>
           <MdOutlinedTextField
             label="Hex Color Code"
-            value={getHexCodeFromToken("--md-sys-point-color")}
+            value={rgbToHex(selectedPointColor)}
+            readOnly
           />
         </div>
+
+        {isPointColorPickerOpen && (
+          <FloatingFocusManager context={context}>
+            <MdElevatedCard
+              className="w-fit p-3"
+              ref={refs.setFloating}
+              style={floatingStyles}
+              {...getFloatingProps()}
+            >
+              <ColorPicker
+                hideColorTypeBtns
+                hideAdvancedSliders
+                hideEyeDrop
+                hideColorGuide
+                hideInputType
+                hidePresets
+                hideOpacity
+                value={selectedPointColor}
+                onChange={setSelectedPointColor}
+              />
+            </MdElevatedCard>
+          </FloatingFocusManager>
+        )}
       </div>
       <div className="flex-1 rounded-lg bg-surfaceContainerLow px-6 py-4 flex flex-col">
         <MdTypography
