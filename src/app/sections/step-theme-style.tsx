@@ -4,15 +4,17 @@ import { DividerComponent } from "@/app/components/divider";
 import { MdTypography } from "@/app/components/typography";
 import {
   MdChipSet,
+  MdElevation,
   MdIcon,
   MdOutlinedButton,
+  MdOutlinedTextField,
   MdRippleEffect,
 } from "@/util/md3";
 import { Upload } from "@mui/icons-material";
 import Image from "next/image";
 
 import DashboardPreview from "@/app/preview/dashboard/dashboard";
-import { useEffect, useRef, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import { applyPresetTheme, createMDTheme } from "@/util/theme";
 import ColorPicker from "@/app/components/color-picker";
 import { CurrentCompanyState } from "@/store/super.store";
@@ -167,10 +169,27 @@ export default function ThemeStyleStep({
             }}
           />
         )}
-        <DividerComponent />
+        <DividerComponent className="border-dashed mt-4" />
         <MdTypography variant="body" size="large" prominent>
           Point Color
         </MdTypography>
+        <div className="flex gap-4 items-center mb-4">
+          <div
+            className="relative rounded-full w-12 h-12 cursor-pointer p-px"
+            style={
+              {
+                "--md-elevation-level": 1,
+              } as CSSProperties
+            }
+          >
+            <div className="w-full h-full bg-pointColor rounded-full"></div>
+            <MdElevation />
+          </div>
+          <MdOutlinedTextField
+            label="Hex Color Code"
+            value={getHexCodeFromToken("--md-sys-point-color")}
+          />
+        </div>
       </div>
       <div className="flex-1 rounded-lg bg-surfaceContainerLow px-6 py-4 flex flex-col">
         <MdTypography
@@ -191,4 +210,10 @@ export default function ThemeStyleStep({
       </div>
     </div>
   );
+}
+
+function getHexCodeFromToken(token: string) {
+  return window
+    .getComputedStyle(document.documentElement.querySelector("body") as Element)
+    .getPropertyValue(token);
 }
