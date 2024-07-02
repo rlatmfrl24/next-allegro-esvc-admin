@@ -34,6 +34,7 @@ import {
 import QuickChart from "./chart";
 import { useRecoilValue } from "recoil";
 import { CurrentCompanyState } from "@/store/super.store";
+import NaOutlinedSegmentedButton from "@/app/components/na-outlined-segmented-button";
 
 export default function DashboardPreview({
   width = 1280,
@@ -137,7 +138,7 @@ export default function DashboardPreview({
               <DashboardCard title="Schedule" width={2} height={2}>
                 <div className="p-4 flex flex-col gap-4">
                   <MdOutlinedSegmentedButtonSet>
-                    <MdOutlinedSegmentedButton
+                    <NaOutlinedSegmentedButton
                       label="Point to Point"
                       selected
                     />
