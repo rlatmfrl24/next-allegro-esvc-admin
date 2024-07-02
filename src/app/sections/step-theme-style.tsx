@@ -13,14 +13,13 @@ import Image from "next/image";
 
 import DashboardPreview from "@/app/preview/dashboard/dashboard";
 import { useEffect, useRef, useState } from "react";
-import { createMDTheme } from "@/util/theme";
+import { applyPresetTheme, createMDTheme } from "@/util/theme";
 import ColorPicker from "@/app/components/color-picker";
 import { CurrentCompanyState } from "@/store/super.store";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import RemovableChip from "@/app/components/removable-chip";
 import { colorThemes } from "../constants";
 import { modifiedDetectState } from "@/store/base.store";
-import { m } from "framer-motion";
 
 export default function ThemeStyleStep({
   previewOption = {
@@ -47,7 +46,12 @@ export default function ThemeStyleStep({
 
   useEffect(() => {
     if (selectedTheme) {
-      createMDTheme(selectedTheme.primaryColor);
+      if (selectedTheme.name !== "custom" && selectedTheme.name !== "pink") {
+        applyPresetTheme(selectedTheme.preset);
+      } else {
+        createMDTheme(selectedTheme.primaryColor);
+      }
+
       modifiedDetect(true);
       setCurrentCompanyStore({
         ...currentCompanyStore,
@@ -163,6 +167,10 @@ export default function ThemeStyleStep({
             }}
           />
         )}
+        <DividerComponent />
+        <MdTypography variant="body" size="large" prominent>
+          Point Color
+        </MdTypography>
       </div>
       <div className="flex-1 rounded-lg bg-surfaceContainerLow px-6 py-4 flex flex-col">
         <MdTypography

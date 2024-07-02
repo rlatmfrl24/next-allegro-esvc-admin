@@ -1,63 +1,66 @@
-import IconThemeViolet from "@/../public/assets/img_theme_violet.svg";
-import IconThemePurple from "@/../public/assets/img_theme_purple.svg";
-import IconThemeBlue from "@/../public/assets/img_theme_blue.svg";
-import IconThemeGreen from "@/../public/assets/img_theme_green.svg";
-import IconThemeYellow from "@/../public/assets/img_theme_yellow.svg";
-import IconThemeOrange from "@/../public/assets/img_theme_orange.svg";
-import IconThemeRed from "@/../public/assets/img_theme_red.svg";
-import IconThemeDarkBlue from "@/../public/assets/img_theme_darkblue.svg";
-import IconThemeJeal from "@/../public/assets/img_theme_jeal.svg";
 import IconThemeCustom from "@/../public/assets/img_theme_custom.svg";
+import IconThemePU from "@/../public/assets/img_theme_pu.svg";
+import IconThemePK from "@/../public/assets/img_theme_pk.svg";
+import IconThemeBL from "@/../public/assets/img_theme_bl.svg";
+import IconThemeNA from "@/../public/assets/img_theme_na.svg";
+import IconThemeGR from "@/../public/assets/img_theme_gr.svg";
+import IconThemeYG from "@/../public/assets/img_theme_yg.svg";
+import IconThemeOR from "@/../public/assets/img_theme_or.svg";
+import IconThemeRE from "@/../public/assets/img_theme_re.svg";
 import { MenuItemType } from "@/util/typeDef/super";
 
 export const colorThemes = [
   {
     name: "violet",
-    icon: IconThemeViolet,
+    preset: "PU",
+    icon: IconThemePU,
     primaryColor: "#6B4EB8",
   },
   {
-    name: "purple",
-    icon: IconThemePurple,
+    name: "pink",
+    preset: "PK",
+    icon: IconThemePK,
     primaryColor: "#BE489D",
   },
   {
     name: "blue",
-    icon: IconThemeBlue,
-    primaryColor: "#00A3FF",
+    preset: "BL",
+    icon: IconThemeBL,
+    primaryColor: "#3F51B5",
+  },
+  {
+    name: "nx",
+    preset: "NA",
+    icon: IconThemeNA,
+    primaryColor: "#1A237E",
   },
   {
     name: "green",
-    icon: IconThemeGreen,
-    primaryColor: "#20B266",
+    preset: "GR",
+    icon: IconThemeGR,
+    primaryColor: "#4CAF50",
   },
   {
     name: "yellow",
-    icon: IconThemeYellow,
-    primaryColor: "#EBA900",
+    preset: "YG",
+    icon: IconThemeYG,
+    primaryColor: "#FFC107",
   },
   {
     name: "orange",
-    icon: IconThemeOrange,
-    primaryColor: "#F17B2F",
+    preset: "OR",
+    icon: IconThemeOR,
+    primaryColor: "#FF5722",
   },
   {
     name: "red",
-    icon: IconThemeRed,
-    primaryColor: "#D13044",
-  },
-  {
-    name: "dark blue",
-    icon: IconThemeDarkBlue,
-    primaryColor: "#174FA0",
-  },
-  {
-    name: "jeal",
-    icon: IconThemeJeal,
-    primaryColor: "#196584",
+    preset: "RE",
+    icon: IconThemeRE,
+    primaryColor: "#F44336",
   },
   {
     name: "custom",
+    preset: "CU",
     icon: IconThemeCustom,
     primaryColor: "#000000",
   },

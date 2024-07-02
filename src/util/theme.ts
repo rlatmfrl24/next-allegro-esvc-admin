@@ -8,6 +8,14 @@ import {
 
 // custom theme
 import defaultTheme from "@/../public/preset/default.json";
+import YGTheme from "@/../public/preset/palette/YG.json";
+import RETheme from "@/../public/preset/palette/RE.json";
+import BLTheme from "@/../public/preset/palette/BL.json";
+import GRTheme from "@/../public/preset/palette/GR.json";
+import NATheme from "@/../public/preset/palette/NA.json";
+import ORTheme from "@/../public/preset/palette/OR.json";
+import PKTheme from "@/../public/preset/palette/PK.json";
+import PUTheme from "@/../public/preset/palette/PU.json";
 
 export function createMDTheme(
   sourceColor: string,
@@ -99,6 +107,30 @@ export function applyPresetTheme(
 ) {
   let css = {};
   switch (presetName) {
+    case "YG":
+      css = YGTheme;
+      break;
+    case "RE":
+      css = RETheme;
+      break;
+    case "BL":
+      css = BLTheme;
+      break;
+    case "GR":
+      css = GRTheme;
+      break;
+    case "NA":
+      css = NATheme;
+      break;
+    case "OR":
+      css = ORTheme;
+      break;
+    case "PK":
+      css = PKTheme;
+      break;
+    case "PU":
+      css = PUTheme;
+      break;
     default:
       css = defaultTheme;
       break;
@@ -125,6 +157,11 @@ export function applyPresetTheme(
       } else if (!(isDark && isLightKey) && !(!isDark && isDarkKey)) {
         target.style.setProperty(key, theme[key]);
       }
+    }
+
+    if (key === "--m3-point-color") {
+      console.log("point color", theme[key]);
+      target.style.setProperty("--md-sys-point-color", theme[key]);
     }
   });
 
