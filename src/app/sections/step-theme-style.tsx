@@ -15,7 +15,11 @@ import Image from "next/image";
 
 import DashboardPreview from "@/app/preview/dashboard/dashboard";
 import { CSSProperties, useEffect, useRef, useState } from "react";
-import { applyPresetTheme, createMDTheme } from "@/util/theme";
+import {
+  addCustomThemeToken,
+  applyPresetTheme,
+  createMDTheme,
+} from "@/util/theme";
 import ColorPicker from "@/app/components/color-picker";
 import { CurrentCompanyState } from "@/store/super.store";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -52,6 +56,10 @@ export default function ThemeStyleStep({
         applyPresetTheme(selectedTheme.preset);
       } else {
         createMDTheme(selectedTheme.primaryColor);
+
+        if (selectedTheme.name === "pink") {
+          addCustomThemeToken("--md-sys-point-color", "#FFDBE4");
+        }
       }
 
       modifiedDetect(true);

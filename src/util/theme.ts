@@ -175,3 +175,7 @@ export function applyPresetTheme(
   //   target.style.setProperty(`--md-sys-color-${token}`, theme[key]);
   // }
 }
+
+export function addCustomThemeToken(token: string, color: string) {
+  document.body.style.setProperty(token, color);
+}
