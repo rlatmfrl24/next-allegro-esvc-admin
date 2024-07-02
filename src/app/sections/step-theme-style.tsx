@@ -171,9 +171,18 @@ export default function ThemeStyleStep({
         {selectedTheme?.name === "custom" && (
           <ColorPicker
             className="mt-4"
-            color="#000000"
+            color={selectedTheme.primaryColor}
             onColorChange={(color) => {
               createMDTheme(color);
+              if (selectedTheme.primaryColor !== color) {
+                modifiedDetect(true);
+                setSelectedTheme({
+                  name: "custom",
+                  preset: "CU",
+                  icon: undefined,
+                  primaryColor: color,
+                });
+              }
             }}
           />
         )}

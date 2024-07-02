@@ -199,8 +199,8 @@ const ChartItem = (props: { title: string }) => {
         data={[
           { key: "Booked", value: 20 },
           { key: "Rejected", value: 10 },
-          { key: "Processing", value: 30 },
-          { key: "Cancelled", value: 5 },
+          { key: "Processing", value: 10 },
+          { key: "Cancelled", value: 30 },
         ]}
       />
     </DashboardCard>
