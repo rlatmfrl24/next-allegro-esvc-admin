@@ -1,7 +1,7 @@
 "use client";
 
 import { MdTypography } from "../../components/typography";
-import CompanyLogo from "@/../public/logo_transfar_shipping.svg";
+import CompanyLogo from "@/../public/logo_transfar_shipping.svg?url";
 import { UserMenu } from "@/app/components/user-menu";
 import Image from "next/image";
 

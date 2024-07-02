@@ -66,7 +66,7 @@ export default function ThemeStyleStep({
       : undefined
   );
   const [selectedPointColor, setSelectedPointColor] = useState(
-    getHexCodeFromToken("--md-sys-point-color")
+    getHexCodeFromToken("--md-sys-point-color") || "#000000"
   );
 
   const { refs, floatingStyles, context } = useFloating({

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import BackgroudImage from "@/../public/img/transfar_1.png";
-import LogoImage from "@/../public/logo_transfar_shipping.svg";
+import LogoImage from "@/../public/logo_transfar_shipping.svg?url";
 import { MdCheckbox, MdElevatedCard, MdFilledButton } from "@/util/md3";
 
 import Logo from "../components/logo";
