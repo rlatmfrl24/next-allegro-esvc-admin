@@ -160,7 +160,7 @@ export function applyPresetTheme(
     }
 
     if (key === "--m3-point-color") {
-      console.log("point color", theme[key]);
+      // console.log("point color", theme[key]);
       target.style.setProperty("--md-sys-point-color", theme[key]);
     }
   });

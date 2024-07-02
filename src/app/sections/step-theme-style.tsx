@@ -148,6 +148,7 @@ export default function ThemeStyleStep({
         </MdTypography>
         <div className="grid grid-cols-4 gap-4">
           {colorThemes.map((theme) => {
+            console.log(theme.icon);
             return (
               <div
                 key={theme.name}

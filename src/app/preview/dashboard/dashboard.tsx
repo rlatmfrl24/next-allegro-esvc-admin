@@ -48,7 +48,7 @@ export default function DashboardPreview({
 
   return (
     <div
-      className="bg-surfaceDim flex overflow-hidden relative rounded-3xl shadow-lg flex-1"
+      className="bg-primary flex overflow-hidden relative rounded-3xl shadow-lg flex-1"
       style={{
         width: width,
         height: height,
@@ -57,42 +57,38 @@ export default function DashboardPreview({
     >
       <div className="absolute top-0 left-0 w-full h-full z-10"></div>
       <div className="w-20 flex flex-col items-center h-full gap-4 py-1">
-        <MdIcon className="w-12 h-12 rounded-full p-2">
+        <MdIcon className="w-12 h-12 rounded-full p-2 text-white">
           <Menu fontSize="small" />
         </MdIcon>
-        <MdIcon className="w-12 h-12 rounded-full p-2 bg-secondaryContainer">
-          <Image src={DashboardIcon} alt="dashboard-icon" className="w-6" />
+        <MdIcon className="w-12 h-12 rounded-full p-3 bg-pointColor">
+          <DashboardIcon />
         </MdIcon>
-        <MdIcon className="w-12 h-12 rounded-full p-2">
-          <Image src={ScheduleIcon} alt="schedule-icon" className="w-6" />
+        <MdIcon className="w-12 h-12 rounded-full p-3 text-white">
+          <ScheduleIcon />
         </MdIcon>
-        <MdIcon className="w-12 h-12 rounded-full p-2">
-          <Image src={BookingIcon} alt="booking-icon" className="w-6" />
+        <MdIcon className="w-12 h-12 rounded-full p-3 text-white">
+          <BookingIcon />
         </MdIcon>
-        <MdIcon className="w-12 h-12 rounded-full p-2">
-          <Image src={PricingIcon} alt="pricing-icon" className="w-6" />
+        <MdIcon className="w-12 h-12 rounded-full p-3 text-white">
+          <PricingIcon />
         </MdIcon>
-        <MdIcon className="w-12 h-12 rounded-full p-2">
-          <Image src={DocumentsIcon} alt="documents-icon" className="w-6" />
+        <MdIcon className="w-12 h-12 rounded-full p-3 text-white">
+          <DocumentsIcon />
         </MdIcon>
-        <MdIcon className="w-12 h-12 rounded-full p-2">
-          <Image src={TrackTraceIcon} alt="track-trace-icon" className="w-6" />
+        <MdIcon className="w-12 h-12 rounded-full p-3 text-white">
+          <TrackTraceIcon />
         </MdIcon>
-        <MdIcon className="w-12 h-12 rounded-full p-2">
-          <Image src={ImportIcon} alt="import-icon" className="w-6" />
+        <MdIcon className="w-12 h-12 rounded-full p-3 text-white">
+          <ImportIcon />
         </MdIcon>
-        <MdIcon className="w-12 h-12 rounded-full p-2">
-          <Image
-            src={ManageShipmentIcon}
-            alt="manage-shipment-icon"
-            className="w-6"
-          />
+        <MdIcon className="w-12 h-12 rounded-full p-3 text-white">
+          <ManageShipmentIcon />
         </MdIcon>
-        <MdIcon className="w-12 h-12 rounded-full p-2">
-          <Image src={DententionIcon} alt="dentention-icon" className="w-6" />
+        <MdIcon className="w-12 h-12 rounded-full p-3 text-white">
+          <DententionIcon />
         </MdIcon>
       </div>
-      <div className="flex-1 bg-surfaceContainerHighest flex flex-col rounded-3xl">
+      <div className="flex-1 bg-surfaceContainerLowest flex flex-col rounded-2xl">
         <div className="min-h-12 flex items-center px-5">
           {logo && (
             <Image
@@ -109,7 +105,7 @@ export default function DashboardPreview({
             E-SERVICE
           </MdTypography>
         </div>
-        <div className="bg-surfaceContainer flex-1 rounded-3xl flex flex-col items-center">
+        <div className="bg-surfaceContainerLow flex-1 rounded-3xl flex flex-col items-center">
           <div className="w-full py-4 px-6">
             <div className="flex items-center gap-2">
               <MdTypography

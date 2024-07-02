@@ -1,12 +1,12 @@
-import IconThemeCustom from "@/../public/assets/img_theme_custom.svg";
-import IconThemePU from "@/../public/assets/img_theme_pu.svg";
-import IconThemePK from "@/../public/assets/img_theme_pk.svg";
-import IconThemeBL from "@/../public/assets/img_theme_bl.svg";
-import IconThemeNA from "@/../public/assets/img_theme_na.svg";
-import IconThemeGR from "@/../public/assets/img_theme_gr.svg";
-import IconThemeYG from "@/../public/assets/img_theme_yg.svg";
-import IconThemeOR from "@/../public/assets/img_theme_or.svg";
-import IconThemeRE from "@/../public/assets/img_theme_re.svg";
+import IconThemeCustom from "@/../public/assets/img_theme_custom.svg?url";
+import IconThemePU from "@/../public/assets/img_theme_pu.svg?url";
+import IconThemePK from "@/../public/assets/img_theme_pk.svg?url";
+import IconThemeBL from "@/../public/assets/img_theme_bl.svg?url";
+import IconThemeNA from "@/../public/assets/img_theme_na.svg?url";
+import IconThemeGR from "@/../public/assets/img_theme_gr.svg?url";
+import IconThemeYG from "@/../public/assets/img_theme_yg.svg?url";
+import IconThemeOR from "@/../public/assets/img_theme_or.svg?url";
+import IconThemeRE from "@/../public/assets/img_theme_re.svg?url";
 import { MenuItemType } from "@/util/typeDef/super";
 
 export const colorThemes = [
