@@ -21,7 +21,8 @@ import {
   useRef,
   useState,
 } from "react";
-import styles from "@/app/styles/table.module.css";
+// import styles from "@/../app/styles/table.module.css";
+import styles from "@/styles/table.module.css";
 import { MemoizedTableBody, TableBody } from "./table-body";
 import { MdTypography } from "../typography";
 import {
