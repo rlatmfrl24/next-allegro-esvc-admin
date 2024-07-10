@@ -91,12 +91,12 @@ export default function ThemeStyleStep({
 
   useEffect(() => {
     if (selectedTheme) {
-      if (selectedTheme.name !== "custom" && selectedTheme.name !== "pink") {
+      if (selectedTheme.name !== "custom" && selectedTheme.name !== "one") {
         applyPresetTheme(selectedTheme.preset);
       } else {
         createMDTheme(selectedTheme.primaryColor);
 
-        if (selectedTheme.name === "pink") {
+        if (selectedTheme.name === "one") {
           addCustomThemeToken("--md-sys-point-color", "#FFDBE4");
         }
       }
