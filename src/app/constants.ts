@@ -1,5 +1,6 @@
 import IconThemeCustom from "@/../public/assets/img_theme_custom.svg?url";
 import IconThemePU from "@/../public/assets/img_theme_pu.svg?url";
+import IconThemeONE from "@/../public/assets/img_theme_one.svg?url";
 import IconThemePK from "@/../public/assets/img_theme_pk.svg?url";
 import IconThemeBL from "@/../public/assets/img_theme_bl.svg?url";
 import IconThemeNA from "@/../public/assets/img_theme_na.svg?url";
@@ -17,9 +18,9 @@ export const colorThemes = [
     primaryColor: "#6B4EB8",
   },
   {
-    name: "pink",
-    preset: "PK",
-    icon: IconThemePK,
+    name: "one",
+    preset: "ONE",
+    icon: IconThemeONE,
     primaryColor: "#BE489D",
   },
   {
@@ -51,6 +52,12 @@ export const colorThemes = [
     preset: "OR",
     icon: IconThemeOR,
     primaryColor: "#FF5722",
+  },
+  {
+    name: "pink",
+    preset: "PK",
+    icon: IconThemePK,
+    primaryColor: "#E91E63",
   },
   {
     name: "red",
