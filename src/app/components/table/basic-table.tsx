@@ -1,11 +1,13 @@
 import {
   Cell,
+  ColumnFiltersState,
   PaginationState,
   RowData,
   SortingState,
   Table,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
@@ -19,6 +21,7 @@ import {
   useRef,
   useState,
 } from "react";
+// import styles from "@/../app/styles/table.module.css";
 import styles from "@/styles/table.module.css";
 import { MemoizedTableBody, TableBody } from "./table-body";
 import { MdTypography } from "../typography";
@@ -67,6 +70,68 @@ function useSkipper() {
   return [shouldSkip, skip] as const;
 }
 
+export const useBasicTable = ({
+  data,
+  columns,
+  pinningColumns = [],
+  controlColumns = [],
+  ignoreSelectionColumns = [],
+  disableColumns = [],
+  requiredColumns = [],
+  editableColumns = [],
+  hiddenColumns = [],
+  isSingleSelect = false,
+  ActionComponent,
+  updater,
+}: {
+  data: any[];
+  columns: any[];
+  pinningColumns?: string[];
+  controlColumns?: string[];
+  ignoreSelectionColumns?: string[];
+  disableColumns?: string[];
+  requiredColumns?: string[];
+  editableColumns?: string[];
+  hiddenColumns?: string[];
+  isSingleSelect?: boolean;
+  ActionComponent?: (table: Table<any>) => React.ReactNode;
+  updater?: Dispatch<SetStateAction<any[]>>;
+}) => {
+  // const [data, setData] = useState<any[]>([]);
+  // const [columns, setColumns] = useState<any[]>([]);
+  // const tableData = useMemo(() => data, [data]);
+  // const tableColumns = useMemo(() => columns, [columns]);
+  const [selectedRows, setSelectedRows] = useState<any>({});
+
+  const renderTable = (props: {
+    data: any[];
+    columns: any[];
+    getSelectionRows?: (Rows: any[], table: Table<any>) => void;
+    onRowSelectionChange?: Dispatch<SetStateAction<any>>;
+  }) => (
+    <BasicTable
+      {...props}
+      data={data}
+      columns={columns}
+      pinningColumns={pinningColumns}
+      controlColumns={controlColumns}
+      ignoreSelectionColumns={ignoreSelectionColumns}
+      disableColumns={disableColumns}
+      requiredColumns={requiredColumns}
+      editableColumns={editableColumns}
+      hiddenColumns={hiddenColumns}
+      isSingleSelect={isSingleSelect}
+      getSelectionRows={(rows) => {
+        setSelectedRows(rows);
+      }}
+      ActionComponent={ActionComponent}
+      updater={updater}
+    />
+  );
+
+  return { renderTable, selectedRows, setSelectedRows };
+};
+
 export const BasicTable = ({
   data,
   columns,
@@ -76,6 +141,8 @@ export const BasicTable = ({
   disableColumns = [],
   requiredColumns = [],
   editableColumns = [],
+  hiddenColumns = [],
+  onlyNumberColumns = [],
   isSingleSelect = false,
   getSelectionRows,
   ActionComponent,
@@ -86,11 +153,13 @@ export const BasicTable = ({
   pinningColumns?: string[];
   controlColumns?: string[];
   ignoreSelectionColumns?: string[];
+  hiddenColumns?: string[];
   requiredColumns?: string[];
   disableColumns?: string[];
   editableColumns?: string[];
+  onlyNumberColumns?: string[];
   isSingleSelect?: boolean;
-  getSelectionRows?: (Rows: any[]) => void;
+  getSelectionRows?: (Rows: any[], table: Table<any>) => void;
   ActionComponent?: (table: Table<any>) => React.ReactNode;
   updater?: Dispatch<SetStateAction<any[]>>;
 }) => {
@@ -99,7 +168,12 @@ export const BasicTable = ({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [columnVisibility, setColumnVisibility] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState(
+    columns.reduce((acc, column) => {
+      acc[column.id] = !hiddenColumns.includes(column.id);
+      return acc;
+    }, {} as Record<string, boolean>)
+  );
   const [sorting, setSorting] = useState<SortingState>([]);
   const [selectedRows, setSelectedRows] = useState({});
   const [columnOrder, setColumnOrder] = useState<string[]>(
@@ -108,6 +182,7 @@ export const BasicTable = ({
   const [selectedCell, setSelectedCell] = useState<Cell<any, unknown> | null>(
     null
   );
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]); // can set initial column filter state here
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -124,6 +199,7 @@ export const BasicTable = ({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     initialState: {
       columnPinning: {
         left: pinningColumns,
@@ -131,16 +207,19 @@ export const BasicTable = ({
     },
     state: {
       rowSelection: selectedRows,
+      columnFilters,
       columnOrder,
       sorting,
       columnVisibility,
       pagination,
     },
+    onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setSelectedRows,
     onColumnOrderChange: setColumnOrder,
     onColumnVisibilityChange: setColumnVisibility,
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
+
     enableMultiRowSelection: !isSingleSelect,
     // enableMultiSort: true,
     autoResetPageIndex,
@@ -174,10 +253,16 @@ export const BasicTable = ({
   });
 
   useEffect(() => {
+    setColumnOrder(columns.map((column) => column.id));
+  }, [columns, table]);
+
+  useEffect(() => {
     getSelectionRows &&
       getSelectionRows(
-        Object.keys(selectedRows).map((key) => data[parseInt(key)])
+        Object.keys(selectedRows).map((key) => data[parseInt(key)]),
+        table
       );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRows]);
 
@@ -206,7 +291,7 @@ export const BasicTable = ({
   }
 
   return (
-    <div className="relative flex flex-col gap-4">
+    <div className="relative flex flex-col gap-4 flex-1 h-full">
       <div className="flex items-end">
         {ActionComponent && <ActionComponent {...table} />}
         <div className="flex gap-2 items-center h-10 z-10">
@@ -217,7 +302,7 @@ export const BasicTable = ({
           <ColumnFilterButton table={table} expectColumnIds={controlColumns} />
         </div>
       </div>
-      <OverlayScrollbarsComponent defer className="overflow-hidden">
+      <OverlayScrollbarsComponent defer className="flex-1">
         <DndContext
           collisionDetection={closestCenter}
           modifiers={[restrictToHorizontalAxis]}
@@ -228,7 +313,8 @@ export const BasicTable = ({
             className={styles.table}
             style={{
               ...columnSizeVars,
-              // width: table.getCenterTotalSize(),
+              width: "99.8%", // to prevent horizontal scroll
+              // minHeight: "480px",
             }}
           >
             <thead>
@@ -276,6 +362,7 @@ export const BasicTable = ({
                 ignoreSelectionColumns={ignoreSelectionColumns}
                 disableColumns={disableColumns}
                 editableColumns={editableColumns}
+                onlyNumberColumns={onlyNumberColumns}
               />
             ) : (
               <TableBody
@@ -285,10 +372,12 @@ export const BasicTable = ({
                 ignoreSelectionColumns={ignoreSelectionColumns}
                 disableColumns={disableColumns}
                 editableColumns={editableColumns}
+                onlyNumberColumns={onlyNumberColumns}
               />
             )}
           </table>
         </DndContext>
+        <div className="flex-1"></div>
       </OverlayScrollbarsComponent>
     </div>
   );

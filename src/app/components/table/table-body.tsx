@@ -18,6 +18,7 @@ export const TableBody = ({
   onCellSelected,
   ignoreSelectionColumns,
   disableColumns,
+  onlyNumberColumns,
   editableColumns,
 }: {
   table: Table<any>;
@@ -26,6 +27,7 @@ export const TableBody = ({
   ignoreSelectionColumns?: string[];
   disableColumns?: string[];
   editableColumns?: string[];
+  onlyNumberColumns?: string[];
 }) => {
   const inputRef = useRef<any>(null);
   const [hoverInfo, setHoverInfo] = useState<{
@@ -43,7 +45,7 @@ export const TableBody = ({
       return {
         backgroundColor: `color-mix(in srgb, var(--md-sys-color-primary) 12%, white)`,
         border: `2px solid var(--md-sys-color-primary)`,
-        // zIndex: 10,
+        zIndex: 10,
       } as CSSProperties;
     } else {
       if (cell.row.getIsSelected()) {
@@ -73,7 +75,7 @@ export const TableBody = ({
             return {
               backgroundColor: disableColumns?.includes(cell.column.id)
                 ? `var(--md-sys-color-surface-container-low)`
-                : `var(--md-sys-color-surface)`,
+                : `var(--md-sys-color-surface-container-lowest)`,
               borderBottom: `1px solid var(--md-sys-color-outline-variant)`,
             } as CSSProperties;
           }
@@ -96,11 +98,12 @@ export const TableBody = ({
                     width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                     ...getCommonPinningStyles(cell.column),
                     ...getCellStyles(cell),
-                    color: disableColumns?.includes(cell.column.id)
-                      ? "var(--md-sys-color-outline)"
-                      : "",
                   }}
-                  className="p-2 border-box border-x border-x-transparent border-y border-y-transparent overflow-x-hidden"
+                  className={`p-2 border-box border-x border-x-transparent border-y border-y-transparent ${
+                    onlyNumberColumns?.includes(cell.column.id)
+                      ? "text-right"
+                      : ""
+                  }`}
                   onMouseEnter={(e) => {
                     setHoverInfo({ row, cell });
                   }}
@@ -125,26 +128,61 @@ export const TableBody = ({
                     row.toggleSelected();
                   }}
                 >
+                  {editableColumns?.includes(cell.column.id) &&
+                    (cell.getValue()?.toString() ?? "") === "" && (
+                      <MdTypography
+                        variant="body"
+                        size="medium"
+                        className="text-outlineVariant"
+                      >
+                        {onlyNumberColumns?.includes(cell.column.id)
+                          ? "0"
+                          : cell.column.columnDef.header?.toString()}
+                      </MdTypography>
+                    )}
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ) : (
-                <td className="h-full relative" key={cell.id}>
+                <td key={cell.id} className="h-full relative">
                   <div className="absolute flex top-0 w-full h-full left-0 p-px">
                     <input
                       autoFocus
                       ref={inputRef}
-                      className="flex-1 px-4 outline-primary"
-                      placeholder="Enter value"
+                      placeholder={
+                        onlyNumberColumns?.includes(cell.column.id)
+                          ? "0"
+                          : cell.column.columnDef.header?.toString()
+                      }
+                      className={`font-pretendard flex-1 px-4 outline-primary max-w-full ${
+                        onlyNumberColumns?.includes(cell.column.id)
+                          ? "text-right"
+                          : ""
+                      }`}
+                      type={
+                        onlyNumberColumns?.includes(cell.column.id)
+                          ? "number"
+                          : "text"
+                      }
                       defaultValue={
                         (cell.getContext().getValue() as string) || ""
                       }
+                      // value={(cell.getContext().getValue() as string) || ""}
                       onBlur={() => {
-                        table.options.meta?.updateData(
-                          parseInt(row.id),
-                          cell.column.id,
-                          inputRef.current.value
-                        );
-
+                        if (onlyNumberColumns?.includes(cell.column.id)) {
+                          table.options.meta?.updateData(
+                            parseInt(row.id),
+                            cell.column.id,
+                            isNaN(parseFloat(inputRef.current.value))
+                              ? undefined
+                              : parseFloat(inputRef.current.value)
+                          );
+                        } else {
+                          table.options.meta?.updateData(
+                            parseInt(row.id),
+                            cell.column.id,
+                            inputRef.current.value
+                          );
+                        }
                         setCurrentEditCell(null);
                       }}
                     />
